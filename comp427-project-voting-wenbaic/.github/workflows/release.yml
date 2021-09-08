@@ -1,0 +1,27 @@
+name: Basic Unit Tests
+on: push
+
+env:
+  PYTHON_VERSION: 3.8
+
+jobs:
+  linux_check:
+    name: Linux Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Change Directory
+        run: cd ${{ github.workspace }}
+      - name: Setup Environment
+        run: make environment
+      - name: Install Module
+        run: make install validate
+      - name: Full Test
+        run: make test
+      - name: Lint Checks
+        run: make lint
