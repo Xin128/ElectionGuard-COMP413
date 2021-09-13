@@ -1,6 +1,6 @@
 ## COMP413 Capstone Project: ElectionGuard
 
-# Project Description
+### Project Description
 Pitch: Integrate “e2e” voting cryptography in a remote vote-by-mail system
 
 Microsoft developed the the ElectionGuard SDK to ensure end-to-end verification in voting process.
@@ -24,7 +24,7 @@ How to implement this in the browser? WebAssembly for the cryptographic parts? P
 How to test and validate compatibility with the existing ElectionGuard?
 Which AVBM technology to integrate with for a demo? Anywhere Ballot? One of the VotingWorks projects?
 
-# Getting Started
+### Getting Started
 
 ```bash
 # Install dependencies
@@ -43,7 +43,7 @@ yarn esbuild-browser
 * Take a look at all the scripts in package.json
 * For publishing to npm, use `yarn publish` (or `npm publish`)
 
-# esbuild
+### esbuild
 
 [esbuild](https://esbuild.github.io/) is an extremely fast bundler that supports a [large part of the TypeScript syntax](https://esbuild.github.io/content-types/#typescript). This project uses it to bundle for browsers (and Node.js if you want).
 
@@ -65,7 +65,7 @@ You can generate a full clean build with `yarn build-all` (which uses both `tsc`
 * esbuild for the browser uses the IIFE (immediately-invoked function expression) format, which executes the bundled code on load (see also https://github.com/evanw/esbuild/issues/29)
 
 
-# Tests with Jest
+### Tests with Jest
 
 You can write [Jest tests](https://jestjs.io/docs/getting-started) [like this](https://github.com/metachris/typescript-boilerplate/blob/master/src/main.test.ts):
 
@@ -87,7 +87,7 @@ Run the tests with `yarn test`, no separate compile step is necessary.
 * The tests can be automatically run in CI (GitHub Actions, GitLab CI): [`.github/workflows/lint-and-test.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.github/workflows/lint-and-test.yml), [`.gitlab-ci.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.gitlab-ci.yml)
 * Take a look at other modern test runners such as [ava](https://github.com/avajs/ava), [uvu](https://github.com/lukeed/uvu) and [tape](https://github.com/substack/tape)
 
-# Documentation, published with CI
+### Documentation, published with CI
 
 You can auto-generate API documentation from the TypeScript source files using [TypeDoc](https://typedoc.org/guides/doccomments/). The generated documentation can be published to GitHub / GitLab pages through the CI.
 
@@ -105,9 +105,10 @@ You can publish the documentation through CI:
 
 This is the documentation for this boilerplate project: https://metachris.github.io/typescript-boilerplate/
 
-# References
+### References
 
-* **[Blog post: Starting a TypeScript Project in 2021](https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/)**
+* **[TypeScript Boilerplate](https://github.com/metachris/typescript-boilerplate)**
+* [Blog post: Starting a TypeScript Project in 2021](https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/)
 * [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
 * [tsconfig docs](https://www.typescriptlang.org/tsconfig)
 * [esbuild docs](https://esbuild.github.io/)
