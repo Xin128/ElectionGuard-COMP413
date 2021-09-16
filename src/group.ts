@@ -23,6 +23,12 @@ class ElementModQ {
         return 0;
     }
 
+    // Converts from the element to the hex representation of bytes. This is preferable to directly
+    // accessing `elem`, whose representation might change.
+    public toHex(): string {
+        return "";
+    }
+
     // Converts from the element to a regular integer. This is preferable to directly
     // accessing `elem`, whose representation might change.
     public toInt(): Number {
@@ -41,11 +47,39 @@ class ElementModQ {
         return 0 < this.elem && this.elem < Q;
     }
     
-    // // Converts from the element to the hex representation of bytes. This is preferable to directly
-    // // accessing `elem`, whose representation might change.
-    // function toHex(): string {
+    // TODO: Operator overloading not supported in TypeScript, need to find a workaround
+    // # overload != (not equal to) operator
+    // def __ne__(self, other: Any) -> bool:
+    //     return (
+    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
+    //     ) and not eq_elems(self, other)
 
-    // }
+    // # overload == (equal to) operator
+    // def __eq__(self, other: Any) -> bool:
+    //     return (
+    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
+    //     ) and eq_elems(self, other)
+
+    // def __str__(self) -> str:
+    //     return self.elem.digits()
+
+    // def __hash__(self) -> int:
+    //     return hash(int(self.elem))
+
+    // # __getstate__ and __setstate__ are here to support pickle and other serialization libraries.
+    // # These are intended for use in "trusted" environments (e.g., running on a computational cluster)
+    // # but should not be used when reading possibly untrusted data from a file. For that, use functions
+    // # like int_to_p(), which will return None if there's an error.
+
+    // def __getstate__(self) -> dict:
+    //     return {"elem": int(self.elem)}
+
+    // def __setstate__(self, state: dict) -> None:
+    //     if "elem" not in state or not isinstance(state["elem"], int):
+    //         raise AttributeError("couldn't restore state, malformed input")
+    //     self.elem = mpz(state["elem"])
+
+    /////////////// POSSIBLE HELPER FUNCTION /////////////////
 
     // Convert decimal strings to Hex with JS BigInts
     // https://coolaj86.com/articles/convert-decimal-to-hex-with-js-bigints/
@@ -114,6 +148,32 @@ class ElementModP {
         const residue: boolean = powP(this, new ElementModQ(BigInt(Q))) === ONE_MOD_P;
         return this.isInBounds() && residue;
     }
+
+    // # overload != (not equal to) operator
+    // def __ne__(self, other: Any) -> bool:
+    //     return (
+    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
+    //     ) and not eq_elems(self, other)
+
+    // # overload == (equal to) operator
+    // def __eq__(self, other: Any) -> bool:
+    //     return (
+    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
+    //     ) and eq_elems(self, other)
+
+    // def __str__(self) -> str:
+    //     return self.elem.digits()
+
+    // def __hash__(self) -> int:
+    //     return hash(int(self.elem))
+
+    // def __getstate__(self) -> dict:
+    //     return {"elem": int(self.elem)}
+
+    // def __setstate__(self, state: dict) -> None:
+    //     if "elem" not in state or not isinstance(state["elem"], int):
+    //         raise AttributeError("couldn't restore state, malformed input")
+    //     self.elem = mpz(state["elem"])
 
 }
 
@@ -280,3 +340,5 @@ const randRangeQ: (start: ElementModQorInt) => ElementModQ = (start) => {
 const eqElems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
     return a.elem === b.elem;
 }
+
+export {ElementModP, ElementModQ}
