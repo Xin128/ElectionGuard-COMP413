@@ -1,4 +1,3 @@
-import { type } from "os"
 
 // Constants used by ElectionGuard
 const Q: number = Math.pow(2, 256) - 189
@@ -10,7 +9,7 @@ const Q_MINUS_ONE: number = Q - 1
 
 class ElementModQ {
     // An element of the smaller `mod q` space, i.e., in [0, Q), where Q is a 256-bit prime.
-    private elem: bigint;
+    public elem: bigint;
 
     constructor(elem: bigint) {
         this.elem = elem; 
@@ -88,7 +87,7 @@ class ElementModQ {
 
 class ElementModP {
     // An element of the larger `mod p` space, i.e., in [0, P), where P is a 4096-bit prime.
-    private elem: bigint;
+    public elem: bigint;
 
     constructor(elem: bigint) {
         this.elem = elem; 
@@ -133,11 +132,151 @@ type ElementModPOrQorInt = ElementModP | ElementModQ | number
 type ElementModQorInt = ElementModQ | number
 type ElementModPorInt = ElementModP | number
 
+
+
 // TODO
-const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => {
+const hexToQ: (input: string) => ElementModQ | null = (input) => {
+    return null;
+}
+
+// TODO
+const intToQ: (input: string | number) => ElementModQ | null = (input) => {
+    return null;
+}
+
+// TODO
+const intToQUnchecked: (i: string | number) => ElementModQ = (i) => {
+    return new ElementModQ(BigInt(0));
+}
+
+// TODO
+const intToP: (input: string | number) => ElementModP | null = (input) => {
+    return null;
+}
+
+// TODO
+const intToPUnchecked: (i: string | number) => ElementModP = (i) => {
     return new ElementModP(BigInt(0));
 }
 
-const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b: ElementModQorInt, e: ElementModQorInt) => {
+//TODO: what is bytes in python equivalent of?
+const qToBytes: (e: ElementModQ) => [] = (e) => {
+    return [];
+} 
+
+// TODO
+const bytesToQ: (b: []) => ElementModQ = (b) => {
     return new ElementModQ(BigInt(0));
+}
+
+const addQ: (...elems: ElementModQorInt[]) => ElementModQ = (...elems) => {
+    let t: bigint = BigInt(0);
+    elems.forEach((e) => {
+        if (typeof e === 'number') {
+            e = intToQUnchecked(e);
+        }
+        t = (t + e.elem) % BigInt(Q);
+    });
+    return new ElementModQ(t);
+}
+
+const aMinusBQ: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (a, b) => {
+    if (typeof a === 'number') {
+        a = intToQUnchecked(a);
+    }
+    if (typeof b === 'number') {
+        b = intToQUnchecked(b);
+    }
+    return new ElementModQ((a.elem - b.elem) % BigInt(Q));
+}
+
+// TODO
+const divP: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
+    if (typeof a === 'number') {
+        a = intToPUnchecked(a);
+    }
+    if (typeof b === 'number') {
+        b = intToPUnchecked(b);
+    } 
+
+    // const inverse = invert(b.elem, BigInt(P));
+    // return mult_p(a, int_to_p_unchecked(inverse))
+    return new ElementModP(BigInt(0));
+}
+
+// TODO
+const divQ: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a, b) => {
+    if (typeof a === 'number') {
+        a = intToPUnchecked(a);
+    }
+    if (typeof b === 'number') {
+        b = intToPUnchecked(b);
+    } 
+
+    // const inverse = invert(b.elem, BigInt(P));
+    // return mult_p(a, int_to_p_unchecked(inverse))
+    return new ElementModQ(BigInt(0));
+}
+
+const negateQ: (a: ElementModQorInt) => ElementModQ = (a) => {
+    if (typeof a === 'number') {
+        a = intToQUnchecked(a);
+    }
+    return new ElementModQ(BigInt(Q) - a.elem);
+}
+
+const aPlusBCQ: (a: ElementModQorInt, b: ElementModQorInt, c: ElementModQorInt) => ElementModQ = (a, b, c) => {
+    if (typeof a === 'number') {
+        a = intToQUnchecked(a);
+    }
+    if (typeof b === 'number') {
+        b = intToQUnchecked(b);
+    }
+    if (typeof c === 'number') {
+        c = intToQUnchecked(c);
+    }
+    return new ElementModQ((a.elem + b.elem + c.elem) % BigInt(Q));
+}
+
+// TODO
+const multInvP: (e: ElementModPOrQorInt) => ElementModP = (e) => {
+    return new ElementModP(BigInt(0));
+}
+
+// TODO
+const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b, e) => {
+    return new ElementModP(BigInt(0));
+}
+
+// TODO
+const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) => {
+    return new ElementModQ(BigInt(0));
+}
+
+// TODO
+const multP: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
+    return new ElementModP(BigInt(0));
+}
+
+// TODO
+const multQ: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
+    return new ElementModQ(BigInt(0));
+}
+
+const gPowP: (e: ElementModPOrQ) => ElementModP = (e) => {
+    return powP(G_MOD_P, e);
+}
+
+// TODO
+const randQ: () => ElementModQ = () => {
+    return new ElementModQ(BigInt(0));
+}
+
+// TODO
+const randRangeQ: (start: ElementModQorInt) => ElementModQ = (start) => {
+    return new ElementModQ(BigInt(0));
+}
+
+const eqElems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
+    return a.elem === b.elem;
 }
