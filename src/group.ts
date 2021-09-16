@@ -1,3 +1,5 @@
+import { type } from "os"
+
 // Constants used by ElectionGuard
 const Q: number = Math.pow(2, 256) - 189
 const P: number = 1044388881413152506691752710716624382579964249047383780384233483283953907971553643537729993126875883902173634017777416360502926082946377942955704498542097614841825246773580689398386320439747911160897731551074903967243883427132918813748016269754522343505285898816777211761912392772914485521155521641049273446207578961939840619466145806859275053476560973295158703823395710210329314709715239251736552384080845836048778667318931418338422443891025911884723433084701207771901944593286624979917391350564662632723703007964229849154756196890615252286533089643184902706926081744149289517418249153634178342075381874131646013444796894582106870531535803666254579602632453103741452569793905551901541856173251385047414840392753585581909950158046256810542678368121278509960520957624737942914600310646609792665012858397381435755902851312071248102599442308951327039250818892493767423329663783709190716162023529669217300939783171415808233146823000766917789286154006042281423733706462905243774854543127239500245873582012663666430583862778167369547603016344242729592244544608279405999759391099775667746401633668308698186721172238255007962658564443858927634850415775348839052026675785694826386930175303143450046575460843879941791946313299322976993405829119
@@ -10,8 +12,8 @@ class ElementModQ {
     // An element of the smaller `mod q` space, i.e., in [0, Q), where Q is a 256-bit prime.
     private elem: bigint;
 
-    constructor() {
-        this.elem = 1n; 
+    constructor(elem: bigint) {
+        this.elem = elem; 
     }
 
     // TODO:
@@ -26,6 +28,18 @@ class ElementModQ {
     // accessing `elem`, whose representation might change.
     public toInt(): Number {
         return Number(this.elem);
+    }
+
+    // Validates that the element is actually within the bounds of [0,Q).
+    // Returns true if all is good, false if something's wrong.
+    public isInBounds(): boolean {
+        return 0 <= this.elem && this.elem < Q;
+    }
+
+    // Validates that the element is actually within the bounds of [1,Q).
+    // Returns true if all is good, false if something's wrong.
+    public isInBoundsNoZero(): boolean {
+        return 0 < this.elem && this.elem < Q;
     }
     
     // // Converts from the element to the hex representation of bytes. This is preferable to directly
@@ -70,4 +84,60 @@ class ElementModQ {
     }
 
 
+}
+
+class ElementModP {
+    // An element of the larger `mod p` space, i.e., in [0, P), where P is a 4096-bit prime.
+    private elem: bigint;
+
+    constructor(elem: bigint) {
+        this.elem = elem; 
+    }
+
+    // TODO
+    public toHex(): string {
+        return ""
+    }
+
+    public toInt(): number {
+        return Number(this.elem);
+    }
+
+    public isInBounds(): boolean {
+        return 0 <= this.elem && this.elem < P;
+    }
+
+    public isInBoundsNoZero(): boolean {
+        return 0 < this.elem && this.elem < P;
+    }
+
+    public isValidResidue(): boolean {
+        const residue: boolean = powP(this, new ElementModQ(BigInt(Q))) === ONE_MOD_P;
+        return this.isInBounds() && residue;
+    }
+
+}
+
+// Common constants
+const ZERO_MOD_Q: ElementModQ = new ElementModQ(BigInt(0))
+const ONE_MOD_Q: ElementModQ = new ElementModQ(BigInt(1))
+const TWO_MOD_Q: ElementModQ = new ElementModQ(BigInt(2))
+
+const ZERO_MOD_P: ElementModP = new ElementModP(BigInt(0))
+const ONE_MOD_P: ElementModP = new ElementModP(BigInt(1))
+const TWO_MOD_P: ElementModP = new ElementModP(BigInt(2))
+const G_MOD_P: ElementModP = new ElementModP(BigInt(G))
+
+type ElementModPOrQ = ElementModP | ElementModQ
+type ElementModPOrQorInt = ElementModP | ElementModQ | number
+type ElementModQorInt = ElementModQ | number
+type ElementModPorInt = ElementModP | number
+
+// TODO
+const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => {
+    return new ElementModP(BigInt(0));
+}
+
+const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b: ElementModQorInt, e: ElementModQorInt) => {
+    return new ElementModQ(BigInt(0));
 }
