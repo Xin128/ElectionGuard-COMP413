@@ -31,7 +31,7 @@ class ElementModQ {
 
     // Converts from the element to a regular integer. This is preferable to directly
     // accessing `elem`, whose representation might change.
-    public toInt(): Number {
+    public toInt(): number {
         return Number(this.elem);
     }
 
