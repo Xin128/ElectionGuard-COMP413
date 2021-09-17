@@ -349,4 +349,4 @@ const createStrHashCode: (s: string) => number = (s) => {
     return h;
 }
 
-export {ElementModP, ElementModQ, hexToQ, intToQ, intToQUnchecked, intToP, intToPUnchecked, qToBytes, bytesToQ, addQ, aMinusBQ, divP, divQ, negateQ, aPlusBCQ, multInvP, powP, powQ, multP, multQ, gPowP, randQ, randRangeQ, eqElems}
+export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hexToQ, intToQ, intToQUnchecked, intToP, intToPUnchecked, qToBytes, bytesToQ, addQ, aMinusBQ, divP, divQ, negateQ, aPlusBCQ, multInvP, powP, powQ, multP, multQ, gPowP, randQ, randRangeQ, eqElems}
