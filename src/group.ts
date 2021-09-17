@@ -18,7 +18,7 @@ class ElementModQ {
     // TODO:
     // Converts from the element to the representation of bytes by first going through hex.
     // This is preferable to directly accessing `elem`, whose representation might change.
-    public toBytes(): Number {
+    public toBytes(): number {
         // return base16decode(this.bnToHex(this.elem));
         return 0;
     }
@@ -47,25 +47,24 @@ class ElementModQ {
         return 0 < this.elem && this.elem < Q;
     }
     
-    // TODO: Operator overloading not supported in TypeScript, need to find a workaround
-    // # overload != (not equal to) operator
-    // def __ne__(self, other: Any) -> bool:
-    //     return (
-    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
-    //     ) and not eq_elems(self, other)
+    // Operator overloading not supported in TypeScript, need to call the function instead
+    public notEqual(other: any): boolean {
+        return (other instanceof ElementModP || other instanceof ElementModQ) && !eqElems(this, other);
+    }
 
-    // # overload == (equal to) operator
-    // def __eq__(self, other: Any) -> bool:
-    //     return (
-    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
-    //     ) and eq_elems(self, other)
+    public equals(other: any): boolean {
+        return (other instanceof ElementModP || other instanceof ElementModQ) && eqElems(this, other);
+    }
 
-    // def __str__(self) -> str:
-    //     return self.elem.digits()
+    public toStirng(): string {
+        return this.elem.toString();
+    }
 
-    // def __hash__(self) -> int:
-    //     return hash(int(self.elem))
+    public hashCode(): number {
+        return createStrHashCode(this.elem.toString());
+    }
 
+    // TODO: Not sure if this is needed in TypeScript version
     // # __getstate__ and __setstate__ are here to support pickle and other serialization libraries.
     // # These are intended for use in "trusted" environments (e.g., running on a computational cluster)
     // # but should not be used when reading possibly untrusted data from a file. For that, use functions
@@ -149,23 +148,21 @@ class ElementModP {
         return this.isInBounds() && residue;
     }
 
-    // # overload != (not equal to) operator
-    // def __ne__(self, other: Any) -> bool:
-    //     return (
-    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
-    //     ) and not eq_elems(self, other)
+    public notEqual(other: any): boolean {
+        return (other instanceof ElementModP || other instanceof ElementModQ) && !eqElems(this, other);
+    }
 
-    // # overload == (equal to) operator
-    // def __eq__(self, other: Any) -> bool:
-    //     return (
-    //         isinstance(other, ElementModP) or isinstance(other, ElementModQ)
-    //     ) and eq_elems(self, other)
+    public equals(other: any): boolean {
+        return (other instanceof ElementModP || other instanceof ElementModQ) && eqElems(this, other);
+    }
 
-    // def __str__(self) -> str:
-    //     return self.elem.digits()
+    public toStirng(): string {
+        return this.elem.toString();
+    }
 
-    // def __hash__(self) -> int:
-    //     return hash(int(self.elem))
+    public hashCode(): number {
+        return createStrHashCode(this.elem.toString());
+    }
 
     // def __getstate__(self) -> dict:
     //     return {"elem": int(self.elem)}
@@ -341,4 +338,15 @@ const eqElems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
     return a.elem === b.elem;
 }
 
-export {ElementModP, ElementModQ}
+////////// Utils only used in this file ////////////
+// Manually hash a string, code taken from https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
+// The hash value of the empty string is zero.
+const createStrHashCode: (s: string) => number = (s) => {
+    let h: number = 0;
+    for(let i = 0; i < s.length; i++) {
+        h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+    }
+    return h;
+}
+
+export {ElementModP, ElementModQ, hexToQ, intToQ, intToQUnchecked, intToP, intToPUnchecked, qToBytes, bytesToQ, addQ, aMinusBQ, divP, divQ, negateQ, aPlusBCQ, multInvP, powP, powQ, multP, multQ, gPowP, randQ, randRangeQ, eqElems}
