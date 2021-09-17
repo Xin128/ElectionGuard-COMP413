@@ -1,15 +1,7 @@
 import {ElementModQ,
     ElementModP,
-    TWO_MOD_Q,
-    ONE_MOD_Q,
-    elements_mod_q_no_zero,
     elements_mod_q,
-    elements_mod_p,
-    pow_p,
-    int_to_q,
-    add_q,
-    g_pow_p,
-    ZERO_MOD_Q} from './group';
+    elements_mod_p} from './group';
 import {hash_elems} from './hash';
 
 
