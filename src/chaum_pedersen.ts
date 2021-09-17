@@ -61,30 +61,30 @@ export class DisjunctiveChaumPedersenProof {
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
         const [alpha, beta] = message;
-        const a0 = this.proof_zero_pad;
-        const b0 = this.proof_zero_data;
-        const a1 = this.proof_one_pad;
-        const b1 = this.proof_one_data;
-        const c0 = this.proof_zero_challenge;
-        const c1 = this.proof_one_challenge;
-        const c = this.challenge;
-        const v0 = this.proof_zero_response;
-        const v1 = this.proof_one_response;
-        const in_bounds_alpha = alpha.is_valid_residue();
-        const in_bounds_beta = beta.is_valid_residue();
-        const in_bounds_a0 = a0.is_valid_residue();
-        const in_bounds_b0 = b0.is_valid_residue();
-        const in_bounds_a1 = a1.is_valid_residue();
-        const in_bounds_b1 = b1.is_valid_residue();
-        const in_bounds_c0 = c0.is_in_bounds();
-        const in_bounds_c1 = c1.is_in_bounds();
-        const in_bounds_v0 = v0.is_in_bounds();
-        const in_bounds_v1 = v1.is_in_bounds();
-        const consistent_c = add_q(c0, c1) == c == hash_elems(q, alpha, beta, a0, b0, a1, b1);
-        const consistent_gv0 = g_pow_p(v0) == mult_p(a0, pow_p(alpha, c0));
-        const consistent_gv1 = g_pow_p(v1) == mult_p(a1, pow_p(alpha, c1));
-        const consistent_kv0 = pow_p(k, v0) == mult_p(b0, pow_p(beta, c0));
-        const consistent_gc1kv1 = mult_p(g_pow_p(c1), pow_p(k, v1)) == mult_p(
+        const a0:ElementModP = this.proof_zero_pad;
+        const b0:ElementModP = this.proof_zero_data;
+        const a1:ElementModP = this.proof_one_pad;
+        const b1:ElementModP = this.proof_one_data;
+        const c0:ElementModQ = this.proof_zero_challenge;
+        const c1:ElementModQ = this.proof_one_challenge;
+        const c:ElementModQ = this.challenge;
+        const v0:ElementModQ = this.proof_zero_response;
+        const v1:ElementModQ = this.proof_one_response;
+        const in_bounds_alpha:boolean = alpha.is_valid_residue();
+        const in_bounds_beta:boolean = beta.is_valid_residue();
+        const in_bounds_a0:boolean = a0.is_valid_residue();
+        const in_bounds_b0:boolean = b0.is_valid_residue();
+        const in_bounds_a1:boolean = a1.is_valid_residue();
+        const in_bounds_b1:boolean = b1.is_valid_residue();
+        const in_bounds_c0:boolean = c0.is_in_bounds();
+        const in_bounds_c1:boolean = c1.is_in_bounds();
+        const in_bounds_v0:boolean = v0.is_in_bounds();
+        const in_bounds_v1:boolean = v1.is_in_bounds();
+        const consistent_c:boolean = add_q(c0, c1) == c == hash_elems(q, alpha, beta, a0, b0, a1, b1);
+        const consistent_gv0:boolean = g_pow_p(v0) == mult_p(a0, pow_p(alpha, c0));
+        const consistent_gv1:boolean = g_pow_p(v1) == mult_p(a1, pow_p(alpha, c1));
+        const consistent_kv0:boolean = pow_p(k, v0) == mult_p(b0, pow_p(beta, c0));
+        const consistent_gc1kv1:boolean = mult_p(g_pow_p(c1), pow_p(k, v1)) == mult_p(
             b1, pow_p(beta, c1)
         );
         const success = (
@@ -140,17 +140,17 @@ export class ConstantChaumPedersenProof {
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
         const [alpha, beta] = message;
-        const a = this.pad;
-        const b = this.data;
-        const c = this.challenge;
-        const v = this.response;
-        const constant = this.constant;
-        const in_bounds_alpha = alpha.is_valid_residue();
-        const in_bounds_beta = beta.is_valid_residue();
-        const in_bounds_a = a.is_valid_residue();
-        const in_bounds_b = b.is_valid_residue();
-        const in_bounds_c = c.is_in_bounds();
-        const in_bounds_v = v.is_in_bounds();
+        const a:ElementModP = this.pad;
+        const b:ElementModP = this.data;
+        const c:ElementModQ = this.challenge;
+        const v:ElementModQ = this.response;
+        const constant:number = this.constant;
+        const in_bounds_alpha:boolean = alpha.is_valid_residue();
+        const in_bounds_beta:boolean = beta.is_valid_residue();
+        const in_bounds_a:boolean = a.is_valid_residue();
+        const in_bounds_b:boolean = b.is_valid_residue();
+        const in_bounds_c:boolean = c.is_in_bounds();
+        const in_bounds_v:boolean = v.is_in_bounds();
         const tmp = int_to_q(constant);
 
         let in_bounds_constant;
@@ -166,9 +166,9 @@ export class ConstantChaumPedersenProof {
         // this is an arbitrary constant check to verify that decryption will be performant
         // in some use cases this value may need to be increased
 
-        const sane_constant = 0 <= constant && constant < 1_000_000_000;
-        const same_c = c == hash_elems(q, alpha, beta, a, b);
-        const consistent_gv = (
+        const sane_constant:boolean = 0 <= constant && constant < 1_000_000_000;
+        const same_c:boolean = c == hash_elems(q, alpha, beta, a, b);
+        const consistent_gv:boolean = (
             in_bounds_v
             && in_bounds_a
             && in_bounds_alpha
@@ -178,7 +178,7 @@ export class ConstantChaumPedersenProof {
         );
 
         // The equation 𝑔^𝐿𝐾^𝑣 = 𝑏𝐵^𝐶 mod 𝑝
-        const consistent_kv = in_bounds_constant && mult_p(
+        const consistent_kv:boolean = in_bounds_constant && mult_p(
             g_pow_p(mult_p(c, constant_q)), pow_p(k, v)
         ) == mult_p(b, pow_p(beta, c));
 
