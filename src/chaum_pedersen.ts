@@ -26,7 +26,7 @@ import { hash_elems } from "./hash"
 import { Nonces } from "./nonces"
 
 
-class DisjunctiveChaumPedersenProof {
+export class DisjunctiveChaumPedersenProof {
     // Representation of disjunctive Chaum Pederson proof
     proof_zero_pad: ElementModP;
     // a0 in the spec
@@ -47,7 +47,7 @@ class DisjunctiveChaumPedersenProof {
     proof_one_response: ElementModQ;
     // proof_one_response in the spec
 
-    constructor(a0: ElementModP, b0: ElementModP, a1: ElementModP, b1: ElementModP, c0: ElementModQ, c1: ElementModQ, c: ElementModQ, v0: ElementModQ, v1: ElementModQ) {
+    public constructor(a0: ElementModP, b0: ElementModP, a1: ElementModP, b1: ElementModP, c0: ElementModQ, c1: ElementModQ, c: ElementModQ, v0: ElementModQ, v1: ElementModQ) {
         this.proof_zero_pad = a0;
         this.proof_zero_data = b0;
         this.proof_one_pad = a1;
@@ -117,7 +117,7 @@ class DisjunctiveChaumPedersenProof {
 
 }
 
-class ConstantChaumPedersenProof {
+export class ConstantChaumPedersenProof {
     // Representation of constant Chaum Pederson proof.
     pad: ElementModP;
     // a in the spec
@@ -130,7 +130,7 @@ class ConstantChaumPedersenProof {
     constant: number;
     // constant value
 
-    constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: number) {
+    public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: number) {
         this.pad = pad;
         this.data = data;
         this.challenge = challenge;
@@ -207,7 +207,7 @@ class ConstantChaumPedersenProof {
 
 }
 
-function make_disjunctive_chaum_pedersen(
+export function make_disjunctive_chaum_pedersen(
     message: ElGamalCiphertext,
     r: ElementModQ,
     k: ElementModP,
@@ -222,7 +222,7 @@ function make_disjunctive_chaum_pedersen(
     }
 }
 
-function make_disjunctive_chaum_pedersen_zero(
+export function make_disjunctive_chaum_pedersen_zero(
     message: ElGamalCiphertext,
     r: ElementModQ,
     k: ElementModP,
@@ -248,7 +248,7 @@ function make_disjunctive_chaum_pedersen_zero(
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
-function make_disjunctive_chaum_pedersen_one(
+export function make_disjunctive_chaum_pedersen_one(
     message: ElGamalCiphertext,
     r: ElementModQ,
     k: ElementModP,
@@ -274,7 +274,7 @@ function make_disjunctive_chaum_pedersen_one(
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
-function make_constant_chaum_pedersen(
+export function make_constant_chaum_pedersen(
     message: ElGamalCiphertext,
     constant: number,
     r: ElementModQ,
@@ -295,7 +295,7 @@ function make_constant_chaum_pedersen(
     return new ConstantChaumPedersenProof(a, b, c, v, constant);
 }
 
-class ChaumPedersenProofGeneric {
+export class ChaumPedersenProofGeneric {
     // General-purpose Chaum-Pedersen proof object, demonstrating that the prover knows the exponent
     // x for two tuples (g, g^x) and (h, h^x). This is used as a component in other proofs.
 
@@ -311,7 +311,7 @@ class ChaumPedersenProofGeneric {
     r: ElementModQ;
     // r = w + xc
 
-    constructor(a: ElementModP, b: ElementModP, c: ElementModQ, r: ElementModQ) {
+    public constructor(a: ElementModP, b: ElementModP, c: ElementModQ, r: ElementModQ) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -366,7 +366,7 @@ class ChaumPedersenProofGeneric {
 
 }
 
-function make_chaum_pedersen_generic(
+export function make_chaum_pedersen_generic(
     g: ElementModP,
     h: ElementModP,
     x: ElementModQ,
@@ -382,7 +382,7 @@ function make_chaum_pedersen_generic(
     return new ChaumPedersenProofGeneric(a, b, c, r);
 }
 
-function make_fake_chaum_pedersen_generic(
+export function make_fake_chaum_pedersen_generic(
     g: ElementModP,
     gx: ElementModP,
     h: ElementModP,
@@ -399,10 +399,10 @@ function make_fake_chaum_pedersen_generic(
     return new ChaumPedersenProofGeneric(a, b, c, r);
 }
 
-class ChaumPedersenDecryptionProof {
+export class ChaumPedersenDecryptionProof {
     proof: ChaumPedersenProofGeneric;
 
-    constructor(proof: ChaumPedersenProofGeneric) {
+    public constructor(proof: ChaumPedersenProofGeneric) {
       this.proof = proof;
     }
 
@@ -436,7 +436,7 @@ class ChaumPedersenDecryptionProof {
     }
 }
 
-function make_chaum_pedersen_decryption_proof(
+export function make_chaum_pedersen_decryption_proof(
     ciphertext: ElGamalCiphertext,
     secret_key: ElementModQ,
     seed: ElementModQ,
