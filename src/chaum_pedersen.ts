@@ -231,9 +231,9 @@ export function make_disjunctive_chaum_pedersen_zero(
     const [alpha, beta] = message;
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    const c1 = nonces[0];
-    const v1 = nonces[1];
-    const u0 = nonces[2];
+    const c1 = nonces.next(0);
+    const v1 = nonces.next(1);
+    const u0 = nonces.next(2);
 
     // Compute the NIZKP
     const a0 = g_pow_p(u0);
