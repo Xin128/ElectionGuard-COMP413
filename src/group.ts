@@ -1,4 +1,6 @@
 
+import { getRandomIntInclusive } from "./groupUtils"
+
 // Constants used by ElectionGuard
 const Q: number = Math.pow(2, 256) - 189
 const P: number = 1044388881413152506691752710716624382579964249047383780384233483283953907971553643537729993126875883902173634017777416360502926082946377942955704498542097614841825246773580689398386320439747911160897731551074903967243883427132918813748016269754522343505285898816777211761912392772914485521155521641049273446207578961939840619466145806859275053476560973295158703823395710210329314709715239251736552384080845836048778667318931418338422443891025911884723433084701207771901944593286624979917391350564662632723703007964229849154756196890615252286533089643184902706926081744149289517418249153634178342075381874131646013444796894582106870531535803666254579602632453103741452569793905551901541856173251385047414840392753585581909950158046256810542678368121278509960520957624737942914600310646609792665012858397381435755902851312071248102599442308951327039250818892493767423329663783709190716162023529669217300939783171415808233146823000766917789286154006042281423733706462905243774854543127239500245873582012663666430583862778167369547603016344242729592244544608279405999759391099775667746401633668308698186721172238255007962658564443858927634850415775348839052026675785694826386930175303143450046575460843879941791946313299322976993405829119
@@ -52,6 +54,7 @@ class ElementModQ {
         return (other instanceof ElementModP || other instanceof ElementModQ) && !eqElems(this, other);
     }
 
+    // overload == (equal to) operator
     public equals(other: any): boolean {
         return (other instanceof ElementModP || other instanceof ElementModQ) && eqElems(this, other);
     }
@@ -191,29 +194,54 @@ type ElementModPorInt = ElementModP | number
 
 
 
-// TODO
+// Given a hex string representing bytes, returns an ElementModQ.
+// Returns `None` if the number is out of the allowed
+// [0,Q) range.
+// Reference: https://stackoverflow.com/questions/14667713/how-to-convert-a-string-to-number-in-typescript
 const hexToQ: (input: string) => ElementModQ | null = (input) => {
-    return null;
+    const i: number = Number(input);
+    if (0 <= i && i < Q) {
+        return new ElementModQ(BigInt(i));
+    } else {
+        return null;
+    }
 }
 
-// TODO
+// Given an integer, returns an ElementModQ.
+// Returns `None` if the number is out of the allowed
+// [0,Q) range.
 const intToQ: (input: string | number) => ElementModQ | null = (input) => {
-    return null;
+    const i: number = Number(input);
+    if (0 <= i && i < Q) {
+        return new ElementModQ(BigInt(i));
+    } else {
+        return null;
+    }
 }
 
-// TODO
+// Given an integer, returns an ElementModQ. Allows
+// for the input to be out-of-bounds, and thus creating an invalid
+// element (i.e., outside of [0,Q)). Useful for tests of it
+// you're absolutely, positively, certain the input is in-bounds.
 const intToQUnchecked: (i: string | number) => ElementModQ = (i) => {
-    return new ElementModQ(BigInt(0));
+    return new ElementModQ(BigInt(i));
 }
 
-// TODO
+// Given an integer, returns an ElementModP.
+// Returns `None` if the number is out of the allowed
+// [0,P) range.
 const intToP: (input: string | number) => ElementModP | null = (input) => {
-    return null;
+    const i: number = Number(input);
+    if (0 <= i && i < P) {
+        return new ElementModP(BigInt(i));
+    } else {
+        return null;
+    }
 }
 
 // TODO
 const intToPUnchecked: (i: string | number) => ElementModP = (i) => {
-    return new ElementModP(BigInt(0));
+    return new ElementModP(BigInt(i));
 }
 
 //TODO: what is bytes in python equivalent of?
@@ -247,7 +275,7 @@ const aMinusBQ: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (a, 
     return new ElementModQ((a.elem - b.elem) % BigInt(Q));
 }
 
-// TODO
+// Computes a/b mod p
 const divP: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
     if (typeof a === 'number') {
         a = intToPUnchecked(a);
@@ -255,6 +283,8 @@ const divP: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a
     if (typeof b === 'number') {
         b = intToPUnchecked(b);
     } 
+
+    // TODO: Need to find an algorithm to calculate modular multiplicative inverse in typescript
 
     // const inverse = invert(b.elem, BigInt(P));
     // return mult_p(a, int_to_p_unchecked(inverse))
@@ -275,6 +305,7 @@ const divQ: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a
     return new ElementModQ(BigInt(0));
 }
 
+// Computes (Q - a) mod q.
 const negateQ: (a: ElementModQorInt) => ElementModQ = (a) => {
     if (typeof a === 'number') {
         a = intToQUnchecked(a);
@@ -282,6 +313,7 @@ const negateQ: (a: ElementModQorInt) => ElementModQ = (a) => {
     return new ElementModQ(BigInt(Q) - a.elem);
 }
 
+// Computes (a + b * c) mod q.
 const aPlusBCQ: (a: ElementModQorInt, b: ElementModQorInt, c: ElementModQorInt) => ElementModQ = (a, b, c) => {
     if (typeof a === 'number') {
         a = intToQUnchecked(a);
@@ -295,43 +327,93 @@ const aPlusBCQ: (a: ElementModQorInt, b: ElementModQorInt, c: ElementModQorInt) 
     return new ElementModQ((a.elem + b.elem + c.elem) % BigInt(Q));
 }
 
-// TODO
+// Computes the multiplicative inverse mod p.
+// e:  An element in [1, P).
 const multInvP: (e: ElementModPOrQorInt) => ElementModP = (e) => {
-    return new ElementModP(BigInt(0));
+    if (typeof e === 'number') {
+        e = intToPUnchecked(e);
+    }
+    if (e.elem === 0n) throw(new Error("No multiplicative inverse for zero"));
+
+    return new ElementModP((e.elem ** (-1n)) % BigInt(P));
 }
 
-// TODO
+// Computes b^e mod p.
+// b: An element in [0,P).
+// e: An element in [0,P).
 const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b, e) => {
-    return new ElementModP(BigInt(0));
+    if (typeof b === 'number') {
+        b = intToPUnchecked(b);
+    }
+    if (typeof e === 'number') {
+        e = intToPUnchecked(e);
+    }
+
+    return new ElementModP((b.elem ** e.elem) % BigInt(P));
 }
 
-// TODO
+// Computes b^e mod p.
+// b: An element in [0,Q).
+// e: An element in [0,Q).
 const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) => {
-    return new ElementModQ(BigInt(0));
+    if (typeof b === 'number') {
+        b = intToQUnchecked(b);
+    }
+    if (typeof e === 'number') {
+        e = intToQUnchecked(e);
+    }
+
+    return new ElementModQ((b.elem ** e.elem) % BigInt(Q));
 }
 
-// TODO
+// Computes the product, mod p, of all elements.
+// elems: Zero or more elements in [0,P).
 const multP: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
-    return new ElementModP(BigInt(0));
+    let product: bigint = BigInt(1);
+    elems.forEach((x) => {
+        if (typeof x === 'number') {
+            x = intToPUnchecked(x);
+        }
+        product = (product * x.elem) % BigInt(P);
+    })
+    return new ElementModP(product);
 }
 
-// TODO
+// Computes the product, mod q, of all elements.
+// elems: Zero or more elements in [0,P).
 const multQ: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
-    return new ElementModQ(BigInt(0));
+    let product: bigint = BigInt(1);
+    elems.forEach((x) => {
+        if (typeof x === 'number') {
+            x = intToQUnchecked(x);
+        }
+        product = (product * x.elem) % BigInt(Q);
+    })
+    return new ElementModQ(product);
 }
 
 const gPowP: (e: ElementModPOrQ) => ElementModP = (e) => {
     return powP(G_MOD_P, e);
 }
 
-// TODO
+// Generate random number between 0 and Q
+// return: Random value between 0 and Q
 const randQ: () => ElementModQ = () => {
-    return new ElementModQ(BigInt(0));
+    return intToQUnchecked(getRandomIntInclusive(0, Q - 1));
 }
 
-// TODO
+// Generate random number between start and Q
+// start: Starting value of range
+// return: Random value between start and Q
 const randRangeQ: (start: ElementModQorInt) => ElementModQ = (start) => {
-    return new ElementModQ(BigInt(0));
+    if (start instanceof ElementModQ) {
+        start = start.toInt();
+    }
+    let random: number = 0;
+    while (random < start) {
+        random = getRandomIntInclusive(0, Q - 1);
+    }
+    return intToQUnchecked(random);
 }
 
 const eqElems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
