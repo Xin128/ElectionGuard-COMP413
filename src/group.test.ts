@@ -9,8 +9,8 @@ import {
     multP,
     ZERO_MOD_P,
     G,
-    // ONE_MOD_Q,
-    // gPowP,
+    ONE_MOD_Q,
+    gPowP,
     ZERO_MOD_Q,
     R,
     intToP,
@@ -24,9 +24,9 @@ import {
 } from './group';
 
 import {
-    // flatmap_optional,
+    flatmap_optional,
     get_or_else_optional,
-    // match_optional,
+    match_optional,
     get_optional,
 } from './utils';
 
@@ -129,11 +129,13 @@ describe("TestModularArithmetic", () => {
         expect(R).toBeLessThan(P);
     });
 
-    // test('testSimplePowers', () => {
-    //     const gp: ElementModP = intToP(G);
-    //     expect(gp.equals(gPowP(ONE_MOD_Q))).toBe(true);
-    //     expect(ONE_MOD_P.equals(gPowP(ZERO_MOD_Q)));
-    // });
+    test('testSimplePowers', () => {
+        let gp: ElementModP | null = intToP(G);
+        gp = get_optional(gp);
+        expect(gp.equals(gPowP(ONE_MOD_Q))).toBe(true);
+        expect(ONE_MOD_P.equals(gPowP(ZERO_MOD_Q)));
+
+    });
 
     test('testInBoundsQ', () => {
         const q: ElementModQ = elementsModQ();
@@ -188,12 +190,12 @@ describe("TestOptionalFunctions", () => {
         expect(() => get_optional(bad)).toThrow(Error);
     });
 
-    // test('testMatch', () => {
-    //     const good: number | null = 3;
-    //     const bad: number | null = null;
-    //     expect(match_optional(good, () => 1, (x) => x + 2)).toEqual(5);
-    //     expect(match_optional(bad, () => 1, (x) => x + 2)).toEqual(1);
-    // });
+    test('testMatch', () => {
+        const good: number | null = 3;
+        const bad: number | null = null;
+        expect(match_optional(good, () => 1, (x) => x + 2)).toEqual(5);
+        expect(match_optional(bad, () => 1, (x) => x! + 2)).toEqual(1);
+    });
 
     test('testGetOrElse', () => {
         const good: number | null = 3;
@@ -202,12 +204,12 @@ describe("TestOptionalFunctions", () => {
         expect(get_or_else_optional(bad, 5)).toEqual(5);
     });
 
-    // test('testFlatMap', () => {
-    //     const good: number | null = 3;
-    //     const bad: number | null = null;
-    //     expect(get_optional(flatmap_optional(good, (x) => x + 2))).toEqual(5);
-    //     expect(flatmap_optional(bad, (x) => x + 2)).toBeNull();
-    // });
+    test('testFlatMap', () => {
+        const good: number | null = 3;
+        const bad: number | null = null;
+        expect(get_optional(flatmap_optional(good, (x) => x + 2))).toEqual(5);
+        expect(flatmap_optional(bad, (x) => x! + 2)).toBeNull();
+    });
 });
 
 // TODO: We probably don't need testPickling
