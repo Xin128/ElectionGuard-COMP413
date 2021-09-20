@@ -23,6 +23,9 @@ import {DisjunctiveChaumPedersenProof,
     make_disjunctive_chaum_pedersen_zero,
     make_disjunctive_chaum_pedersen_one} 
 from './chaum_pedersen'
+
+import {get_optional} from './utils'
+
 describe("TestDisjunctiveChaumPedersen", () => {
     test('test_djcp_proofs_simple', () => {
 
