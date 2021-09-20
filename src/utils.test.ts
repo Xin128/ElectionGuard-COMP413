@@ -8,7 +8,8 @@ describe("TestUtils", () => {
     const good: number | undefined = 3;
     const bad: number | undefined = undefined;
     expect(get_optional(good)).toBe(3);
-    expect(get_optional(bad)).toThrowError();
+    // expect(get_optional(bad)).toThrowError("Unwrap called on null or undefined.");
+    expect(() => {get_optional(bad);}).toThrowError();
   });
 
   test("test_match", () => {

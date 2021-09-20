@@ -1,12 +1,12 @@
 // Util functions
-import {log_error} from './logs'
+// import {log_error} from './logs'
 /**
  * General-purpose unwrapping function to handle `Optional`.
  * Raises an exception if it's actually `null or undefined`, otherwise
  * returns the internal type.
  * @param optional input that can be null or undefined.
  */
-export function get_optional<T>(optional: T): T {
+export function get_optional<T>(optional: T | undefined | null): T {
   if (optional !== null && optional !== undefined) {
     return optional;
   }
@@ -90,7 +90,7 @@ export function list_of_option_to_option_list<T>(input: Array<T | undefined | nu
     return result;
   } else {
     if (err_msg !== "") {
-      log_error(err_msg);
+      // log_error(err_msg);
     }
     return undefined;
   }
