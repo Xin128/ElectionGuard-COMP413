@@ -17,7 +17,7 @@ import {ElGamalKeyPair,
     elgamal_encrypt,
     elgamal_add,
     elgamal_keypair_from_secret,
-    elgamal_keypair_random,} from './elgamal'
+    elgamal_keypair_random} from './elgamal';
 import exp from 'constants';
 
 describe("TestElgamal", () => {
@@ -41,4 +41,4 @@ describe("TestElgamal", () => {
 
         expect(plaintext).toBe(0);
     });
-    });
+});
