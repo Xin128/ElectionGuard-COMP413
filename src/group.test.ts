@@ -34,8 +34,23 @@ import {
     elementsModQ,
     elementsModP,
     elementsModPNoZero,
-    elementsModQNoZero
+    elementsModQNoZero,
+    powmod
 } from './groupUtils';
+
+// values taken from the slackoverflow thread: https://stackoverflow.com/questions/34119110/negative-power-in-modular-pow
+describe("TestGroupUtil", () => {
+    test('testPowMod', () => {
+        const g: bigint = 11444n;
+        const p: bigint = 48731n;
+        const w: bigint = 357n;
+        const y: bigint = 7355n;
+        const gmodinvp: bigint = 29420n;
+
+        expect(powmod(g, p)).toEqual(gmodinvp);
+        expect((powmod(g, p) ** w) % p).toEqual(y);
+    });
+});
 
 describe("TestEquality", () => {
     test('testPsNotEqualToQs', () => {
@@ -208,7 +223,7 @@ describe("TestOptionalFunctions", () => {
         const good: number | null = 3;
         const bad: number | null = null;
         expect(get_optional(flatmap_optional(good, (x) => x + 2))).toEqual(5);
-        expect(flatmap_optional(bad, (x) => x! + 2)).toBeNull();
+        expect(flatmap_optional(bad, (x) => x! + 2)).toBeUndefined();
     });
 });
 
