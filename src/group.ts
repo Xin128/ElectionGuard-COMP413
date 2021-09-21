@@ -23,43 +23,43 @@ class ElementModQ {
     // TODO:
     // Converts from the element to the representation of bytes by first going through hex.
     // This is preferable to directly accessing `elem`, whose representation might change.
-    public toBytes(): bigint {
+    public to_bytes(): bigint {
         // return base16decode(this.bnToHex(this.elem));
         return 0n;
     }
 
     // Converts from the element to the hex representation of bytes. This is preferable to directly
     // accessing `elem`, whose representation might change.
-    public toHex(): string {
+    public to_hex(): string {
         return "";
     }
 
     // Converts from the element to a regular integer. This is preferable to directly
     // accessing `elem`, whose representation might change.
-    public toInt(): bigint {
+    public to_int(): bigint {
         return this.elem;
     }
 
     // Validates that the element is actually within the bounds of [0,Q).
     // Returns true if all is good, false if something's wrong.
-    public isInBounds(): boolean {
+    public is_in_bounds(): boolean {
         return 0 <= this.elem && this.elem < Q;
     }
 
     // Validates that the element is actually within the bounds of [1,Q).
     // Returns true if all is good, false if something's wrong.
-    public isInBoundsNoZero(): boolean {
+    public is_in_bounds_no_zero(): boolean {
         return 0 < this.elem && this.elem < Q;
     }
     
     // Operator overloading not supported in TypeScript, need to call the function instead
     public notEqual(other: any): boolean {
-        return (other instanceof ElementModP || other instanceof ElementModQ) && !eqElems(this, other);
+        return (other instanceof ElementModP || other instanceof ElementModQ) && !eq_elems(this, other);
     }
 
     // overload == (equal to) operator
     public equals(other: any): boolean {
-        return (other instanceof ElementModP || other instanceof ElementModQ) && eqElems(this, other);
+        return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
     public toStirng(): string {
@@ -133,33 +133,33 @@ class ElementModP {
     }
 
     // TODO
-    public toHex(): string {
+    public to_hex(): string {
         return ""
     }
 
-    public toInt(): bigint {
+    public to_int(): bigint {
         return this.elem;
     }
 
-    public isInBounds(): boolean {
+    public is_in_bounds(): boolean {
         return 0 <= this.elem && this.elem < P;
     }
 
-    public isInBoundsNoZero(): boolean {
+    public is_in_bounds_no_zero(): boolean {
         return 0 < this.elem && this.elem < P;
     }
 
-    public isValidResidue(): boolean {
-        const residue: boolean = powP(this, new ElementModQ(BigInt(Q))) === ONE_MOD_P;
-        return this.isInBounds() && residue;
+    public is_valid_residue(): boolean {
+        const residue: boolean = pow_p(this, new ElementModQ(BigInt(Q))) === ONE_MOD_P;
+        return this.is_in_bounds() && residue;
     }
 
     public notEqual(other: any): boolean {
-        return (other instanceof ElementModP || other instanceof ElementModQ) && !eqElems(this, other);
+        return (other instanceof ElementModP || other instanceof ElementModQ) && !eq_elems(this, other);
     }
 
     public equals(other: any): boolean {
-        return (other instanceof ElementModP || other instanceof ElementModQ) && eqElems(this, other);
+        return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
     public toStirng(): string {
@@ -201,7 +201,7 @@ type ElementModPorInt = ElementModP | bigint;
 // Returns `None` if the bigint is out of the allowed
 // [0,Q) range.
 // Reference: https://stackoverflow.com/questions/14667713/how-to-convert-a-string-to-bigint-in-typescript
-const hexToQ: (input: string) => ElementModQ | null = (input) => {
+const hex_to_q: (input: string) => ElementModQ | null = (input) => {
     const i: bigint = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
@@ -213,7 +213,7 @@ const hexToQ: (input: string) => ElementModQ | null = (input) => {
 // Given an integer, returns an ElementModQ.
 // Returns `None` if the bigint is out of the allowed
 // [0,Q) range.
-const intToQ: (input: string | bigint) => ElementModQ | null = (input) => {
+const int_to_q: (input: string | bigint) => ElementModQ | null = (input) => {
     const i: bigint = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
@@ -226,14 +226,14 @@ const intToQ: (input: string | bigint) => ElementModQ | null = (input) => {
 // for the input to be out-of-bounds, and thus creating an invalid
 // element (i.e., outside of [0,Q)). Useful for tests of it
 // you're absolutely, positively, certain the input is in-bounds.
-const intToQUnchecked: (i: string | bigint) => ElementModQ = (i) => {
+const int_to_q_unchecked: (i: string | bigint) => ElementModQ = (i) => {
     return new ElementModQ(BigInt(i));
 }
 
 // Given an integer, returns an ElementModP.
 // Returns `None` if the bigint is out of the allowed
 // [0,P) range.
-const intToP: (input: string | bigint) => ElementModP | null = (input) => {
+const int_to_p: (input: string | bigint) => ElementModP | null = (input) => {
     const i: bigint = BigInt(input);
     if (0 <= i && i < P) {
         return new ElementModP(BigInt(i));
@@ -243,7 +243,11 @@ const intToP: (input: string | bigint) => ElementModP | null = (input) => {
 }
 
 // TODO
-const intToPUnchecked: (i: string | bigint) => ElementModP = (i) => {
+// Given an integer, returns an ElementModP. Allows
+//     for the input to be out-of-bounds, and thus creating an invalid
+//     element (i.e., outside of [0,P)). Useful for tests or if
+//     you're absolutely, positively, certain the input is in-bounds.
+const int_to_p_unchecked: (i: string | bigint) => ElementModP = (i) => {
     return new ElementModP(BigInt(i));
 }
 
@@ -257,35 +261,35 @@ const intToPUnchecked: (i: string | bigint) => ElementModP = (i) => {
 //     return new ElementModQ(BigInt(0));
 // }
 
-const addQ: (...elems: ElementModQorInt[]) => ElementModQ = (...elems) => {
+const add_q: (...elems: ElementModQorInt[]) => ElementModQ = (...elems) => {
     let t: bigint = BigInt(0);
     // console.log("Q is ", Q, "R is ", R, "P is ", P);
     elems.forEach((e) => {
         if (typeof e === 'bigint') {
-            e = intToQUnchecked(e);
+            e = int_to_q_unchecked(e);
         }
         t = (t + e.elem) % BigInt(Q);
     });
     return new ElementModQ(t);
 }
 
-const aMinusBQ: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (a, b) => {
+const a_minus_b_q: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (a, b) => {
     if (typeof a === 'bigint') {
-        a = intToQUnchecked(a);
+        a = int_to_q_unchecked(a);
     }
     if (typeof b === 'bigint') {
-        b = intToQUnchecked(b);
+        b = int_to_q_unchecked(b);
     }
     return new ElementModQ((a.elem - b.elem) % BigInt(Q));
 }
 
 // Computes a/b mod p
-const divP: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
+const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
     if (typeof a === 'bigint') {
-        a = intToPUnchecked(a);
+        a = int_to_p_unchecked(a);
     }
     if (typeof b === 'bigint') {
-        b = intToPUnchecked(b);
+        b = int_to_p_unchecked(b);
     } 
 
     // TODO: Need to find an algorithm to calculate modular multiplicative inverse in typescript
@@ -296,12 +300,12 @@ const divP: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a
 }
 
 // TODO
-const divQ: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a, b) => {
+const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a, b) => {
     if (typeof a === 'bigint') {
-        a = intToPUnchecked(a);
+        a = int_to_q_unchecked(a);
     }
     if (typeof b === 'bigint') {
-        b = intToPUnchecked(b);
+        b = int_to_q_unchecked(b);
     } 
 
     // const inverse = invert(b.elem, BigInt(P));
@@ -310,32 +314,32 @@ const divQ: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a
 }
 
 // Computes (Q - a) mod q.
-const negateQ: (a: ElementModQorInt) => ElementModQ = (a) => {
+const negate_q: (a: ElementModQorInt) => ElementModQ = (a) => {
     if (typeof a === 'bigint') {
-        a = intToQUnchecked(a);
+        a = int_to_q_unchecked(a);
     }
     return new ElementModQ(BigInt(Q) - a.elem);
 }
 
 // Computes (a + b * c) mod q.
-const aPlusBCQ: (a: ElementModQorInt, b: ElementModQorInt, c: ElementModQorInt) => ElementModQ = (a, b, c) => {
+const a_plus_bc_q: (a: ElementModQorInt, b: ElementModQorInt, c: ElementModQorInt) => ElementModQ = (a, b, c) => {
     if (typeof a === 'bigint') {
-        a = intToQUnchecked(a);
+        a = int_to_q_unchecked(a);
     }
     if (typeof b === 'bigint') {
-        b = intToQUnchecked(b);
+        b = int_to_q_unchecked(b);
     }
     if (typeof c === 'bigint') {
-        c = intToQUnchecked(c);
+        c = int_to_q_unchecked(c);
     }
     return new ElementModQ((a.elem + b.elem + c.elem) % BigInt(Q));
 }
 
 // Computes the multiplicative inverse mod p.
 // e:  An element in [1, P).
-const multInvP: (e: ElementModPOrQorInt) => ElementModP = (e) => {
+const mult_inv_p: (e: ElementModPOrQorInt) => ElementModP = (e) => {
     if (typeof e === 'bigint') {
-        e = intToPUnchecked(e);
+        e = int_to_p_unchecked(e);
     }
     if (e.elem === 0n) throw(new Error("No multiplicative inverse for zero"));
 
@@ -345,12 +349,12 @@ const multInvP: (e: ElementModPOrQorInt) => ElementModP = (e) => {
 // Computes b^e mod p.
 // b: An element in [0,P).
 // e: An element in [0,P).
-const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b, e) => {
+const pow_p: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b, e) => {
     if (typeof b === 'bigint') {
-        b = intToPUnchecked(b);
+        b = int_to_p_unchecked(b);
     }
     if (typeof e === 'bigint') {
-        e = intToPUnchecked(e);
+        e = int_to_p_unchecked(e);
     }
 
     return new ElementModP((b.elem ** e.elem) % BigInt(P));
@@ -359,12 +363,12 @@ const powP: (b: ElementModPOrQorInt, e: ElementModPOrQorInt) => ElementModP = (b
 // Computes b^e mod p.
 // b: An element in [0,Q).
 // e: An element in [0,Q).
-const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) => {
+const pow_q: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) => {
     if (typeof b === 'bigint') {
-        b = intToQUnchecked(b);
+        b = int_to_q_unchecked(b);
     }
     if (typeof e === 'bigint') {
-        e = intToQUnchecked(e);
+        e = int_to_q_unchecked(e);
     }
 
     return new ElementModQ((b.elem ** e.elem) % BigInt(Q));
@@ -372,11 +376,11 @@ const powQ: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) =
 
 // Computes the product, mod p, of all elements.
 // elems: Zero or more elements in [0,P).
-const multP: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
+const mult_p: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
     let product: bigint = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
-            x = intToPUnchecked(x);
+            x = int_to_p_unchecked(x);
         }
         product = (product * x.elem) % BigInt(P);
     })
@@ -385,42 +389,44 @@ const multP: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
 
 // Computes the product, mod q, of all elements.
 // elems: Zero or more elements in [0,P).
-const multQ: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
+const mult_q: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
     let product: bigint = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
-            x = intToQUnchecked(x);
+            x = int_to_q_unchecked(x);
         }
         product = (product * x.elem) % BigInt(Q);
     })
     return new ElementModQ(product);
 }
 
-const gPowP: (e: ElementModPOrQ) => ElementModP = (e) => {
-    return powP(G_MOD_P, e);
+// Computes g^e mod p.
+// e: An element in [0,P).
+const g_pow_p: (e: ElementModPOrQ) => ElementModP = (e) => {
+    return pow_p(G_MOD_P, e);
 }
 
 // Generate random bigint between 0 and Q
 // return: Random value between 0 and Q
-const randQ: () => ElementModQ = () => {
-    return intToQUnchecked(getRandomIntExclusive(Q));
+const rand_q: () => ElementModQ = () => {
+    return int_to_q_unchecked(getRandomIntExclusive(Q));
 }
 
 // Generate random bigint between start and Q
 // start: Starting value of range
 // return: Random value between start and Q
-const randRangeQ: (start: ElementModQorInt) => ElementModQ = (start) => {
+const rand_range_q: (start: ElementModQorInt) => ElementModQ = (start) => {
     if (start instanceof ElementModQ) {
-        start = start.toInt();
+        start = start.to_int();
     }
     let random: bigint = 0n;
     while (random < start) {
         random = getRandomIntExclusive(Q);
     }
-    return intToQUnchecked(random);
+    return int_to_q_unchecked(random);
 }
 
-const eqElems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
+const eq_elems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
     return a.elem === b.elem;
 }
 
@@ -435,4 +441,4 @@ const createStrHashCode: (s: string) => bigint = (s) => {
     return h;
 }
 
-export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hexToQ, intToQ, intToQUnchecked, intToP, intToPUnchecked, addQ, aMinusBQ, divP, divQ, negateQ, aPlusBCQ, multInvP, powP, powQ, multP, multQ, gPowP, randQ, randRangeQ, eqElems}
+export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hex_to_q, int_to_q, int_to_q_unchecked, int_to_p, int_to_p_unchecked, add_q, a_minus_b_q, div_p, div_q, negate_q, a_plus_bc_q, mult_inv_p, pow_p, pow_q, mult_p, mult_q, g_pow_p, rand_q, rand_range_q, eq_elems};

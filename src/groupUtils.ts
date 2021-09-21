@@ -1,19 +1,19 @@
 // Helper functions for group.test.ts
-import {ElementModQ, ElementModP, Q, P, intToQUnchecked, intToPUnchecked} from './group';
+import {ElementModQ, ElementModP, Q, P, int_to_q_unchecked, int_to_p_unchecked} from './group';
 const elementsModQ: () => ElementModQ = () => {
-    return intToQUnchecked(getRandomIntExclusive(Q));
+    return int_to_q_unchecked(getRandomIntExclusive(Q));
 }
 
 const elementsModQNoZero: () => ElementModQ = () => {
-    return intToQUnchecked(getRandomIntExclusive(Q));
+    return int_to_q_unchecked(getRandomIntExclusive(Q));
 }
 
 const elementsModP: () => ElementModP = () => {
-    return intToPUnchecked(getRandomIntExclusive(P));
+    return int_to_p_unchecked(getRandomIntExclusive(P));
 }
 
 const elementsModPNoZero: () => ElementModP = () => {
-    return intToPUnchecked(getRandomIntExclusive(P));
+    return int_to_p_unchecked(getRandomIntExclusive(P));
 }
 
 // returns BigInt 0 to (range non inclusive)
