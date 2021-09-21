@@ -7,69 +7,50 @@ import {Nonces} from './nonces';
 
 describe("TestNonces", () => {
     test('test_nonces_iterable', () => {
-        // const a: ElementModP = elements_mod_p();
-        // const b: ElementModQ = elements_mod_q();
-
-        // const h1:ElementModQ = hash_elems(a, b);
-        // const h2:ElementModQ = hash_elems(a, b);
-
-        // expect(h1.equals(h2)).toBe(true);
         const seed:ElementModQ = elements_mod_q();
-        const n = Nonces(seed);
-        // i = iter(n)
-        // q0 = next(i)
-        // q1 = next(i)
-        // self.assertTrue(q0 != q1)
-
+        const n = new Nonces(seed);
+        const i: number = Math.floor(Math.random() * 100) + 1;
+        const q0: ElementModQ = n.get(i);
+        const q1: ElementModQ = n.get(i);
+        expect(q0.equals(q1)).toBeTruthy();
     });
+
+    test('test_nonces_deterministic', () => {
+        const seed:ElementModQ = elements_mod_q();
+        const i: number = Math.floor(Math.random() * 1000000) + 1;
+        const n1:Nonces = new Nonces(seed);
+        const n2:Nonces = new Nonces(seed);
+
+        expect(n1.get(i).equals(n2.get(i))).toBeTruthy();
+    });
+
+    test('test_nonces_seed_matters', () => {
+        let seed1:ElementModQ = elements_mod_q();
+        let seed2:ElementModQ = elements_mod_q();
+        const i: number = Math.floor(Math.random() * 1000000) + 1;
+        while (seed1.equals(seed2)) {
+            seed1 = elements_mod_q();
+            seed2 = elements_mod_q();
+        }
+        const n1:Nonces = new Nonces(seed1);
+        const n2:Nonces = new Nonces(seed2);
+        expect(n1.get(i).equals(n2.get(i))).toBeTruthy();
+    });
+
+    test('test_nonces_with_slices', () => {
+        const seed:ElementModQ = elements_mod_q();
+        const n:Nonces = new Nonces(seed);
+        let l:ElementModQ[];  
+        for (let i = 0; i < 10; i++) {
+            l.push(n.get(i));
+          }
+        expect(l.length).toBe(10);
+    });
+
+    test('test_nonces_type_errors', () => {
+        const seed:ElementModQ = int_to_q_unchecked(3);
+        
+        expect(new Nonces(seed)).toThrowError();
+    });
+
 });
-
-
-// class TestNonces(unittest.TestCase):
-//     @given(elements_mod_q())
-//     def test_nonces_iterable(self, seed: ElementModQ):
-//         n = Nonces(seed)
-//         i = iter(n)
-//         q0 = next(i)
-//         q1 = next(i)
-//         self.assertTrue(q0 != q1)
-
-//     @given(elements_mod_q(), integers(min_value=0, max_value=1000000))
-//     def test_nonces_deterministic(self, seed: ElementModQ, i: int):
-//         n1 = Nonces(seed)
-//         n2 = Nonces(seed)
-//         self.assertEqual(n1[i], n2[i])
-
-//     @given(
-//         elements_mod_q(),
-//         elements_mod_q(),
-//         integers(min_value=0, max_value=1000000),
-//     )
-//     def test_nonces_seed_matters(self, seed1: ElementModQ, seed2: ElementModQ, i: int):
-//         assume(seed1 != seed2)
-//         n1 = Nonces(seed1)
-//         n2 = Nonces(seed2)
-//         self.assertNotEqual(n1[i], n2[i])
-
-//     @given(elements_mod_q())
-//     def test_nonces_with_slices(self, seed: ElementModQ):
-//         n = Nonces(seed)
-//         count: int = 0
-//         l: List[ElementModQ] = []
-
-//         for i in iter(n):
-//             count += 1
-//             l.append(i)
-//             if count == 10:
-//                 break
-//         self.assertEqual(len(l), 10)
-
-//         l2 = Nonces(seed)[0:10]
-//         self.assertEqual(len(l2), 10)
-//         self.assertEqual(l, l2)
-
-//     def test_nonces_type_errors(self):
-//         n = Nonces(int_to_q_unchecked(3))
-//         self.assertRaises(TypeError, len, n)
-//         self.assertRaises(TypeError, lambda: n[1:])
-//         self.assertRaises(TypeError, lambda: n.get_with_headers(-1))

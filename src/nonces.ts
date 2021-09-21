@@ -12,7 +12,7 @@ export class Nonces {
         }
     }
 
-    public next(index: number): ElementModQ {
+    public get(index: number): ElementModQ {
         return this.get_with_headers(index);
     }
 
