@@ -1,7 +1,8 @@
 import {ElementModQ,
     ElementModP,
     elements_mod_q,
-    elements_mod_p} from './group';
+    elements_mod_p,
+    int_to_q_unchecked} from './group';
 import {hash_elems} from './hash';
 import {Nonces} from './nonces';
 
