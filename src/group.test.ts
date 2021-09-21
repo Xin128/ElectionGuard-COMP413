@@ -31,10 +31,10 @@ import {
 } from './utils';
 
 import {
-    elementsModQ,
-    elementsModP,
-    elementsModPNoZero,
-    elementsModQNoZero,
+    elements_mod_q,
+    elements_mod_p,
+    elements_mod_p_no_zero,
+    elements_mod_q_no_zero,
     powmod
 } from './groupUtils';
 
@@ -54,8 +54,8 @@ describe("TestGroupUtil", () => {
 
 describe("TestEquality", () => {
     test('testPsNotEqualToQs', () => {
-        const q = elementsModQ();
-        const q2 = elementsModQ();
+        const q = elements_mod_q();
+        const q2 = elements_mod_q();
         const p: ElementModP = int_to_p_unchecked(q.to_int());
         const p2: ElementModP = int_to_p_unchecked(q2.to_int());
         
@@ -78,35 +78,35 @@ describe("TestEquality", () => {
 
 describe("TestModularArithmetic", () => {
     test('testAddQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         const asInt: ElementModQ = add_q(q, 1n);
         const asElem: ElementModQ = add_q(q, new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
     });
 
     test('testAPlusBCQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         const asInt: ElementModQ = a_plus_bc_q(q, 1n, 1n);
         const asElem: ElementModQ = a_plus_bc_q(q, new ElementModQ(BigInt(1)), new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
     });
 
     test('testAMinusBQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         const asInt: ElementModQ = a_minus_b_q(q, 1n);
         const asElem: ElementModQ = a_minus_b_q(q, new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
     });
 
     test('testDivQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         const asInt: ElementModQ = div_q(q, 1n);
         const asElem: ElementModQ = div_q(q, new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
     });
 
     test('testDivP', () => {
-        const p: ElementModP = elementsModP();
+        const p: ElementModP = elements_mod_p();
         const asInt: ElementModP = div_p(p, 1n);
         const asElem: ElementModP = div_p(p, new ElementModP(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
@@ -118,13 +118,13 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testMultInverses', () => {
-        const elem: ElementModP = elementsModPNoZero();
+        const elem: ElementModP = elements_mod_p_no_zero();
         const inv: ElementModP = mult_inv_p(elem);
         expect(mult_p(elem, inv).equals(ONE_MOD_P)).toBe(true);
     });
 
     test('testMultIdentity', () => {
-        const elem: ElementModP = elementsModP();
+        const elem: ElementModP = elements_mod_p();
         expect(elem.equals(mult_p(elem))).toBe(true);
     });
 
@@ -153,7 +153,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testInBoundsQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         expect(q.is_in_bounds()).toBe(true);
         const tooBig: bigint = q.to_int() + Q;
         const tooSmall: bigint = q.to_int() - Q;
@@ -164,7 +164,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testInBoundsP', () => {
-        const p: ElementModP = elementsModP();
+        const p: ElementModP = elements_mod_p();
         expect(p.is_in_bounds()).toBe(true);
         const tooBig: bigint = p.to_int() + P;
         const tooSmall: bigint = p.to_int() - P;
@@ -175,7 +175,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testInBoundsQNoZero', () => {
-        const q: ElementModQ = elementsModQNoZero();
+        const q: ElementModQ = elements_mod_q_no_zero();
         expect(q.is_in_bounds_no_zero()).toBe(true);
         expect(ZERO_MOD_Q.is_in_bounds_no_zero()).toBe(false);
         expect(int_to_q_unchecked(q.to_int() + Q).is_in_bounds_no_zero()).toBe(false);
@@ -183,7 +183,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testInBoundsPNoZero', () => {
-        const p: ElementModP = elementsModPNoZero();
+        const p: ElementModP = elements_mod_p_no_zero();
         expect(p.is_in_bounds_no_zero()).toBe(true);
         expect(ZERO_MOD_P.is_in_bounds_no_zero()).toBe(false);
         expect(int_to_p_unchecked(p.to_int() + P).is_in_bounds_no_zero()).toBe(false);
@@ -191,7 +191,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testLargeValuesRejectedByInToQ', () => {
-        const q: ElementModQ = elementsModQ();
+        const q: ElementModQ = elements_mod_q();
         const oversize: bigint = q.to_int() + Q;
         expect(int_to_q(oversize)).toEqual(null);
     });

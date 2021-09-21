@@ -1,18 +1,18 @@
 // Helper functions for group.test.ts
 import {ElementModQ, ElementModP, Q, P, int_to_q_unchecked, int_to_p_unchecked} from './group';
-const elementsModQ: () => ElementModQ = () => {
+const elements_mod_q: () => ElementModQ = () => {
     return int_to_q_unchecked(getRandomIntExclusive(Q));
 }
 
-const elementsModQNoZero: () => ElementModQ = () => {
+const elements_mod_q_no_zero: () => ElementModQ = () => {
     return int_to_q_unchecked(getRandomIntExclusive(Q));
 }
 
-const elementsModP: () => ElementModP = () => {
+const elements_mod_p: () => ElementModP = () => {
     return int_to_p_unchecked(getRandomIntExclusive(P));
 }
 
-const elementsModPNoZero: () => ElementModP = () => {
+const elements_mod_p_no_zero: () => ElementModP = () => {
     return int_to_p_unchecked(getRandomIntExclusive(P));
 }
 
@@ -47,4 +47,4 @@ const egcd: (a: bigint, b: bigint) => bigint[] = (a, b) => {
     }
 }
 
-export {elementsModQ, elementsModQNoZero, elementsModP, elementsModPNoZero, getRandomIntExclusive, powmod};
+export {elements_mod_q, elements_mod_q_no_zero, elements_mod_p, elements_mod_p_no_zero, getRandomIntExclusive, powmod};
