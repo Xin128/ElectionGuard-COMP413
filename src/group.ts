@@ -283,6 +283,7 @@ const a_minus_b_q: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (
     return new ElementModQ((a.elem - b.elem) % BigInt(Q));
 }
 
+// TODO
 // Computes a/b mod p
 const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
     if (typeof a === 'bigint') {
