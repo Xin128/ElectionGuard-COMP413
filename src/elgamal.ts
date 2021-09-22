@@ -1,3 +1,4 @@
+import {assert} from "console";
 import {discrete_log} from "./dlog"
 import {
   ElementModQ,
@@ -44,6 +45,10 @@ export class ElGamalCiphertext {
   //encrypted data or beta
   data: ElementModP;
 
+  constructor(pad: ElementModP, data: ElementModP) {
+    this.pad = pad;
+    this.data = data;
+  }
   /**
    * Decrypts an ElGamal ciphertext with a "known product"
    * (the blinding factor used in the encryption).
@@ -89,8 +94,9 @@ export class ElGamalCiphertext {
 }
 
 /**
- * 
- * @param a
+ * Given an ElGamal secret key (typically, a random number in [2,Q)), returns
+ * an ElGamal keypair, consisting of the given secret key a and public key g^a.
+ * @param a A secret key
  */
 export function elgamal_keypair_from_secret(a: ElGamalSecretKey)
   : ElGamalKeyPair {
@@ -100,4 +106,98 @@ export function elgamal_keypair_from_secret(a: ElGamalSecretKey)
     throw Error("ElGamal secret key needs to be in [2,Q).");
   }
   return new ElGamalKeyPair(a, g_pow_p(a));
+}
+
+/**
+ * Create a random elgamal keypair
+ * return random elgamal key pair
+ */
+export function elgamal_keypair_random(): ElGamalKeyPair {
+  return get_optional(elgamal_keypair_from_secret(rand_range_q(2)));
+}
+
+export function elgamal_encrypt
+(m: number, nonce: ElementModQ,
+ public_key: ElGamalKeyPair | ElGamalPublicKey): ElGamalCiphertext {
+  if (nonce === ZERO_MOD_Q) {
+    log_error("ElGamal encryption requires a non-zero nonce");
+    throw Error("ElGamal encryption requires a non-zero nonce");
+  }
+  if (m < 0) {
+    log_error("Can't encrypt a negative message");
+    throw Error("Can't encrypt a negative message");
+  }
+  if (m >= Q) {
+    log_error("Can't encrypt a message bigger than Q");
+    throw Error("Can't encrypt a message bigger than Q");
+  }
+  let pk;
+  if (public_key instanceof ElGamalKeyPair) {
+    pk = public_key.public_key;
+  } else {
+    pk = public_key;
+  }
+  return new ElGamalCiphertext(g_pow_p(nonce),
+    mult_p(g_pow_p(int_to_q_unchecked(m)), pow_p(pk, nonce)));
+}
+
+export function elgamal_add(...ciphertexts: ElGamalCiphertext[]): ElGamalCiphertext {
+  assert(ciphertexts.length !== 0, "Must have one or more ciphertexts for elgamal_add");
+
+  const pads = ciphertexts.map((value: ElGamalCiphertext) => {value.pad});
+  const data = ciphertexts.map((value: ElGamalCiphertext) => {value.data});
+
+  return new ElGamalCiphertext(mult_p(...pads), mult_p(...data));
+}
+
+/**
+ * Combines multiple ElGamal public keys into a single public key. The corresponding secret keys can
+ * do "partial decryption" operations that can be later combined. See, e.g.,
+ * [ElGamalCiphertext.partialDecryption] and [combinePartialDecryptions].
+ * @param keys
+ */
+export function elgamal_combine_public_keys(...keys: (ElGamalPublicKey | ElGamalKeyPair)[]
+): ElGamalPublicKey {
+  const result = keys.map((value) => {
+    if (value instanceof ElementModP) {
+      return value;
+    } else {
+      return value.public_key;
+    }
+  });
+  return mult_p(...result);
+}
+
+type ElGamalPartialDecryption = ElementModP;
+
+/**
+ * Computes a partial decryption of the ciphertext with a secret key or keypair. See
+ * [ElGamalCiphertext.combinePartialDecryptions] for extracting the plaintext.
+ * @param key a secret key
+ * @param ciphertext ciphered text that need to be decrypted.
+ */
+export function elgamal_partial_decryption(
+  key: ElGamalSecretKey | ElGamalKeyPair, ciphertext: ElGamalCiphertext
+): ElGamalPartialDecryption {
+ let sk;
+ if (key instanceof  ElGamalKeyPair) {
+   sk = key.secret_key;
+ } else {
+   sk = key;
+ }
+ return pow_p(ciphertext.pad, sk);
+}
+
+/**
+ * Given a series of partial decryptions of the ciphertext, combines them together to complete the
+ * decryption process.
+ * @param ciphertext text that need to be decrypted.
+ * @param partial_decryptions a series of partial decriptions of the ciphertext.
+ */
+export function elgamal_combine_partial_decryptions(
+  ciphertext: ElGamalCiphertext,
+  ...partial_decryptions: ElGamalPartialDecryption[]): number | null {
+  const blind = mult_p(...partial_decryptions);
+  const gPowM = div_p(ciphertext.data, blind);
+  return discrete_log(gPowM);
 }
