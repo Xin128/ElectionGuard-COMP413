@@ -344,7 +344,7 @@ const mult_inv_p: (e: ElementModPOrQorInt) => ElementModP = (e) => {
     }
     if (e.elem === 0n) throw(new Error("No multiplicative inverse for zero"));
 
-    return new ElementModP((1n / e.elem ** 1n) % BigInt(P));
+    return new ElementModP(powmod(e.elem, P));
 }
 
 // Computes b^e mod p.

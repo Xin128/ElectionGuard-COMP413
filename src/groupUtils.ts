@@ -27,24 +27,20 @@ const getRandomIntExclusive: (range: bigint) => bigint = (range) => {
 }
 
 // compute the modular multiplicative inverse 
-// solution found: https://stackoverflow.com/questions/34119110/negative-power-in-modular-pow
-const powmod: (a: bigint, m: bigint) => bigint = (a, m) => {
-    const [g, x, y] = egcd(a, m);
-    y; // added to prevent compiling error
-    if (g !== 1n) {
-        throw Error('modular inverse does not exist');
-    } else {
-        return x % m;
+// solution found: https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python
+const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
+    let i = 1n;
+    let c;
+    while (true) {
+        c = n * i + 1n;
+        if (c % a === 0n) {
+            c = c / a;
+            break;
+        }
+        i++;
     }
+    return c;
 }
 
-const egcd: (a: bigint, b: bigint) => bigint[] = (a, b) => {
-    if (a === 0n) {
-        return [b, 0n, 1n];
-    } else {
-        const [g, y, x] = egcd(b % a, a);
-        return [g, x - (b / a) * y, y];
-    }
-}
 
 export {elements_mod_q, elements_mod_q_no_zero, elements_mod_p, elements_mod_p_no_zero, getRandomIntExclusive, powmod};
