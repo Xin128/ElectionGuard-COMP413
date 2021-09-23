@@ -62,7 +62,7 @@ class ElementModQ {
         return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
-    public toStirng(): string {
+    public toString(): string {
         return this.elem.toString();
     }
 
@@ -162,7 +162,7 @@ class ElementModP {
         return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
-    public toStirng(): string {
+    public toString(): string {
         return this.elem.toString();
     }
 
