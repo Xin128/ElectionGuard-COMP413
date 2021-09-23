@@ -204,7 +204,6 @@ const int_to_p: (input: string | bigint) => ElementModP | null = (input) => {
     }
 }
 
-// TODO
 // Given an integer, returns an ElementModP. Allows
 //     for the input to be out-of-bounds, and thus creating an invalid
 //     element (i.e., outside of [0,P)). Useful for tests or if
