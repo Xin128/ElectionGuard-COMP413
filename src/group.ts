@@ -1,5 +1,5 @@
 
-import { getRandomIntExclusive, powmod } from "./groupUtils"
+import { bnToHex, getRandomIntExclusive, powmod } from "./groupUtils"
 
 // Constants used by ElectionGuard
 const Q: bigint = BigInt(Math.pow(2, 256) - 189);
@@ -20,7 +20,7 @@ class ElementModQ {
         this.elem = elem; 
     }
 
-    // TODO:
+    // TODO: Probably don't need this function since it's not used anywhere else in the code base
     // Converts from the element to the representation of bytes by first going through hex.
     // This is preferable to directly accessing `elem`, whose representation might change.
     public to_bytes(): bigint {
@@ -31,7 +31,7 @@ class ElementModQ {
     // Converts from the element to the hex representation of bytes. This is preferable to directly
     // accessing `elem`, whose representation might change.
     public to_hex(): string {
-        return "";
+        return bnToHex(this.elem);
     }
 
     // Converts from the element to a regular integer. This is preferable to directly
@@ -83,45 +83,6 @@ class ElementModQ {
     //     if "elem" not in state or not isinstance(state["elem"], int):
     //         raise AttributeError("couldn't restore state, malformed input")
     //     self.elem = mpz(state["elem"])
-
-    /////////////// POSSIBLE HELPER FUNCTION /////////////////
-
-    // Convert decimal strings to Hex with JS BigInts
-    // https://coolaj86.com/articles/convert-decimal-to-hex-with-js-bigints/
-    // private bnToHex(bn: bigint) {
-    //     bn = BigInt(bn);
-      
-    //     var pos = true;
-    //     if (bn < 0) {
-    //       pos = false;
-    //       bn = this.bitnot(bn);
-    //     }
-      
-    //     var hex = bn.toString(16);
-    //     if (hex.length % 2) { hex = '0' + hex; }
-      
-    //     if (pos && (0x80 & parseInt(hex.slice(0, 2), 16))) {
-    //       hex = '00' + hex;
-    //     }
-      
-    //     return hex;
-    //   }
-      
-    // private bitnot(bn: bigint) {
-    //     bn = -bn;
-    //     var bin = (bn).toString(2)
-    //     var prefix = '';
-    //     while (bin.length % 8) { bin = '0' + bin; }
-    //     if ('1' === bin[0] && -1 !== bin.slice(1).indexOf('1')) {
-    //         prefix = '11111111';
-    //     }
-    //     bin = bin.split('').map(function (i) {
-    //         return '0' === i ? '1' : '0';
-    //     }).join('');
-    //     return BigInt('0b' + prefix + bin) + BigInt(1);
-    // }
-
-
 }
 
 class ElementModP {
@@ -132,9 +93,10 @@ class ElementModP {
         this.elem = elem; 
     }
 
-    // TODO
+    // Converts from the element to the hex representation of bytes. This is preferable to directly
+    // accessing `elem`, whose representation might change.
     public to_hex(): string {
-        return ""
+        return bnToHex(this.elem);
     }
 
     public to_int(): bigint {

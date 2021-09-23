@@ -50,6 +50,13 @@ describe("TestGroupUtil", () => {
     });
 });
 
+describe("TestBigIntToHex", () => {
+    const randomQ: ElementModQ = elements_mod_q();
+    const randomP: ElementModP = elements_mod_p();
+    expect(BigInt("0x" + randomQ.to_hex())).toEqual(randomQ.elem);
+    expect(BigInt("0x" + randomP.to_hex())).toEqual(randomP.elem);
+});
+
 describe("TestBinaryBigIntConversion", () => {
     const largeNumber:string =
         '1101001101011010000101001111101001011101' + 

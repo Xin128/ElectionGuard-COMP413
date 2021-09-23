@@ -42,5 +42,23 @@ const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
     return c;
 }
 
+// Convert decimal strings to Hex with JS BigInts
+// https://coolaj86.com/articles/convert-decimal-to-hex-with-js-bigints/
+// Since in our case bn is never going to be negative, ignore the bn < 0 case
+const bnToHex: (bn: bigint) => string = (bn) => {
+    bn = BigInt(bn);
+    
+    let pos = true;
+    
+    let hex = bn.toString(16);
+    if (hex.length % 2) { hex = '0' + hex; }
+    
+    if (pos && (0x80 & parseInt(hex.slice(0, 2), 16))) {
+        hex = '00' + hex;
+    }
+    
+    return hex;
+}
 
-export {elements_mod_q, elements_mod_q_no_zero, elements_mod_p, elements_mod_p_no_zero, getRandomIntExclusive, powmod};
+
+export {elements_mod_q, elements_mod_q_no_zero, elements_mod_p, elements_mod_p_no_zero, getRandomIntExclusive, powmod, bnToHex};
