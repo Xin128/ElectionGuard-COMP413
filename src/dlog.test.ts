@@ -40,7 +40,7 @@ describe("Test_DLog", () => {
     });
 
     test("test_uncached", () => {
-        const max = 100;
+        const max = 1000;
         const min = 0;
         const exp = Math.floor(Math.random() * (max - min + 1) + min);
         const plaintext = get_optional(int_to_q(exp))
