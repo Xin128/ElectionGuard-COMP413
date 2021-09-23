@@ -442,4 +442,53 @@ const createStrHashCode: (s: string) => bigint = (s) => {
     return h;
 }
 
-export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hex_to_q, int_to_q, int_to_q_unchecked, int_to_p, int_to_p_unchecked, add_q, a_minus_b_q, div_p, div_q, negate_q, a_plus_bc_q, mult_inv_p, pow_p, pow_q, mult_p, mult_q, g_pow_p, rand_q, rand_range_q, eq_elems};
+
+const parseBigInt: (bigint:string, base: number) => Array<number> = (bigint, base) => {
+    //convert bigint string to array of digit values
+    const values = [];
+    for (let i = 0; i < bigint.length; i++) {
+      values[i] = parseInt(bigint.charAt(i), base);
+    }
+    return values;
+  }
+  
+  const formatBigInt: (values:Array<number> , base:number) => string = (values, base) =>{
+    //convert array of digit values to bigint string
+    let bigint = '';
+    for (let i = 0; i < values.length; i++) {
+      bigint += values[i].toString(base);
+    }
+    return bigint;
+  }
+  
+  const convertBase: (bigint:string, inputBase:number, outputBase:number)  => string = (bigint, inputBase, outputBase) => {
+    //takes a bigint string and converts to different base
+    const inputValues = parseBigInt(bigint, inputBase),
+      outputValues = [], //output array, little-endian/lsd order
+      len = inputValues.length;
+    let pos = 0;
+    while (pos < len) { //while digits left in input array
+      let remainder = 0; //set remainder to 0
+      for (let i = pos; i < len; i++) {
+        //long integer division of input values divided by output base
+        //remainder is added to output array
+        remainder = inputValues[i] + remainder * inputBase;
+        inputValues[i] = Math.floor(remainder / outputBase);
+        remainder -= inputValues[i] * outputBase;
+        if (inputValues[i] == 0 && i == pos) {
+          pos++;
+        }
+      }
+      outputValues.push(remainder);
+    }
+    outputValues.reverse(); //transform to big-endian/msd order
+    return formatBigInt(outputValues, outputBase);
+  }
+  
+  const groupDigits: (bigint:string) => string = (bigint) => {//3-digit grouping
+    return bigint.replace(/(\d)(?=(\d{3})+$)/g, "$1 ");
+  }
+  
+
+
+export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hex_to_q, int_to_q, int_to_q_unchecked, int_to_p, int_to_p_unchecked, add_q, a_minus_b_q, div_p, div_q, negate_q, a_plus_bc_q, mult_inv_p, pow_p, pow_q, mult_p, mult_q, g_pow_p, rand_q, rand_range_q, eq_elems, convertBase, groupDigits, formatBigInt, parseBigInt};
