@@ -21,6 +21,8 @@ import {
     a_plus_bc_q,
     int_to_p_unchecked,
     int_to_q_unchecked,
+    convertBase,
+    groupDigits,
 } from './group';
 
 import {
@@ -45,6 +47,44 @@ describe("TestGroupUtil", () => {
         expect(powmod(3n, 26n)).toEqual(9n);
         expect(powmod(7n, 29n)).toEqual(25n);
         expect(powmod(29n, 31n)).toEqual(15n);
+    });
+});
+
+describe("TestBinaryBigIntConversion", () => {
+    const largeNumber:string =
+        '1101001101011010000101001111101001011101' + 
+        '1111000010010111000111110011111011111000' +
+        '0011000001100000110000011001110101001110' +
+        '1010111010001000101101010111001111000001' +
+        '1000001100000110000011001001100000110000' +
+        '0110000011000001100001110000111000001100' +
+        '0001100000110000011000001100001010110001' +
+        '1001110101101001100110100100000110000011' +
+        '0000011000001100010011010111101100100010' +
+        '1101000110101101010001100100111000111001' +
+        '0100111011011111010000110001110010101010' +
+        '0011110100100001011000010000011000010110' +
+        '0001101111100001111000111011111001111111' +
+        '1000100011110110101000101100000110000011' +
+        '0000011000001100000110100111010101101011' +
+        '0100111110100101001011110101100001110110' +
+        '0110010011001001111101';
+
+    test('testConvertBaseFrom2To10', () => {
+        
+      //convert largeNumber from base 2 to base 10
+      const largeIntDecimal = convertBase(largeNumber, 2, 10);
+      const expectedLargeIntStr = '15 798 770 299 367 407 029 725 345 423 297 491 683 306 908 462 684 165 669 735 033 278 996 876 231 474 309 788 453 071 122 111 686 268 816 862 247 538 905 966 252 886 886 438 931 450 432 740 640 141 331 094 589 505 960 171 298 398 097 197 475 262 433 234 991 526 525';
+      expect(groupDigits(largeIntDecimal)).toBe(expectedLargeIntStr);
+    });
+
+    test('testConvertBaseFrom10To2', () => {
+        //convert largeNumber from base 2 to base 10
+        const largeIntDecimal = convertBase(largeNumber, 2, 10);
+        //converting back to base 2:
+        const restoredOriginal = convertBase(largeIntDecimal, 10, 2);
+         //check that it matches the original:
+        expect(restoredOriginal).toBe(largeNumber);
     });
 });
 
