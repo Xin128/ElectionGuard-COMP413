@@ -5,17 +5,20 @@ import {
   ElementModP,
   g_pow_p,
   mult_p,
+  mult_inv_p,
   pow_p,
   ZERO_MOD_Q,
+  TWO_MOD_Q,
+  int_to_q,
   rand_range_q,
-  div_p,
-  int_to_q_unchecked,
-  Q,
 } from "./group"
 
 import {hash_elems} from "./hash"
 import {log_error} from "./logs"
-import {get_optional} from "./utils"
+import {
+  flatmap_optional,
+  get_optional
+} from "./utils"
 
 type ElGamalPublicKey = ElementModP;
 type ElGamalSecretKey = ElementModQ;
@@ -54,8 +57,8 @@ export class ElGamalCiphertext {
    * (the blinding factor used in the encryption).
    * @param product the blinding factor used in the encryption
    */
-  public decrypt_known_product(product: ElementModP): number | null {
-    return discrete_log(div_p(product));
+  public decrypt_known_product(product: ElementModP): number {
+    return discrete_log(mult_p(this.data, mult_inv_p(product)));
   }
 
   /**
@@ -63,10 +66,8 @@ export class ElGamalCiphertext {
    * @param secret_key The corresponding ElGamal secret key.
    * Return A plaintext message.
    */
-  public decrypt(secret_key: ElGamalSecretKey | ElGamalKeyPair): number | null {
-    if (secret_key instanceof ElGamalKeyPair){
-      secret_key = secret_key.secret_key;
-    }
+  public decrypt(secret_key: ElementModQ): number {
+
     return this.decrypt_known_product(pow_p(this.pad, secret_key));
   }
 
@@ -76,11 +77,8 @@ export class ElGamalCiphertext {
    * @param nonce The secret nonce used to create the ciphertext.
    * Return A plaintext message.
    */
-  public decrypt_known_nonce(public_key: ElGamalPublicKey | ElGamalKeyPair,
-                             nonce: ElementModQ): number | null {
-    if (public_key instanceof ElGamalKeyPair) {
-      public_key = public_key.public_key;
-    }
+  public decrypt_known_nonce(public_key: ElementModP,
+                             nonce: ElementModQ): number{
     return this.decrypt_known_product(pow_p(public_key, nonce));
   }
 
@@ -98,12 +96,12 @@ export class ElGamalCiphertext {
  * an ElGamal keypair, consisting of the given secret key a and public key g^a.
  * @param a A secret key
  */
-export function elgamal_keypair_from_secret(a: ElGamalSecretKey)
-  : ElGamalKeyPair {
+export function elgamal_keypair_from_secret(a: ElementModQ)
+  : ElGamalKeyPair | null {
   const secret_key_int: number = a.to_int();
   if (secret_key_int < 2) {
     log_error("ElGamal secret key needs to be in [2,Q).");
-    throw Error("ElGamal secret key needs to be in [2,Q).");
+    return null;
   }
   return new ElGamalKeyPair(a, g_pow_p(a));
 }
@@ -113,91 +111,42 @@ export function elgamal_keypair_from_secret(a: ElGamalSecretKey)
  * return random elgamal key pair
  */
 export function elgamal_keypair_random(): ElGamalKeyPair {
-  return get_optional(elgamal_keypair_from_secret(rand_range_q(2)));
+  return get_optional(elgamal_keypair_from_secret(rand_range_q(TWO_MOD_Q)));
 }
 
 export function elgamal_encrypt
 (m: number, nonce: ElementModQ,
- public_key: ElGamalKeyPair | ElGamalPublicKey): ElGamalCiphertext {
+ public_key: ElGamalKeyPair | ElGamalPublicKey): ElGamalCiphertext | null {
   if (nonce === ZERO_MOD_Q) {
     log_error("ElGamal encryption requires a non-zero nonce");
-    throw Error("ElGamal encryption requires a non-zero nonce");
+    return null;
   }
-  if (m < 0) {
-    log_error("Can't encrypt a negative message");
-    throw Error("Can't encrypt a negative message");
-  }
-  if (m >= Q) {
-    log_error("Can't encrypt a message bigger than Q");
-    throw Error("Can't encrypt a message bigger than Q");
-  }
-  let pk;
-  if (public_key instanceof ElGamalKeyPair) {
-    pk = public_key.public_key;
-  } else {
-    pk = public_key;
-  }
-  return new ElGamalCiphertext(g_pow_p(nonce),
-    mult_p(g_pow_p(int_to_q_unchecked(m)), pow_p(pk, nonce)));
+  // if (m < 0) {
+  //   log_error("Can't encrypt a negative message");
+  //   throw Error("Can't encrypt a negative message");
+  // }
+  // if (m >= Q) {
+  //   log_error("Can't encrypt a message bigger than Q");
+  //   throw Error("Can't encrypt a message bigger than Q");
+  // }
+  // let pk;
+  // if (public_key instanceof ElGamalKeyPair) {
+  //   pk = public_key.public_key;
+  // } else {
+  //   pk = public_key;
+  // }
+  return flatmap_optional(int_to_q(m), (e: number) => new ElGamalCiphertext(g_pow_p(nonce), mult_p(g_pow_p(e), pow_p(public_key, nonce))));
 }
 
 export function elgamal_add(...ciphertexts: ElGamalCiphertext[]): ElGamalCiphertext {
   assert(ciphertexts.length !== 0, "Must have one or more ciphertexts for elgamal_add");
 
-  const pads = ciphertexts.map((value: ElGamalCiphertext) => {value.pad});
-  const data = ciphertexts.map((value: ElGamalCiphertext) => {value.data});
+  let result: ElGamalCiphertext = ciphertexts[0];
+  for (let i = 1; i < ciphertexts.length; i++) {
+    const c:ElGamalCiphertext = ciphertexts[i];
+    result = new ElGamalCiphertext(mult_p(result.pad, c.pad), mult_p(result.data, c.data));
 
-  return new ElGamalCiphertext(mult_p(...pads), mult_p(...data));
+  }
+  return result;
 }
 
-/**
- * Combines multiple ElGamal public keys into a single public key. The corresponding secret keys can
- * do "partial decryption" operations that can be later combined. See, e.g.,
- * [ElGamalCiphertext.partialDecryption] and [combinePartialDecryptions].
- * @param keys
- */
-export function elgamal_combine_public_keys(...keys: (ElGamalPublicKey | ElGamalKeyPair)[]
-): ElGamalPublicKey {
-  const result = keys.map((value) => {
-    if (value instanceof ElementModP) {
-      return value;
-    } else {
-      return value.public_key;
-    }
-  });
-  return mult_p(...result);
-}
-
-type ElGamalPartialDecryption = ElementModP;
-
-/**
- * Computes a partial decryption of the ciphertext with a secret key or keypair. See
- * [ElGamalCiphertext.combinePartialDecryptions] for extracting the plaintext.
- * @param key a secret key
- * @param ciphertext ciphered text that need to be decrypted.
- */
-export function elgamal_partial_decryption(
-  key: ElGamalSecretKey | ElGamalKeyPair, ciphertext: ElGamalCiphertext
-): ElGamalPartialDecryption {
- let sk;
- if (key instanceof  ElGamalKeyPair) {
-   sk = key.secret_key;
- } else {
-   sk = key;
- }
- return pow_p(ciphertext.pad, sk);
-}
-
-/**
- * Given a series of partial decryptions of the ciphertext, combines them together to complete the
- * decryption process.
- * @param ciphertext text that need to be decrypted.
- * @param partial_decryptions a series of partial decriptions of the ciphertext.
- */
-export function elgamal_combine_partial_decryptions(
-  ciphertext: ElGamalCiphertext,
-  ...partial_decryptions: ElGamalPartialDecryption[]): number | null {
-  const blind = mult_p(...partial_decryptions);
-  const gPowM = div_p(ciphertext.data, blind);
-  return discrete_log(gPowM);
-}
