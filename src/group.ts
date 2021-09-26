@@ -2,10 +2,10 @@
 import { bnToHex, getRandomIntExclusive, powmod } from "./groupUtils"
 
 // Constants used by ElectionGuard
-const Q: bigint = 1987n;
-const P: bigint = 24341n;
-const R:bigint = 49n;
-const G:bigint = 1831n;
+const Q = 1987n;
+const P = 24341n;
+const R = 49n;
+const G = 1831n;
 const Q_MINUS_ONE: bigint = Q - 1n;
 
 // const Q: bigint = BigInt(Math.pow(2, 256) - 189);
@@ -169,7 +169,7 @@ type ElementModPorInt = ElementModP | bigint;
 // [0,Q) range.
 // Reference: https://stackoverflow.com/questions/14667713/how-to-convert-a-string-to-bigint-in-typescript
 const hex_to_q: (input: string) => ElementModQ | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
     } else {
@@ -181,7 +181,7 @@ const hex_to_q: (input: string) => ElementModQ | null = (input) => {
 // Returns `None` if the bigint is out of the allowed
 // [0,Q) range.
 const int_to_q: (input: string | bigint) => ElementModQ | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
     } else {
@@ -201,7 +201,7 @@ const int_to_q_unchecked: (i: string | bigint) => ElementModQ = (i) => {
 // Returns `None` if the bigint is out of the allowed
 // [0,P) range.
 const int_to_p: (input: string | bigint) => ElementModP | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < P) {
         return new ElementModP(BigInt(i));
     } else {
@@ -228,7 +228,7 @@ const int_to_p_unchecked: (i: string | bigint) => ElementModP = (i) => {
 // }
 
 const add_q: (...elems: ElementModQorInt[]) => ElementModQ = (...elems) => {
-    let t: bigint = BigInt(0);
+    let t = BigInt(0);
     // console.log("Q is ", Q, "R is ", R, "P is ", P);
     elems.forEach((e) => {
         if (typeof e === 'bigint') {
@@ -344,7 +344,7 @@ const pow_q: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) 
 // Computes the product, mod p, of all elements.
 // elems: Zero or more elements in [0,P).
 const mult_p: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
-    let product: bigint = BigInt(1);
+    let product = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
             x = int_to_p_unchecked(x);
@@ -357,7 +357,7 @@ const mult_p: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
 // Computes the product, mod q, of all elements.
 // elems: Zero or more elements in [0,P).
 const mult_q: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
-    let product: bigint = BigInt(1);
+    let product = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
             x = int_to_q_unchecked(x);
@@ -386,7 +386,7 @@ const rand_range_q: (start: ElementModQorInt) => ElementModQ = (start) => {
     if (start instanceof ElementModQ) {
         start = start.to_int();
     }
-    let random: bigint = 0n;
+    let random = 0n;
     while (random < start) {
         random = getRandomIntExclusive(Q);
     }
@@ -401,7 +401,7 @@ const eq_elems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
 // Manually hash a string, code taken from https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
 // The hash value of the empty string is zero.
 const createStrHashCode: (s: string) => bigint = (s) => {
-    let h: bigint = 0n;
+    let h = 0n;
     for(let i = 0; i < s.length; i++) {
         h = 31n * h + BigInt(s.charCodeAt(i)) | 0n;
     }
