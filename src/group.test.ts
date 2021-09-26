@@ -167,7 +167,6 @@ describe("TestModularArithmetic", () => {
     // TODO: the current powmod function is not efficient enough for large number like P
     test('testMultInverses', () => {
         const elem: ElementModP = elements_mod_p_no_zero();
-        // console.log("elem is ", elem);
         const inv: ElementModP = mult_inv_p(elem);
         expect(mult_p(elem, inv).equals(ONE_MOD_P)).toBe(true);
     });
