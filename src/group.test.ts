@@ -146,6 +146,8 @@ describe("TestModularArithmetic", () => {
         const asInt: ElementModQ = div_q(q, 1n);
         const asElem: ElementModQ = div_q(q, new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
+        expect(asInt.equals(q)).toBe(true);
+        expect(asElem.equals(q)).toBe(true);
     });
 
     test('testDivP', () => {
@@ -153,6 +155,8 @@ describe("TestModularArithmetic", () => {
         const asInt: ElementModP = div_p(p, 1n);
         const asElem: ElementModP = div_p(p, new ElementModP(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
+        expect(asInt.equals(p)).toBe(true);
+        expect(asElem.equals(p)).toBe(true);
     });
 
     test('testNoMultInvOfZero', () => {

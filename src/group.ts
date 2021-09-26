@@ -249,7 +249,6 @@ const a_minus_b_q: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (
     return new ElementModQ((a.elem - b.elem) % BigInt(Q));
 }
 
-// TODO
 // Computes a/b mod p
 const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
     if (typeof a === 'bigint') {
@@ -259,14 +258,12 @@ const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (
         b = int_to_p_unchecked(b);
     } 
 
-    // TODO: Need to find an algorithm to calculate modular multiplicative inverse in typescript
-
-    // const inverse = invert(b.elem, BigInt(P));
-    // return mult_p(a, int_to_p_unchecked(inverse))
-    return new ElementModP(BigInt(0));
+    // Calculate modular multiplicative inverse in typescript
+    const inverse = powmod(b.elem, P);
+    return mult_p(a, int_to_p_unchecked(inverse));
 }
 
-// TODO
+// Computes a/b mod q
 const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a, b) => {
     if (typeof a === 'bigint') {
         a = int_to_q_unchecked(a);
@@ -275,9 +272,9 @@ const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (
         b = int_to_q_unchecked(b);
     } 
 
-    // const inverse = invert(b.elem, BigInt(P));
-    // return mult_p(a, int_to_p_unchecked(inverse))
-    return new ElementModQ(BigInt(0));
+    // Calculate modular multiplicative inverse in typescript
+    const inverse = powmod(b.elem, Q);
+    return mult_q(a, int_to_q_unchecked(inverse));
 }
 
 // Computes (Q - a) mod q.
