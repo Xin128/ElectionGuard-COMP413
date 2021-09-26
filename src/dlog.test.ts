@@ -9,27 +9,42 @@ import {
     int_to_q_unchecked,
     P
 } from './group';
+import * as bigintModArith from 'bigint-mod-arith'
 
 import {
     get_optional
 } from './utils';
-import {powmod} from './groupUtils';
+// import {powmod} from './groupUtils';
 import {discrete_log} from './dlog';
 
-function _discrete_log_uncached(e: ElementModP): number {
+function _discrete_log_uncached(e: ElementModP): BigInt {
     let count = 0;
-    const g_inv: ElementModP = int_to_p_unchecked(powmod(G, P));
-    while (e !== ONE_MOD_P) {
+    // const g_inv: ElementModP = int_to_p_unchecked(powmod(G, P));
+    const g_inv: ElementModP = int_to_p_unchecked(bigintModArith.modPow(G, -1n, P));
+
+    while (e.elem !== ONE_MOD_P.elem) {
         e = mult_p(e, g_inv);
         count += 1;
     }
-    return count;
+    return BigInt(count);
 }
 
 
 describe("Test_DLog", () => {
+
     test("test_uncached", () => {
         const max = 100;
+        const min = 0;
+        const exp = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+        const plaintext = get_optional(int_to_q(exp));
+        const exp_plaintext = g_pow_p(plaintext);
+        const plaintext_again = _discrete_log_uncached(exp_plaintext);
+
+        expect(plaintext_again).toBe(exp);
+    });
+
+    test("test_cached", () => {
+        const max = 1000;
         const min = 0;
         const exp = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
         console.log("exp done: " + exp + "\n");
@@ -37,19 +52,8 @@ describe("Test_DLog", () => {
         console.log("plaintext done: " + plaintext + "\n");
         const exp_plaintext = g_pow_p(plaintext)
         console.log("exp_plaintext done: " + exp_plaintext + "\n");
-        const plaintext_again = _discrete_log_uncached(exp_plaintext)
-        console.log("plaintext_again done: " + plaintext_again + "\n");
-
-        expect(plaintext_again).toBe(exp);
-    });
-
-    test("test_uncached", () => {
-        const max = 1000;
-        const min = 0;
-        const exp = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-        const plaintext = get_optional(int_to_q(exp))
-        const exp_plaintext = g_pow_p(plaintext)
         const plaintext_again = discrete_log(exp_plaintext)
+        console.log("plaintext_again done: " + plaintext_again + "\n");
 
         expect(plaintext_again).toBe(exp);
     });
