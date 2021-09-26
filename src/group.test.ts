@@ -185,7 +185,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testPropertiesForConstants', () => {
-        expect(G !== 1n).toBe(true);
+        expect(G as bigint !== 1n).toBe(true);
         expect((R * Q) % P).toEqual(P - 1n);
         expect(Q).toBeLessThan(P);
         expect(G).toBeLessThan(P);
