@@ -13,12 +13,12 @@ import {
 import {
     get_optional
 } from './utils';
-
-import {discrete_log} from './dlog'
+import {powmod} from './groupUtils';
+import {discrete_log} from './dlog';
 
 function _discrete_log_uncached(e: ElementModP): number {
     let count = 0;
-    const g_inv: ElementModP = int_to_p_unchecked(BigInt(G ** -1n) % P);
+    const g_inv: ElementModP = int_to_p_unchecked(powmod(G, P));
     while (e !== ONE_MOD_P) {
         e = mult_p(e, g_inv);
         count += 1;
@@ -32,9 +32,13 @@ describe("Test_DLog", () => {
         const max = 100;
         const min = 0;
         const exp = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+        console.log("exp done: " + exp + "\n");
         const plaintext = get_optional(int_to_q(exp))
+        console.log("plaintext done: " + plaintext + "\n");
         const exp_plaintext = g_pow_p(plaintext)
+        console.log("exp_plaintext done: " + exp_plaintext + "\n");
         const plaintext_again = _discrete_log_uncached(exp_plaintext)
+        console.log("plaintext_again done: " + plaintext_again + "\n");
 
         expect(plaintext_again).toBe(exp);
     });
