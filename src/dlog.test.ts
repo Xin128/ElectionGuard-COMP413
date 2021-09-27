@@ -17,7 +17,7 @@ import {
 // import {powmod} from './groupUtils';
 import {discrete_log} from './dlog';
 
-function _discrete_log_uncached(e: ElementModP): BigInt {
+function _discrete_log_uncached(e: ElementModP): bigint {
     let count = 0;
     // const g_inv: ElementModP = int_to_p_unchecked(powmod(G, P));
     const g_inv: ElementModP = int_to_p_unchecked(bigintModArith.modPow(G, -1n, P));
@@ -47,13 +47,9 @@ describe("Test_DLog", () => {
         const max = 1000;
         const min = 0;
         const exp = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-        console.log("exp done: " + exp + "\n");
         const plaintext = get_optional(int_to_q(exp))
-        console.log("plaintext done: " + plaintext + "\n");
         const exp_plaintext = g_pow_p(plaintext)
-        console.log("exp_plaintext done: " + exp_plaintext + "\n");
         const plaintext_again = discrete_log(exp_plaintext)
-        console.log("plaintext_again done: " + plaintext_again + "\n");
 
         expect(plaintext_again).toBe(exp);
     });
@@ -62,6 +58,6 @@ describe("Test_DLog", () => {
         const plaintext = int_to_q_unchecked(1n);
         const ciphertext = g_pow_p(plaintext);
         const plaintext_again = discrete_log(ciphertext);
-        expect(plaintext_again).toBe(1);
+        expect(plaintext_again).toBe(1n);
     });
 })
