@@ -2,11 +2,11 @@
 import { bnToHex, getRandomIntExclusive, powmod } from "./groupUtils"
 
 // Constants used by ElectionGuard
-const Q: bigint = 1987n;
-const P: bigint = 24341n;
-const R:bigint = 49n;
-const G:bigint = 1831n;
-const Q_MINUS_ONE: bigint = Q - 1n;
+const Q = 32633n;
+const P = 65267n;
+const R = 2n;
+const G = 3n;
+const Q_MINUS_ONE = Q - 1n;
 
 // const Q: bigint = BigInt(Math.pow(2, 256) - 189);
 // // const P: bigint = BigInt('1044388881413152506691752710716624382579964249047383780384233483283953907971553643537729993126875883902173634017777416360502926082946377942955704498542097614841825246773580689398386320439747911160897731551074903967243883427132918813748016269754522343505285898816777211761912392772914485521155521641049273446207578961939840619466145806859275053476560973295158703823395710210329314709715239251736552384080845836048778667318931418338422443891025911884723433084701207771901944593286624979917391350564662632723703007964229849154756196890615252286533089643184902706926081744149289517418249153634178342075381874131646013444796894582106870531535803666254579602632453103741452569793905551901541856173251385047414840392753585581909950158046256810542678368121278509960520957624737942914600310646609792665012858397381435755902851312071248102599442308951327039250818892493767423329663783709190716162023529669217300939783171415808233146823000766917789286154006042281423733706462905243774854543127239500245873582012663666430583862778167369547603016344242729592244544608279405999759391099775667746401633668308698186721172238255007962658564443858927634850415775348839052026675785694826386930175303143450046575460843879941791946313299322976993405829119');
@@ -169,7 +169,7 @@ type ElementModPorInt = ElementModP | bigint;
 // [0,Q) range.
 // Reference: https://stackoverflow.com/questions/14667713/how-to-convert-a-string-to-bigint-in-typescript
 const hex_to_q: (input: string) => ElementModQ | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
     } else {
@@ -181,7 +181,7 @@ const hex_to_q: (input: string) => ElementModQ | null = (input) => {
 // Returns `None` if the bigint is out of the allowed
 // [0,Q) range.
 const int_to_q: (input: string | bigint) => ElementModQ | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < Q) {
         return new ElementModQ(BigInt(i));
     } else {
@@ -201,7 +201,7 @@ const int_to_q_unchecked: (i: string | bigint) => ElementModQ = (i) => {
 // Returns `None` if the bigint is out of the allowed
 // [0,P) range.
 const int_to_p: (input: string | bigint) => ElementModP | null = (input) => {
-    const i: bigint = BigInt(input);
+    const i = BigInt(input);
     if (0 <= i && i < P) {
         return new ElementModP(BigInt(i));
     } else {
@@ -228,7 +228,7 @@ const int_to_p_unchecked: (i: string | bigint) => ElementModP = (i) => {
 // }
 
 const add_q: (...elems: ElementModQorInt[]) => ElementModQ = (...elems) => {
-    let t: bigint = BigInt(0);
+    let t = BigInt(0);
     // console.log("Q is ", Q, "R is ", R, "P is ", P);
     elems.forEach((e) => {
         if (typeof e === 'bigint') {
@@ -249,7 +249,6 @@ const a_minus_b_q: (a: ElementModQorInt, b: ElementModQorInt) => ElementModQ = (
     return new ElementModQ((a.elem - b.elem) % BigInt(Q));
 }
 
-// TODO
 // Computes a/b mod p
 const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (a, b) => {
     if (typeof a === 'bigint') {
@@ -259,14 +258,12 @@ const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (
         b = int_to_p_unchecked(b);
     } 
 
-    // TODO: Need to find an algorithm to calculate modular multiplicative inverse in typescript
-
-    // const inverse = invert(b.elem, BigInt(P));
-    // return mult_p(a, int_to_p_unchecked(inverse))
-    return new ElementModP(BigInt(0));
+    // Calculate modular multiplicative inverse in typescript
+    const inverse = powmod(b.elem, P);
+    return mult_p(a, int_to_p_unchecked(inverse));
 }
 
-// TODO
+// Computes a/b mod q
 const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (a, b) => {
     if (typeof a === 'bigint') {
         a = int_to_q_unchecked(a);
@@ -275,9 +272,9 @@ const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (
         b = int_to_q_unchecked(b);
     } 
 
-    // const inverse = invert(b.elem, BigInt(P));
-    // return mult_p(a, int_to_p_unchecked(inverse))
-    return new ElementModQ(BigInt(0));
+    // Calculate modular multiplicative inverse in typescript
+    const inverse = powmod(b.elem, Q);
+    return mult_q(a, int_to_q_unchecked(inverse));
 }
 
 // Computes (Q - a) mod q.
@@ -344,7 +341,7 @@ const pow_q: (b: ElementModQorInt, e: ElementModQorInt) => ElementModQ = (b, e) 
 // Computes the product, mod p, of all elements.
 // elems: Zero or more elements in [0,P).
 const mult_p: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
-    let product: bigint = BigInt(1);
+    let product = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
             x = int_to_p_unchecked(x);
@@ -357,7 +354,7 @@ const mult_p: (...elems: ElementModPOrQorInt[]) => ElementModP = (...elems) => {
 // Computes the product, mod q, of all elements.
 // elems: Zero or more elements in [0,P).
 const mult_q: (...elems: ElementModPOrQorInt[]) => ElementModQ = (...elems) => {
-    let product: bigint = BigInt(1);
+    let product = BigInt(1);
     elems.forEach((x) => {
         if (typeof x === 'bigint') {
             x = int_to_q_unchecked(x);
@@ -386,7 +383,7 @@ const rand_range_q: (start: ElementModQorInt) => ElementModQ = (start) => {
     if (start instanceof ElementModQ) {
         start = start.to_int();
     }
-    let random: bigint = 0n;
+    let random = 0n;
     while (random < start) {
         random = getRandomIntExclusive(Q);
     }
@@ -401,7 +398,7 @@ const eq_elems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
 // Manually hash a string, code taken from https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
 // The hash value of the empty string is zero.
 const createStrHashCode: (s: string) => bigint = (s) => {
-    let h: bigint = 0n;
+    let h = 0n;
     for(let i = 0; i < s.length; i++) {
         h = 31n * h + BigInt(s.charCodeAt(i)) | 0n;
     }

@@ -146,6 +146,8 @@ describe("TestModularArithmetic", () => {
         const asInt: ElementModQ = div_q(q, 1n);
         const asElem: ElementModQ = div_q(q, new ElementModQ(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
+        expect(asInt.equals(q)).toBe(true);
+        expect(asElem.equals(q)).toBe(true);
     });
 
     test('testDivP', () => {
@@ -153,6 +155,8 @@ describe("TestModularArithmetic", () => {
         const asInt: ElementModP = div_p(p, 1n);
         const asElem: ElementModP = div_p(p, new ElementModP(BigInt(1)));
         expect(asInt.equals(asElem)).toBe(true);
+        expect(asInt.equals(p)).toBe(true);
+        expect(asElem.equals(p)).toBe(true);
     });
 
     test('testNoMultInvOfZero', () => {
@@ -163,7 +167,6 @@ describe("TestModularArithmetic", () => {
     // TODO: the current powmod function is not efficient enough for large number like P
     test('testMultInverses', () => {
         const elem: ElementModP = elements_mod_p_no_zero();
-        console.log("elem is ", elem);
         const inv: ElementModP = mult_inv_p(elem);
         expect(mult_p(elem, inv).equals(ONE_MOD_P)).toBe(true);
     });
@@ -182,7 +185,7 @@ describe("TestModularArithmetic", () => {
     });
 
     test('testPropertiesForConstants', () => {
-        expect(G !== 1n).toBe(true);
+        expect(G as bigint !== 1n).toBe(true);
         expect((R * Q) % P).toEqual(P - 1n);
         expect(Q).toBeLessThan(P);
         expect(G).toBeLessThan(P);
