@@ -2,10 +2,10 @@
 import { bnToHex, getRandomIntExclusive, powmod } from "./groupUtils"
 
 // Constants used by ElectionGuard
-const Q = 1987n;
-const P = 24341n;
-const R = 49n;
-const G = 1831n;
+const Q = 32633n;
+const P = 65267n;
+const R = 2n;
+const G = 3n;
 const Q_MINUS_ONE = Q - 1n;
 
 // const Q: bigint = BigInt(Math.pow(2, 256) - 189);
