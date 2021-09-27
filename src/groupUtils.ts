@@ -34,7 +34,7 @@ const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
     let c = 0n;
     let cnt = 0;
     // while (true) {
-    while ( cnt < 10000) {
+    while ( cnt < 100000) {
         cnt += 1;
         c = n * i + 1n;
         if (c % a === 0n) {
