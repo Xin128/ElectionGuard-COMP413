@@ -1,12 +1,8 @@
-import { type } from 'os';
 import {ElementModQ,
     ElementModP} from './group';
 import {elements_mod_q,
     elements_mod_p} from './groupUtils'
 import {hash_elems} from './hash';
-
-
-
 
 describe("TestHash", () => {
     test('test_same_answer_twice_in_a_row', () => {
