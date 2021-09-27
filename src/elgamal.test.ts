@@ -27,7 +27,6 @@ describe("TestElgamal", () => {
         const keypair:ElGamalKeyPair| null | undefined = elgamal_keypair_from_secret(secret_key);
         const public_key = get_optional(keypair).public_key;
         expect(public_key.to_int()).toBeLessThan(P);
-        expect(public_key.to_int() ** nonce.to_int()).toBe(P);
 
 
         const elem:ElementModP = g_pow_p(ZERO_MOD_Q);
@@ -35,9 +34,10 @@ describe("TestElgamal", () => {
 
         const ciphertext:ElGamalCiphertext| null | undefined = elgamal_encrypt(0n, nonce, get_optional(keypair).public_key);
         expect(G).toBe(get_optional(ciphertext).pad.to_int());
-        expect(get_optional(ciphertext).pad.to_int() ** secret_key.to_int()).toBe(P);
+        expect(get_optional(ciphertext).pad.to_int() ** secret_key.to_int() % P).toBe(public_key.to_int() ** nonce.to_int() % P);
+        expect(get_optional(ciphertext).data.to_int()).toBe(public_key.to_int() ** nonce.to_int() % P);
 
-        // const plaintext:number = ciphertext.decrypt(keypair.secret_key);
+      // const plaintext:number = ciphertext.decrypt(keypair.secret_key);
         //
         // expect(plaintext).toBe(0);
     });
