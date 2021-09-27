@@ -39,8 +39,9 @@ class ElectionGuardLog{
     }
 
     formattedMessage(message:string):string{
-        const info = this.getCallInfo(); // filename, funcname, line
-        return info[0]+"."+info[1]+":L"+info[2]+":"+message;
+        //const info = this.getCallInfo(); // filename, funcname, line
+        //return info[0]+"."+info[1]+":L"+info[2]+":"+message;
+        return message;
     }
 
     info(message:string){
