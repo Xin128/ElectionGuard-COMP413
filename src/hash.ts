@@ -33,7 +33,7 @@ export abstract class CryptoHashCheckable {
 // All the "atomic" types that we know how to hash.
 export type CRYPTO_HASHABLE_T = CryptoHashable | ElementModPOrQ | string | number | undefined;
 
-export type CRYPTO_HASHABLE_ALL = CRYPTO_HASHABLE_T[] | CRYPTO_HASHABLE_T;
+export type CRYPTO_HASHABLE_ALL = CRYPTO_HASHABLE_T[] | CRYPTO_HASHABLE_T | CRYPTO_HASHABLE_ALL[];
 
 export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     let hash_me = 'null';
