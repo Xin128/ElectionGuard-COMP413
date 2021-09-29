@@ -60,7 +60,7 @@ export class DisjunctiveChaumPedersenProof {
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
-        const [alpha, beta] = message;
+        const [alpha, beta] = [message.pad, message.data];
         const a0:ElementModP = this.proof_zero_pad;
         const b0:ElementModP = this.proof_zero_data;
         const a1:ElementModP = this.proof_one_pad;
@@ -139,7 +139,7 @@ export class ConstantChaumPedersenProof {
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
-        const [alpha, beta] = message;
+        const [alpha, beta] = [message.pad, message.data];
         const a:ElementModP = this.pad;
         const b:ElementModP = this.data;
         const c:ElementModQ = this.challenge;
@@ -228,7 +228,7 @@ export function make_disjunctive_chaum_pedersen_zero(
     k: ElementModP,
     q: ElementModQ,
     seed: ElementModQ): DisjunctiveChaumPedersenProof{
-    const [alpha, beta] = message;
+    const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
     const c1 = nonces.get(0);
@@ -254,7 +254,7 @@ export function make_disjunctive_chaum_pedersen_one(
     k: ElementModP,
     q: ElementModQ,
     seed: ElementModQ): DisjunctiveChaumPedersenProof{
-    const [alpha, beta] = message;
+    const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
     const c0 = nonces.get(0);
@@ -282,7 +282,7 @@ export function make_constant_chaum_pedersen(
     seed: ElementModQ,
     base_hash: ElementModQ,
 ): ConstantChaumPedersenProof{
-    const [alpha, beta] = message;
+    const [alpha, beta] = [message.pad, message.data];
 
     // Pick one random number in Q.
     const nonce = new Nonces(seed, "constant-chaum-pedersen-proof")
