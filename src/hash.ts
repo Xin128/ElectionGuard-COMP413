@@ -3,7 +3,7 @@ import {
   ElementModQ,
   Q_MINUS_ONE,
   int_to_q_unchecked,
-  ElementModP} from "./group"
+  ElementModP} from "./group";
 
 import * as crypto from "crypto";
 
