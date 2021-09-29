@@ -80,7 +80,7 @@ export class DisjunctiveChaumPedersenProof {
         const in_bounds_c1:boolean = c1.is_in_bounds();
         const in_bounds_v0:boolean = v0.is_in_bounds();
         const in_bounds_v1:boolean = v1.is_in_bounds();
-        const consistent_c:boolean = add_q(c0, c1) == c == hash_elems(q, alpha, beta, a0, b0, a1, b1);
+        const consistent_c:boolean = (add_q(c0, c1) == c) && (add_q(c0, c1) == hash_elems([q, alpha, beta, a0, b0, a1, b1]));
         const consistent_gv0:boolean = g_pow_p(v0) == mult_p(a0, pow_p(alpha, c0));
         const consistent_gv1:boolean = g_pow_p(v1) == mult_p(a1, pow_p(alpha, c1));
         const consistent_kv0:boolean = pow_p(k, v0) == mult_p(b0, pow_p(beta, c0));
@@ -130,7 +130,7 @@ export class ConstantChaumPedersenProof {
     constant: bigint;
     // constant value
 
-    public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: number) {
+    public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: bigint) {
         this.pad = pad;
         this.data = data;
         this.challenge = challenge;
@@ -155,7 +155,7 @@ export class ConstantChaumPedersenProof {
 
         let in_bounds_constant;
         let constant_q;
-        if (tmp != undefined){
+        if (tmp !== null){
             constant_q = ZERO_MOD_Q;
             in_bounds_constant = false;
         } else {
@@ -167,7 +167,7 @@ export class ConstantChaumPedersenProof {
         // in some use cases this value may need to be increased
 
         const sane_constant:boolean = 0 <= constant && constant < 1_000_000_000;
-        const same_c:boolean = c == hash_elems(q, alpha, beta, a, b);
+        const same_c:boolean = c == hash_elems([q, alpha, beta, a, b]);
         const consistent_gv:boolean = (
             in_bounds_v
             && in_bounds_a
@@ -179,7 +179,7 @@ export class ConstantChaumPedersenProof {
 
         // The equation 𝑔^𝐿𝐾^𝑣 = 𝑏𝐵^𝐶 mod 𝑝
         const consistent_kv:boolean = in_bounds_constant && mult_p(
-            g_pow_p(mult_p(c, constant_q)), pow_p(k, v)
+            g_pow_p(mult_p(c, constant_q as ElementModQ)), pow_p(k, v)
         ) == mult_p(b, pow_p(beta, c));
 
         const success = (
@@ -241,7 +241,7 @@ export function make_disjunctive_chaum_pedersen_zero(
     const q_minus_c1 = negate_q(c1);
     const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
     const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
-    const c = hash_elems(q, alpha, beta, a0, b0, a1, b1);
+    const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c0 = a_minus_b_q(c, c1);
     const v0 = a_plus_bc_q(u0, c0, r);
 
@@ -267,7 +267,7 @@ export function make_disjunctive_chaum_pedersen_one(
     const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
     const a1 = g_pow_p(u1);
     const b1 = pow_p(k, u1);
-    const c = hash_elems(q, alpha, beta, a0, b0, a1, b1);
+    const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c1 = a_minus_b_q(c, c0);
     const v1 = a_plus_bc_q(u1, c1, r);
 
@@ -276,7 +276,7 @@ export function make_disjunctive_chaum_pedersen_one(
 
 export function make_constant_chaum_pedersen(
     message: ElGamalCiphertext,
-    constant: number,
+    constant: bigint,
     r: ElementModQ,
     k: ElementModP,
     seed: ElementModQ,
@@ -290,7 +290,7 @@ export function make_constant_chaum_pedersen(
 
     const a = g_pow_p(u);  // 𝑔^𝑢𝑖 mod 𝑝
     const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
-    const c = hash_elems(base_hash, alpha, beta, a, b);  // sha256(𝑄', A, B, a, b)
+    const c = hash_elems([base_hash, alpha, beta, a, b]);  // sha256(𝑄', A, B, a, b)
     const v = a_plus_bc_q(u, c, r);
 
     return new ConstantChaumPedersenProof(a, b, c, v, constant);
@@ -333,7 +333,7 @@ export class ChaumPedersenProofGeneric {
         const in_bounds_h = h.is_valid_residue();
         const in_bounds_hx = hx.is_valid_residue();
 
-        const hash_good = (this.c == hash_elems(base_hash, this.a, this.b)) || (!check_c);
+        const hash_good = (this.c == hash_elems([base_hash, this.a, this.b])) || (!check_c);
 
         const agxc = mult_p(this.a, pow_p(gx, this.c));  // should yield g^{w + xc}
         const gr = pow_p(g, this.r);  // should also yield g^{w + xc}
@@ -378,7 +378,7 @@ export function make_chaum_pedersen_generic(
     const w = nonce.get(0);
     const a = pow_p(g, w);
     const b = pow_p(h, w);
-    const c = hash_elems(base_hash, a, b);
+    const c = hash_elems([base_hash, a, b]);
     const r = a_plus_bc_q(w, x, c);
 
     return new ChaumPedersenProofGeneric(a, b, c, r);
@@ -410,7 +410,7 @@ export class ChaumPedersenDecryptionProof {
     }
 
     public is_valid(
-        plaintext: number,
+        plaintext: bigint,
         ciphertext: ElGamalCiphertext,
         public_key: ElementModP,
         base_hash: ElementModQ[] | null
