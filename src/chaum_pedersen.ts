@@ -231,9 +231,9 @@ export function make_disjunctive_chaum_pedersen_zero(
     const [alpha, beta] = message;
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    const c1 = nonces.next(0);
-    const v1 = nonces.next(1);
-    const u0 = nonces.next(2);
+    const c1 = nonces.get(0);
+    const v1 = nonces.get(1);
+    const u0 = nonces.get(2);
 
     // Compute the NIZKP
     const a0 = g_pow_p(u0);
@@ -257,9 +257,9 @@ export function make_disjunctive_chaum_pedersen_one(
     const [alpha, beta] = message;
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    const c0 = nonces[0];
-    const v0 = nonces[1];
-    const u1 = nonces[2];
+    const c0 = nonces.get(0);
+    const v0 = nonces.get(1);
+    const u1 = nonces.get(2);
 
     // Compute the NIZKP
     const q_minus_c0 = negate_q(c0);
@@ -285,7 +285,8 @@ export function make_constant_chaum_pedersen(
     const [alpha, beta] = message;
 
     // Pick one random number in Q.
-    const u = new Nonces(seed, "constant-chaum-pedersen-proof")[0];
+    const nonce = new Nonces(seed, "constant-chaum-pedersen-proof")
+    const u = nonce.get(0);
 
     const a = g_pow_p(u);  // 𝑔^𝑢𝑖 mod 𝑝
     const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
@@ -373,7 +374,8 @@ export function make_chaum_pedersen_generic(
     seed: ElementModQ,
     base_hash?: [ElementModQ],
 ): ChaumPedersenProofGeneric {
-    const w = new Nonces(seed, "generic-chaum-pedersen-proof")[0];
+    const nonce = new Nonces(seed, "generic-chaum-pedersen-proof");
+    const w = nonce.get(0);
     const a = pow_p(g, w);
     const b = pow_p(h, w);
     const c = hash_elems(base_hash, a, b);
@@ -390,7 +392,8 @@ export function make_fake_chaum_pedersen_generic(
     c: ElementModQ,
     seed: ElementModQ
 ): ChaumPedersenProofGeneric {
-    const r = new Nonces(seed, "generic-chaum-pedersen-proof")[0];
+    const nonce = new Nonces(seed, "generic-chaum-pedersen-proof");
+    const r = nonce.get(0);
     const gr = pow_p(g, r);
     const hr = pow_p(h, r);
     const a = mult_p(gr, mult_inv_p(pow_p(gx, c)));
