@@ -8,9 +8,8 @@ import {
     AnyElectionContext,
     PlaintextSelectionWithProof,
     PlaintextBallotWithProofs,
-    ElGamalCiphertext
 } from "./simple_election_data"
-
+import { ElGamalCiphertext } from "./elgamal"
 import { ElementModQ, TWO_MOD_Q, add_q } from "./group"
 import {Nonces} from "./nonces"
 import * as el from "./elgamal"
@@ -37,7 +36,7 @@ export function encrypt_selection(context: AnyElectionContext,
         seed_nonce,
         selection.choice
     )
-    const cipher = CiphertextSelection(selection.name, encryption, zero_or_one_pad)
+    const cipher = new CiphertextSelection(selection.name, encryption, zero_or_one_pad)
     return [cipher, seed_nonce]
 }
 
@@ -57,12 +56,12 @@ export function encrypt_ballot(context: AnyElectionContext,
         nonces.push(Nonces(seed_nonce).get(i));
     }
 
-    const public_key = context.get_public_key()
-    const ciphered_selections: (CiphertextSelection|null)[] = []
+    const public_key = context.get_public_key();
+    const ciphered_selections: CiphertextSelection[] = [];
     let start = true;
     let total_constant_int: number;
     total_constant_int = 0;
-    let agg_seed: ElementModQ = null;
+    let agg_seed: ElementModQ | null = null;
     let overall_encryption: el.ElGamalCiphertext = null;
     for(let selection_idx=0; selection_idx < num_selection; selection_idx++) {
         const plain_selection = ballot.selections[selection_idx];
@@ -95,7 +94,7 @@ export function encrypt_ballot(context: AnyElectionContext,
     } else {
         placeholder_choice = 0;
     }
-    const placeHolderSelection = PlaintextSelection(PLACEHOLDER_NAME, placeholder_choice);
+    const placeHolderSelection = new PlaintextSelection(PLACEHOLDER_NAME, placeholder_choice);
     const placeholder_encrypt_selection: ([CiphertextSelection, ElementModQ] | null) = encrypt_selection(context, placeHolderSelection, seed_nonce);
     if (placeholder_encrypt_selection == null){
         return null;
@@ -125,7 +124,7 @@ export function encrypt_ballot(context: AnyElectionContext,
         seed_nonce,
         context.base_hash,
     );
-    const cipher: CiphertextBallot = CiphertextBallot(ballot.ballot_id, ciphered_selections, chaum_proof);
+    const cipher: CiphertextBallot = new CiphertextBallot(ballot.ballot_id, ciphered_selections, chaum_proof);
     return cipher;
 }
 
@@ -144,7 +143,7 @@ export function encrypt_ballots(
         nonces.push(value);
     }
     for(let ballot_idx = 0; ballot_idx < num_ballots; ballot_idx++) {
-        const ballot_encrypted: CiphertextBallot = encrypt_ballot(context, ballots[ballot_idx], nonces[ballot_idx]);
+        const ballot_encrypted: CiphertextBallot | null = encrypt_ballot(context, ballots[ballot_idx], nonces[ballot_idx]);
         if(ballot_encrypted == null) {
             return null;
         }
@@ -191,9 +190,9 @@ export function decrypt_selection(
     //     ciphertext. The optional seed is used for computing the proof.
     const secret_key = context.keypair.secret_key;
     const choice = selection.ciphertext.decrypt(secret_key);
-    const plaintextSelection = PlaintextSelection(selection.name, choice);
+    const plaintextSelection = new PlaintextSelection(selection.name, choice);
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
-    return PlaintextSelectionWithProof(plaintextSelection, descryption_proof);
+    return new PlaintextSelectionWithProof(plaintextSelection, descryption_proof);
 }
 
 export function decrypt_ballot(
@@ -213,7 +212,7 @@ export function decrypt_ballot(
     for(let selection_idx = 0; selection_idx < num_selection - 1; selection_idx++) {
         ballot_decrypted_lst.push(decrypt_selection(context, ballot.selections[selection_idx], nonces[selection_idx]));
     }
-    return PlaintextBallotWithProofs(ballot.ballot_id, ballot_decrypted_lst);
+    return new PlaintextBallotWithProofs(ballot.ballot_id, ballot_decrypted_lst);
 }
 
 export function validate_decrypted_selection(
@@ -261,7 +260,7 @@ export function tally_encrypted_ballots(
     }
     const return_list = [];
     for (const name of Object.keys(total_votes)) { // return string[] of keys of total_votes
-        return_list.push(CiphertextSelectionTally(name, total_votes[name]));
+        return_list.push(new CiphertextSelectionTally(name, total_votes[name]));
     }
     return return_list;
 }
@@ -275,9 +274,9 @@ export function decrypt_tally(
     //     ciphertext. The optional seed is used for computing the proof.
 
     const secret_key = context.keypair.secret_key;
-    const plain_selections = PlaintextSelection(selection.name, selection.total.decrypt(secret_key));
+    const plain_selections = new PlaintextSelection(selection.name, selection.total.decrypt(secret_key));
     const decryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.total, secret_key, seed, context.base_hash);
-    return PlaintextSelectionWithProof(plain_selections, decryption_proof);
+    return new PlaintextSelectionWithProof(plain_selections, decryption_proof);
 }
 
 export function decrypt_tallies(
@@ -347,7 +346,7 @@ export function tally_plaintext_ballots(
     }
     const lst = [];
     for (const name of context.names) {
-        lst.push(PlaintextSelection(name, totals[name]));
+        lst.push(new PlaintextSelection(name, totals[name]));
     }
-    return PlaintextBallot("TOTALS", lst);
+    return new PlaintextBallot("TOTALS", lst);
 }
