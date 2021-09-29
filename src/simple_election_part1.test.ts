@@ -15,7 +15,7 @@ import {
     validate_decrypted_selection,
 } from "./simple_elections";
 import { elements_mod_q_no_zero, elements_mod_q } from "./groupUtils";
-import { context_and_ballots } from "./simple_elections";
+import { context_and_ballots } from "./simpleElectionsUtil";
 
 describe("TestPart1", () => {
     // TODO
