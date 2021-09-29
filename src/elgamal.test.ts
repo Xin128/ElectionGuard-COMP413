@@ -127,7 +127,7 @@ describe("TestElgamal", () => {
             e = TWO_MOD_Q;
         }
         const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(e);
-
+        console.log("public key!!!!!", keypair!.public_key);
         expect(keypair!.public_key.is_valid_residue()).toBe(true);
     });
 
