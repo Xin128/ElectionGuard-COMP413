@@ -127,7 +127,7 @@ export class ConstantChaumPedersenProof {
     // c in the spec
     response: ElementModQ;
     // v in the spec
-    constant: number;
+    constant: bigint;
     // constant value
 
     public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: number) {
@@ -144,7 +144,7 @@ export class ConstantChaumPedersenProof {
         const b:ElementModP = this.data;
         const c:ElementModQ = this.challenge;
         const v:ElementModQ = this.response;
-        const constant:number = this.constant;
+        const constant: bigint = this.constant;
         const in_bounds_alpha:boolean = alpha.is_valid_residue();
         const in_bounds_beta:boolean = beta.is_valid_residue();
         const in_bounds_a:boolean = a.is_valid_residue();
@@ -324,7 +324,7 @@ export class ChaumPedersenProofGeneric {
         gx: ElementModP,
         h: ElementModP,
         hx: ElementModP,
-        base_hash?: [ElementModQ],
+        base_hash: ElementModQ[] | null,
         check_c = true): boolean {
         const in_bounds_a = this.a.is_valid_residue();
         const in_bounds_b = this.b.is_valid_residue();
@@ -372,7 +372,7 @@ export function make_chaum_pedersen_generic(
     h: ElementModP,
     x: ElementModQ,
     seed: ElementModQ,
-    base_hash?: [ElementModQ],
+    base_hash: ElementModQ[] | null,
 ): ChaumPedersenProofGeneric {
     const nonce = new Nonces(seed, "generic-chaum-pedersen-proof");
     const w = nonce.get(0);
@@ -413,7 +413,7 @@ export class ChaumPedersenDecryptionProof {
         plaintext: number,
         ciphertext: ElGamalCiphertext,
         public_key: ElementModP,
-        base_hash?: [ElementModQ]
+        base_hash: ElementModQ[] | null
     ): boolean {
         const plaintext_p = int_to_p(plaintext);
         if (plaintext_p == undefined){
@@ -443,7 +443,7 @@ export function make_chaum_pedersen_decryption_proof(
     ciphertext: ElGamalCiphertext,
     secret_key: ElementModQ,
     seed: ElementModQ,
-    base_hash?: [ElementModQ]
+    base_hash: ElementModQ[] | null
 ): ChaumPedersenDecryptionProof {
     return new ChaumPedersenDecryptionProof(
         make_chaum_pedersen_generic(
