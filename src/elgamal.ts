@@ -1,4 +1,3 @@
-import {assert} from "console";
 // import {discrete_log} from "./dlog"
 import {
   ElementModQ,
@@ -139,7 +138,9 @@ export function elgamal_encrypt
 }
 
 export function elgamal_add(...ciphertexts: ElGamalCiphertext[]): ElGamalCiphertext {
-  assert(ciphertexts.length !== 0, "Must have one or more ciphertexts for elgamal_add");
+  if (ciphertexts.length == 0) {
+    throw new Error("Must have one or more ciphertexts for elgamal_add");
+  }
 
   let result: ElGamalCiphertext = ciphertexts[0];
   for (let i = 1; i < ciphertexts.length; i++) {

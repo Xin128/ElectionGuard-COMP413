@@ -81,7 +81,7 @@ describe("TestElgamal", () => {
 
         // to avoid non-used issue
         console.log(message,keypair,nonce);
-        
+
         // const ciphertext = elgamal_encrypt(message, nonce, keypair!.public_key)
         // const plaintext:number = ciphertext.decrypt_known_nonce(keypair!.secret_key);
         // expect(plaintext).toBe(message);
@@ -117,10 +117,10 @@ describe("TestElgamal", () => {
     test('test_elgamal_add_requires_args', () => {
         //console.assert does not throw an AssertionError (except in Node.js), meaning that this method is incompatible with most testing frameworks and that code execution will not break on a failed assertion.
         // TODO: add manual defined error in elgamal.
-        expect(elgamal_add()).toBe(undefined);
+        expect(() => {elgamal_add()}).toThrowError();
     });
-    
-    
+
+
     test('test_elgamal_keypair_produces_valid_residue', () => {
         let e = elements_mod_q_no_zero();
         if (e == ONE_MOD_Q) {
