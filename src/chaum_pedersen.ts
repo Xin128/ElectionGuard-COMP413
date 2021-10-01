@@ -80,13 +80,13 @@ export class DisjunctiveChaumPedersenProof {
         const in_bounds_c1:boolean = c1.is_in_bounds();
         const in_bounds_v0:boolean = v0.is_in_bounds();
         const in_bounds_v1:boolean = v1.is_in_bounds();
-        const consistent_c:boolean = (add_q(c0, c1) == c) && (add_q(c0, c1) == hash_elems([q, alpha, beta, a0, b0, a1, b1]));
-        const consistent_gv0:boolean = g_pow_p(v0) == mult_p(a0, pow_p(alpha, c0));
-        const consistent_gv1:boolean = g_pow_p(v1) == mult_p(a1, pow_p(alpha, c1));
-        const consistent_kv0:boolean = pow_p(k, v0) == mult_p(b0, pow_p(beta, c0));
-        const consistent_gc1kv1:boolean = mult_p(g_pow_p(c1), pow_p(k, v1)) == mult_p(
+        const consistent_c:boolean = (add_q(c0, c1).equals(c)) && (add_q(c0, c1).equals(hash_elems([q, alpha, beta, a0, b0, a1, b1])));
+        const consistent_gv0:boolean = g_pow_p(v0).equals(mult_p(a0, pow_p(alpha, c0)));
+        const consistent_gv1:boolean = g_pow_p(v1).equals(mult_p(a1, pow_p(alpha, c1)));
+        const consistent_kv0:boolean = pow_p(k, v0).equals(mult_p(b0, pow_p(beta, c0)));
+        const consistent_gc1kv1:boolean = mult_p(g_pow_p(c1), pow_p(k, v1)).equals(mult_p(
             b1, pow_p(beta, c1)
-        );
+        ));
         const success = (
             in_bounds_alpha
             && in_bounds_beta
@@ -104,6 +104,10 @@ export class DisjunctiveChaumPedersenProof {
             && consistent_kv0
             && consistent_gc1kv1
         );
+        console.log("consistent_gv0", consistent_gv0);
+
+        console.log("g_pow_p(v0):", g_pow_p(v0));
+        console.log("mult_p(a0, pow_p(alpha, c0))",mult_p(a0, pow_p(alpha, c0)));
         if (!success) {
             console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
             "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,

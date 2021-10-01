@@ -43,8 +43,8 @@ describe("TestDisjunctiveChaumPedersen", () => {
         const proof0bad:DisjunctiveChaumPedersenProof = make_disjunctive_chaum_pedersen_one(
             message0, nonce, keypair.public_key, ONE_MOD_Q, seed
         )
-        expect(proof0.is_valid(message0, keypair.public_key, ONE_MOD_Q)).toBe(true);
-        expect(proof0bad.is_valid(message0, keypair.public_key, ONE_MOD_Q)).toBe(false);
+        expect(proof0.is_valid(message0, keypair.public_key, ONE_MOD_Q)).toBeTruthy();
+        expect(proof0bad.is_valid(message0, keypair.public_key, ONE_MOD_Q)).toBeFalsy();
 
         const message1:ElGamalCiphertext = get_optional(elgamal_encrypt(BigInt(1), nonce, keypair.public_key))
         const proof1:DisjunctiveChaumPedersenProof = make_disjunctive_chaum_pedersen_one(
