@@ -19,17 +19,16 @@ import {
     decrypt_tallies,
     tally_plaintext_ballots,
 } from "./simple_elections";
-import { elements_mod_q_no_zero } from "./group";
+import { elements_mod_q_no_zero } from "./groupUtils";
 import {
     context_and_ballots,
     context_and_arbitrary_ballots,
-} from "./groupUtils"
+    getRandomNumberInclusive,
+} from "./simpleElectionsUtil"
 
 describe("TestPart2", () => {
 
-    // TODO
     test("test_encryption_decryption_inverses", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         [context, ballots] = context_and_ballots(1);
@@ -44,14 +43,12 @@ describe("TestPart2", () => {
         });
     });
 
-    // TODO
     test("test_unique_ballot_ids", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
-        [context, ballots] = context_and_ballots(Math.random() * (21 - 2) + 2);
+        [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
         cballots = encrypt_ballots(context, ballots, seed_nonce);
         expect(cballots).not.toEqual(null);
 
@@ -64,14 +61,12 @@ describe("TestPart2", () => {
 
     });
 
-    // TODO
     test("test_unique_nonces", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
-        [context, ballots] = context_and_ballots(Math.random() * (21 - 2) + 2);
+        [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
         expect(cballots).not.toEqual(null);
 
         // We're going to extract all of the "pad" elements from the ElGamal ciphertexts,
@@ -122,9 +117,7 @@ describe("TestPart2", () => {
         expect(dec_proof_c_vals.length).toEqual(new Set(dec_proof_c_vals).size);
     });
 
-    // TODO
     test("test_encryption_determinism", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballots1: CiphertextBallot[];
@@ -150,9 +143,7 @@ describe("TestPart2", () => {
         
     });
 
-    // TODO
     test("test_chaum_pedersen_ballot_proofs_validate", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballot: CiphertextBallot;
@@ -163,9 +154,7 @@ describe("TestPart2", () => {
         expect(validate_encrypted_ballot(context, cballot)).toBe(true);
     });
 
-    // TODO
     test("test_broken_chaum_pedersen_ballot_proofs_fail", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballot_good: CiphertextBallot;
@@ -194,7 +183,7 @@ describe("TestPart2", () => {
             )
         ).toBe(true);
 
-        const ciphertext_bad = elgamal_encrypt(2, alt_nonce, context.get_public_key());
+        const ciphertext_bad = elgamal_encrypt(2n, alt_nonce, context.get_public_key());
         expect(
             zero_or_one_proof.is_valid(
                 ciphertext_bad, context.get_public_key(), context.base_hash
@@ -209,9 +198,7 @@ describe("TestPart2", () => {
 
     });
 
-    // TODO
     test("test_invalid_ballots_dont_encrypt", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballot: CiphertextBallot;
@@ -225,9 +212,7 @@ describe("TestPart2", () => {
         }
     });
 
-    // TODO
     test("test_ballot_accumulation", () => {
-        // TODO: need to generate context, ballots randomly
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
         let cballots: CiphertextBallot[];

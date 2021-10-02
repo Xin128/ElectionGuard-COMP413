@@ -18,10 +18,8 @@ import { elements_mod_q_no_zero, elements_mod_q } from "./groupUtils";
 import { context_and_ballots } from "./simpleElectionsUtil";
 
 describe("TestPart1", () => {
-    // TODO
     test("test_part1_encryption_decryption_inverses", () => {
-        // TODO: need to generate context, ballots randomly
-        const [context, ballots] = context_and_ballots;
+        const [context, ballots] = context_and_ballots(1);
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
 
         const selections: PlaintextSelection[] = ballots[0].selections;
@@ -54,10 +52,8 @@ describe("TestPart1", () => {
 
     });
 
-    // TODO
     test("test_part1_proof_validation", () => {
-       // TODO: need to generate context, ballots randomly
-       const [context, ballots] = context_and_ballots;
+       const [context, ballots] = context_and_ballots(1);
        const seed_nonce: ElementModQ = elements_mod_q_no_zero();
 
        const selections: PlaintextSelection[] = ballots[0].selections;
@@ -85,10 +81,8 @@ describe("TestPart1", () => {
 
     });
 
-    // TODO
     test("test_part1_invalid_encryption_proofs_fail", () => {
-        // TODO: need to generate context, ballots, and seed_nonce randomly
-        const [context, ballots] = context_and_ballots;
+        const [context, ballots] = context_and_ballots(1);
         const original_seed_nonce: ElementModQ = elements_mod_q_no_zero();
         const substitute_seed_nonce: ElementModQ = elements_mod_q();
 
