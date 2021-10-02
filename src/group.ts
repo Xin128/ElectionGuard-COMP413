@@ -117,7 +117,7 @@ class ElementModP {
     }
 
     public is_valid_residue(): boolean {
-        const residue: boolean = pow_p(this, new ElementModQ(BigInt(Q))) === ONE_MOD_P;
+        const residue: boolean = pow_p(this, new ElementModQ(BigInt(Q))).equals(ONE_MOD_P);
         return this.is_in_bounds() && residue;
     }
 
