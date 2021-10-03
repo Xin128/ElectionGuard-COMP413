@@ -167,20 +167,20 @@ export class ConstantChaumPedersenProof {
         // in some use cases this value may need to be increased
 
         const sane_constant:boolean = 0 <= constant && constant < 1_000_000_000;
-        const same_c:boolean = c == hash_elems([q, alpha, beta, a, b]);
+        const same_c:boolean = c.equals(hash_elems([q, alpha, beta, a, b]));
         const consistent_gv:boolean = (
             in_bounds_v
             && in_bounds_a
             && in_bounds_alpha
             && in_bounds_c
             // The equation 𝑔^𝑉 = 𝑎𝐴^𝐶 mod 𝑝
-            && g_pow_p(v) == mult_p(a, pow_p(alpha, c))
+            && g_pow_p(v).equals(mult_p(a, pow_p(alpha, c)))
         );
 
         // The equation 𝑔^𝐿𝐾^𝑣 = 𝑏𝐵^𝐶 mod 𝑝
         const consistent_kv:boolean = in_bounds_constant && mult_p(
             g_pow_p(mult_p(c, constant_q as ElementModQ)), pow_p(k, v)
-        ) == mult_p(b, pow_p(beta, c));
+        ).equals(mult_p(b, pow_p(beta, c)));
 
         const success = (
             in_bounds_alpha
