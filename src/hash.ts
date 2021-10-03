@@ -37,13 +37,17 @@ export type CRYPTO_HASHABLE_ALL = CRYPTO_HASHABLE_T[] | CRYPTO_HASHABLE_T | CRYP
 export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     let hash_me = 'null';
     if (x instanceof ElementModQ || x instanceof ElementModP) {
-      hash_me = x.to_hex();
+      if (x.elem != 0n) {
+        hash_me = x.to_hex().toUpperCase();
+      }
     } else if (x instanceof CryptoHashable) {
       hash_me = x.crypto_hash().to_hex();
     } else if (typeof x === "string") {
       hash_me = x;
     } else if (typeof x === "number") {
-      hash_me = x.toString();
+      if (x!= 0) {
+        hash_me = x.toString();
+      }
     }
     return hash_me;
 }
@@ -58,20 +62,15 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
  */
 export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
   const h = crypto.createHash('sha256');
-  // const CRYPTO_HASHABLE_T_StrList:string[]= ['CryptoHashable' ,'ElementModPOrQ','string','number', 'undefined'];
-  h.update("|", "utf-8");  let hash_me:string; 
+  h.update("|", "utf-8");  
+  // console.log(BigInt('0x' + h.digest('hex').toString()).toString(10));
+  let hash_me:string; 
 
   if (!(a instanceof(Array))) {
     hash_me = hash_elem(a as CRYPTO_HASHABLE_T);
     h.update(hash_me + "|", "utf-8")
-  } 
-  else { 
-  let cnt = 0;
+  } else { 
   for (const x of a as Array<CRYPTO_HASHABLE_T>) {
-    if (cnt >= 0 ){
-      break;
-    }
-    cnt += 1;
     if (Array.isArray(x)) {
       if (x.length === 0) {
         hash_me = "null";
@@ -86,9 +85,21 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
     }
     h.update(hash_me + "|", "utf-8")
   }
-  
 }
-  //TODO: Need a binary to BigInt function here.
-  return int_to_q_unchecked(
-    BigInt(BigInt('0x' + h.digest('hex').toString()).toString(10)) % Q_MINUS_ONE);
+  const tempRsltForDebug = BigInt('0x' + h.digest('hex').toString()).toString(10);
+  const hash_rslt = int_to_q_unchecked(
+    BigInt(tempRsltForDebug) % Q_MINUS_ONE);
+    
+    /// just for testing!!
+    // const hash_newlist:string[] = ["01"]
+  //   const hash_newlist:string[] = ['01', '03', '09', '3CA2', '7CF3', '0103', 'B925']
+  //   const h1 = crypto.createHash('sha256');
+  //    h1.update("|", "utf-8");  
+  //    for (const element of hash_newlist) {
+  //      console.log(element) 
+  //      h1.update(element + '|', "utf-8");
+  //    }
+
+  // const hash_rslt = int_to_q_unchecked(1n);
+  return hash_rslt;
 }

@@ -104,10 +104,7 @@ export class DisjunctiveChaumPedersenProof {
             && consistent_kv0
             && consistent_gc1kv1
         );
-        console.log("consistent_gv0", consistent_gv0);
 
-        console.log("g_pow_p(v0):", g_pow_p(v0));
-        console.log("mult_p(a0, pow_p(alpha, c0))",mult_p(a0, pow_p(alpha, c0)));
         if (!success) {
             console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
             "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
@@ -218,6 +215,7 @@ export function make_disjunctive_chaum_pedersen(
     q: ElementModQ,
     seed: ElementModQ,
     plaintext: number): DisjunctiveChaumPedersenProof {
+    //TODO for Alex: throw errors here.
     assert(0 <= plaintext && plaintext <= 1);
     if (plaintext == 0){
         return make_disjunctive_chaum_pedersen_zero(message, r, k, q, seed);
@@ -232,22 +230,31 @@ export function make_disjunctive_chaum_pedersen_zero(
     k: ElementModP,
     q: ElementModQ,
     seed: ElementModQ): DisjunctiveChaumPedersenProof{
+
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
     const c1 = nonces.get(0);
     const v1 = nonces.get(1);
     const u0 = nonces.get(2);
-
     // Compute the NIZKP
     const a0 = g_pow_p(u0);
     const b0 = pow_p(k, u0);
     const q_minus_c1 = negate_q(c1);
     const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
     const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
+    // console.log('to hash c:', q, alpha, beta, a0, b0, a1, b1);
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c0 = a_minus_b_q(c, c1);
+
     const v0 = a_plus_bc_q(u0, c0, r);
+    // console.log('make disjunctive: ');
+    // console.log('a_plus_bc_q(u0, c0, r)', a_plus_bc_q(u0, c0, r), u0, c0, r);
+    // console.log('alpha', alpha);
+    // console.log('v0', v0);
+    // console.log('a0', a0);
+    // console.log('b0', b0);
+    // console.log('c0', c0, c, c1);
 
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
