@@ -153,10 +153,9 @@ export class ConstantChaumPedersenProof {
         const in_bounds_c:boolean = c.is_in_bounds();
         const in_bounds_v:boolean = v.is_in_bounds();
         const tmp = int_to_q(constant);
-
         let in_bounds_constant;
         let constant_q;
-        if (tmp !== null){
+        if (tmp == null){
             constant_q = ZERO_MOD_Q;
             in_bounds_constant = false;
         } else {
