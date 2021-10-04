@@ -32,7 +32,7 @@ describe("TestPart1", () => {
         });
         expect(encryptions).not.toEqual(null);
 
-        let decryptions_with_nonce: bigint[] = [];
+        let decryptions_with_nonce: number[] = [];
         encryptions.forEach((e) => {
             decryptions_with_nonce = [...decryptions_with_nonce, e[0].ciphertext.decrypt_known_nonce(context.keypair.public_key, e[1])];
         });
@@ -92,14 +92,13 @@ describe("TestPart1", () => {
         const original_decrypt_nonces = new Nonces(original_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
         const substitute_decrypt_nonces = new Nonces(substitute_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
         let original_encryptions: [CiphertextSelection, ElementModQ][] = [];
-        selections.forEach((selection , idx) => {
-            original_encryptions = [...original_encryptions, get_optional(encrypt_selection(context, selection, original_decrypt_nonces[idx]))];
-        });
         let substitute_encryptions: [CiphertextSelection, ElementModQ][] = [];
-        selections.forEach((selection , idx) => {
-            selection; // prevent unused value lint error
-            substitute_encryptions = [...substitute_encryptions, get_optional(encrypt_selection(context, selections[Math.floor(selections.length / 2) + idx], substitute_decrypt_nonces[idx]))];
-        });
+        for (let i = 0; i < Math.floor(selections.length / 2); i++) {
+            original_encryptions = [...original_encryptions, get_optional(encrypt_selection(context, selections[i], original_decrypt_nonces[i]))];
+        }
+        for (let i = 0; i < Math.floor(selections.length / 2); i++) {
+            substitute_encryptions = [...substitute_encryptions, get_optional(encrypt_selection(context, selections[Math.floor(selections.length / 2) + i], substitute_decrypt_nonces[i]))];
+        }
         expect(original_encryptions).not.toBeNull();
         expect(substitute_encryptions).not.toBeNull();
 
