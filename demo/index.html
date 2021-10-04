@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> -->
+    <title>Official Ballot for the General Election</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        min-height: 100%;
+      }
+      body,
+      div,
+      form,
+      input,
+      p {
+        padding: 0;
+        margin: 0;
+        outline: none;
+        font-family: Roboto, Arial, sans-serif;
+        font-size: 14px;
+        color: #666;
+        line-height: 22px;
+      }
+      h1 {
+        font-weight: 400;
+      }
+      h4 {
+        margin-bottom: 0;
+      }
+      hr {
+        margin: 20px 0;
+      }
+      span.required {
+        color: red;
+      }
+      .main-block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+      }
+      form {
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 2px 5px #ccc;
+        background: #fff;
+      }
+      th,
+      td {
+        width: 12%;
+        text-align: center;
+        vertical-align: unset;
+        line-height: 18px;
+        font-weight: 400;
+        word-break: break-all;
+      }
+      .first-col {
+        width: 38%;
+        text-align: left;
+      }
+      textarea:hover {
+        border: 1px solid #095484;
+        outline: none;
+      }
+      .comments-block,
+      .radio-block {
+        margin: 30px 0;
+      }
+      .comments,
+      question,
+      .answer,
+      .question-answer,
+      table {
+        width: 100%;
+      }
+      .comments {
+        margin: 0;
+      }
+      small {
+        display: block;
+        line-height: 18px;
+        opacity: 0.5;
+      }
+      textarea {
+        width: calc(100% - 6px);
+      }
+      .question-answer > div {
+        display: inline-block;
+        margin-left: 30px;
+      }
+      .btn-block {
+        text-align: center;
+      }
+      button {
+        width: 150px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background: #095484;
+        font-size: 16px;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0666a3;
+      }
+      @media (min-width: 568px) {
+        .comments-block,
+        .radio-block {
+          display: flex;
+          justify-content: space-between;
+        }
+        .comments {
+          width: 30%;
+        }
+        .answer {
+          width: 70%;
+        }
+        .question,
+        .question-answer {
+          width: 50%;
+        }
+        th,
+        td {
+          word-break: keep-all;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-block">
+      <form action="/">
+        <h1>Official Ballot for the General Election 普选官方选票</h1>
+        <p>
+          City of New County - County of Kings 新乡市 国王町
+        </p>
+        <h3>Instruction 说明:</h3>
+        <p>Mark the oval to the bottom of the name of your choice</p>
+        <p>标记您所选择的候选人姓名下边的椭圆</p>
+        <hr />
+        <div>
+          <h4>Mayor of New County 新乡村长<span class="required">*</span></h4>
+          <table>
+            <tr>
+              <th class="first-col"></th>
+              <th>
+                <p>水澤</p>
+                Mizu Sawa
+              </th>
+              <th>
+                <p>朴秀</p>
+                Park Shu
+              </th>
+              <th>
+                <p>胡志万</p>
+                Van Darkholme
+              </th>
+              <th>
+                <p>王乔乔</p>
+                Wang Jo Jo
+              </th>
+              <th>
+                <p>泰德 巴德</p>
+                Ted Budd
+              </th>
+            </tr>
+            <tr>
+              <td class="first-col">You may vote for ONE 只能选填一位</td>
+              <td><input type="radio" value="none" name="needs" required /></td>
+              <td><input type="radio" value="none" name="needs" required /></td>
+              <td><input type="radio" value="none" name="needs" required /></td>
+              <td><input type="radio" value="none" name="needs" required /></td>
+              <td><input type="radio" value="none" name="needs" required /></td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <h4>Treasurer of New County 新乡出纳</h4>
+          <table>
+            <tr>
+              <th class="first-col"></th>
+              <th><p>詹姆斯 米勒</p>James Miller</th>
+              <th><p>莱姆 伽西亚</p>Liam Garcia</th>
+              <th><p>奥莉薇娅 布朗</p>Olivia Brown</th>
+              <th><p>夏洛特 李</p>Charlotte Li</th>
+              <th><p>阿瓦 阮</p> Ava Nguyen</th>
+            </tr>
+            <tr>
+              <td class="first-col">You may vote for ONE 只能选填一位</td>
+              <td><input type="radio" value="none" name="knowledge" /></td>
+              <td><input type="radio" value="none" name="knowledge" /></td>
+              <td><input type="radio" value="none" name="knowledge" /></td>
+              <td><input type="radio" value="none" name="knowledge" /></td>
+              <td><input type="radio" value="none" name="knowledge" /></td>
+            </tr>
+          </table>
+        </div>
+        <div class="comments-block">
+          <h4 class="comments">
+            Encryption Output 加密输出<small
+              >This is a security code that make sure your ballot is casted. </br> 这是一个保障您的选票加密的安全码</small
+            >
+          </h4>
+          <div class="answer">
+            <textarea rows="5"></textarea>
+          </div>
+        </div>
+        <!-- <div class="radio-block">
+          <p class="question">May We Use Your Quotes / Comments?</p>
+          <div class="question-answer">
+            <div>
+              <input type="radio" value="none" id="radioYes" name="comments" />
+              <label for="radioYes" class="radio">Yes</label>
+            </div>
+            <div>
+              <input type="radio" value="none" id="radioNo" name="comments" />
+              <label for="radioNo" class="radio">No</label>
+            </div>
+          </div>
+        </div> -->
+        <div class="btn-block">
+          <button type="submit" href="/">Print & Encrypt </br> 打印与加密</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
