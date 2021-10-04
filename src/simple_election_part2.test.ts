@@ -25,6 +25,7 @@ import {
     context_and_arbitrary_ballots,
     getRandomNumberInclusive,
 } from "./simpleElectionsUtil"
+import { get_optional } from "./utils";
 
 describe("TestPart2", () => {
 
@@ -34,7 +35,7 @@ describe("TestPart2", () => {
         [context, ballots] = context_and_ballots(1);
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         ballots.forEach((ballot) => {
-            let encrypted_ballot: CiphertextBallot = encrypt_ballot(context, ballot, seed_nonce);
+            let encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
             let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
             for (let i = 0; i < ballot.num_selections(); i++) {
                 expect(ballot.selections[i]).toEqual(decrypted_ballot.selections[i].selection);
@@ -49,7 +50,7 @@ describe("TestPart2", () => {
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
-        cballots = encrypt_ballots(context, ballots, seed_nonce);
+        cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
         // convert to a set, which will collapse duplicates
@@ -67,6 +68,7 @@ describe("TestPart2", () => {
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
+        cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
         // We're going to extract all of the "pad" elements from the ElGamal ciphertexts,
@@ -125,7 +127,8 @@ describe("TestPart2", () => {
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         // originally the input to context_and_ballots is a hypothesis test
         [context, ballots] = context_and_ballots(Math.random() * (21 - 2) + 2);
-
+        cballots1 = get_optional(encrypt_ballots(context, ballots, seed_nonce));
+        cballots2 = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots1).not.toEqual(null);
         expect(cballots2).not.toEqual(null);
 
@@ -149,7 +152,7 @@ describe("TestPart2", () => {
         let cballot: CiphertextBallot;
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_ballots(1);
-        cballot = encrypt_ballot(context, ballots[0], seed_nonce);
+        cballot = get_optional(encrypt_ballot(context, ballots[0], seed_nonce));
         expect(cballot).not.toEqual(null);
         expect(validate_encrypted_ballot(context, cballot)).toBe(true);
     });
@@ -160,20 +163,21 @@ describe("TestPart2", () => {
         let cballot_good: CiphertextBallot;
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_ballots(1);
-        cballot_good = encrypt_ballot(context, ballots[0], seed_nonce);
+        cballot_good = get_optional(encrypt_ballot(context, ballots[0], seed_nonce));
         expect(cballot_good).not.toEqual(null);
         expect(validate_encrypted_ballot(context, cballot_good)).toBe(true);
 
         // we're going to take the first candidate and make its ciphertext be an encryption of 2,
         // which should cause all sorts of fun failures
 
-        const alt_nonce = new Nonces(seed_nonce, "testing is fun")[0];
+        const alt_nonce = new Nonces(seed_nonce, "testing is fun").slice(0, 1)[0];
         const bid = cballot_good.ballot_id;
         const selections = cballot_good.selections;
         const valid_sum_proof = cballot_good.valid_sum_proof;
         let name, ciphertext, zero_or_one_proof;
         name = selections[0].name;
         ciphertext = selections[0].ciphertext;
+        ciphertext; // prevent value unused lint error
         zero_or_one_proof = selections[0].zero_or_one_proof;
         expect(
             zero_or_one_proof.is_valid(
@@ -183,7 +187,7 @@ describe("TestPart2", () => {
             )
         ).toBe(true);
 
-        const ciphertext_bad = elgamal_encrypt(2n, alt_nonce, context.get_public_key());
+        const ciphertext_bad = get_optional(elgamal_encrypt(2n, alt_nonce, context.get_public_key()));
         expect(
             zero_or_one_proof.is_valid(
                 ciphertext_bad, context.get_public_key(), context.base_hash
@@ -204,7 +208,7 @@ describe("TestPart2", () => {
         let cballot: CiphertextBallot;
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_arbitrary_ballots(1);
-        cballot = encrypt_ballot(context, ballots[0], seed_nonce);
+        cballot = get_optional(encrypt_ballot(context, ballots[0], seed_nonce));
         if (ballots[0].is_overvoted()) {
             expect(cballot).toEqual(null);
         } else {
@@ -219,7 +223,7 @@ describe("TestPart2", () => {
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         const decrypt_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_ballots(10);
-        cballots = encrypt_ballots(context, ballots, seed_nonce);
+        cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
         let tally = tally_encrypted_ballots(context, cballots);
@@ -238,7 +242,7 @@ describe("TestPart2", () => {
         }
             
         let plain_tally = tally_plaintext_ballots(context, ballots);
-        let same_totals = [];
+        let same_totals: boolean[] = [];
         plain_tally.selections.forEach((tally, idx) => {
             same_totals = [...same_totals, tally === pballots[idx].selection];
         });

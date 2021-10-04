@@ -3,8 +3,7 @@ import { make_fake_chaum_pedersen_generic, ChaumPedersenDecryptionProof } from "
 import { ONE_MOD_P } from "./group";
 import { Nonces } from "./nonces";
 import {
-    PrivateElectionContext,
-    PlaintextBallot,
+    CiphertextSelection,
     PlaintextSelection,
     PlaintextSelectionWithProof,
 } from "./simple_election_data";
@@ -16,6 +15,7 @@ import {
 } from "./simple_elections";
 import { elements_mod_q_no_zero, elements_mod_q } from "./groupUtils";
 import { context_and_ballots } from "./simpleElectionsUtil";
+import { get_optional } from "./utils";
 
 describe("TestPart1", () => {
     test("test_part1_encryption_decryption_inverses", () => {
@@ -26,9 +26,9 @@ describe("TestPart1", () => {
         const nonces = new Nonces(seed_nonce, "part1-ballot-nonces").slice(0 , selections.length);
         const decrypt_nonces = new Nonces(seed_nonce, "part1-ballot-decrypt-nonces").slice(0 , selections.length);
 
-        let encryptions = [];
+        let encryptions: [CiphertextSelection, ElementModQ][] = [];
         selections.forEach((selection , idx) => {
-            encryptions = [...encryptions, encrypt_selection(context, selection, nonces[idx])];
+            encryptions = [...encryptions, get_optional(encrypt_selection(context, selection, nonces[idx]))];
         });
         expect(encryptions).not.toEqual(null);
 
@@ -39,6 +39,7 @@ describe("TestPart1", () => {
 
         let decryptions_with_key: PlaintextSelectionWithProof[] = [];
         selections.forEach((selection, idx) => {
+            selection; // prevent value not used lint error
             decryptions_with_key = [...decryptions_with_key, decrypt_selection(context, encryptions[idx][0], decrypt_nonces[idx])];
         });
 
@@ -60,9 +61,9 @@ describe("TestPart1", () => {
        const nonces = new Nonces(seed_nonce, "part1-ballot-nonces").slice(0 , selections.length);
        const decrypt_nonces = new Nonces(seed_nonce, "part1-ballot-decrypt-nonces").slice(0 , selections.length);
 
-       let encryptions = [];
+       let encryptions: [CiphertextSelection, ElementModQ][] = [];
        selections.forEach((selection , idx) => {
-           encryptions = [...encryptions, encrypt_selection(context, selection, nonces[idx])];
+           encryptions = [...encryptions, get_optional(encrypt_selection(context, selection, nonces[idx]))];
        });
        expect(encryptions).not.toEqual(null);
        
@@ -72,6 +73,7 @@ describe("TestPart1", () => {
 
        let decryptions_with_key: PlaintextSelectionWithProof[] = [];
         selections.forEach((selection, idx) => {
+            selection; // prevent value unused lint error
             decryptions_with_key = [...decryptions_with_key, decrypt_selection(context, encryptions[idx][0], decrypt_nonces[idx])];
         });
 
@@ -89,13 +91,14 @@ describe("TestPart1", () => {
         const selections: PlaintextSelection[] = ballots[0].selections;
         const original_decrypt_nonces = new Nonces(original_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
         const substitute_decrypt_nonces = new Nonces(substitute_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
-        let original_encryptions = [];
+        let original_encryptions: [CiphertextSelection, ElementModQ][] = [];
         selections.forEach((selection , idx) => {
-            original_encryptions = [...original_encryptions, encrypt_selection(context, selection, original_decrypt_nonces[idx])];
+            original_encryptions = [...original_encryptions, get_optional(encrypt_selection(context, selection, original_decrypt_nonces[idx]))];
         });
-        let substitute_encryptions = [];
+        let substitute_encryptions: [CiphertextSelection, ElementModQ][] = [];
         selections.forEach((selection , idx) => {
-            substitute_encryptions = [...substitute_encryptions, encrypt_selection(context, selections[Math.floor(selections.length / 2) + idx], substitute_decrypt_nonces[idx])];
+            selection; // prevent unused value lint error
+            substitute_encryptions = [...substitute_encryptions, get_optional(encrypt_selection(context, selections[Math.floor(selections.length / 2) + idx], substitute_decrypt_nonces[idx]))];
         });
         expect(original_encryptions).not.toBeNull();
         expect(substitute_encryptions).not.toBeNull();
@@ -108,6 +111,7 @@ describe("TestPart1", () => {
         // make changes to proof
         let original_decryptions_with_wrong_proof: PlaintextSelectionWithProof[] = [];
         original_encryptions.forEach((o, idx) => {
+            o; // prevent unused value lint error
             original_decryptions_with_wrong_proof = [...original_decryptions_with_wrong_proof, new PlaintextSelectionWithProof(selections[idx], new ChaumPedersenDecryptionProof(make_fake_chaum_pedersen_generic(ONE_MOD_P, ONE_MOD_P, ONE_MOD_P, ONE_MOD_P, original_seed_nonce, substitute_seed_nonce)))];
         });
 
