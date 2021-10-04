@@ -36,7 +36,7 @@ describe("TestNonces", () => {
         }
         const n1:Nonces = new Nonces(seed1);
         const n2:Nonces = new Nonces(seed2);
-        expect(n1.get(i).equals(n2.get(i))).toBeTruthy();
+        expect(n1.get(i).equals(n2.get(i))).toBeFalsy();
     });
 
     test('test_nonces_with_slices', () => {
