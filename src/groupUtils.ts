@@ -32,10 +32,11 @@ const getRandomIntExclusive: (range: bigint) => bigint = (range) => {
 const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
     let i = 1n;
     let c = 0n;
-    let cnt = 0;
-    // while (true) {
-    while ( cnt < 100000) {
-        cnt += 1;
+    // let cnt = 0;
+    console.log("Inside powmod!!!");
+    while (true) {
+    // while ( cnt < 100000) {
+        // cnt += 1;
         c = n * i + 1n;
         if (c % a === 0n) {
             c = c / a;
@@ -43,9 +44,9 @@ const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
         }
         i++;
     }
-    if ( cnt == 10000) {
-        throw Error();
-    }
+    // if ( cnt == 10000) {
+    //     throw Error();
+    // }
     return c;
 }
 
