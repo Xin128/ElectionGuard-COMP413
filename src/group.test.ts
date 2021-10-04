@@ -44,7 +44,6 @@ import {
 // values taken from the slackoverflow thread: https://stackoverflow.com/questions/34119110/negative-power-in-modular-pow
 describe("TestGroupUtil", () => {
     test('testPowMod', () => {
-        console.log("inside test powmod");
         expect(powmod(3n, 26n)).toEqual(9n);
         expect(powmod(7n, 29n)).toEqual(25n);
         expect(powmod(29n, 31n)).toEqual(15n);
@@ -169,7 +168,6 @@ describe("TestModularArithmetic", () => {
     test('testMultInverses', () => {
         const elem: ElementModP = elements_mod_p_no_zero();
         const inv: ElementModP = mult_inv_p(elem);
-        console.log("inside test mul inverses");
         expect(mult_p(elem, inv).equals(ONE_MOD_P)).toBe(true);
     });
 

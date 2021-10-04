@@ -33,7 +33,6 @@ const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
     let i = 1n;
     let c = 0n;
     // let cnt = 0;
-    console.log("Inside powmod!!!");
     while (true) {
     // while ( cnt < 100000) {
         // cnt += 1;
@@ -60,7 +59,7 @@ const bnToHex: (bn: bigint) => string = (bn) => {
     
     let hex = bn.toString(16);
     if (hex.length % 2) { hex = '0' + hex; }
-    
+
     if (pos && (0x80 & parseInt(hex.slice(0, 2), 16))) {
         hex = '00' + hex;
     }
