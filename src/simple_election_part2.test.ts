@@ -1,3 +1,4 @@
+/*eslint prefer-const: "warn"*/
 import { elgamal_encrypt } from "./elgamal";
 import { ElementModQ, ElementModP } from "./group";
 import { Nonces } from "./nonces";
@@ -32,10 +33,13 @@ describe("TestPart2", () => {
     test("test_encryption_decryption_inverses", () => {
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
+        // eslint-disable-next-line prefer-const
         [context, ballots] = context_and_ballots(1);
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         ballots.forEach((ballot) => {
-            let encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+            // eslint-disable prefer-const
+            const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+            // eslint-disable-next-line prefer-const
             let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
             for (let i = 0; i < ballot.num_selections(); i++) {
                 expect(ballot.selections[i]).toEqual(decrypted_ballot.selections[i].selection);
@@ -49,7 +53,9 @@ describe("TestPart2", () => {
         let ballots: PlaintextBallot[];
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
+        // eslint-disable-next-line prefer-const
         [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
+        // eslint-disable-next-line prefer-const
         cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
