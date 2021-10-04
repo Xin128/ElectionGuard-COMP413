@@ -334,7 +334,7 @@ export class ChaumPedersenProofGeneric {
         gx: ElementModP,
         h: ElementModP,
         hx: ElementModP,
-        base_hash: ElementModQ[] | null,
+        base_hash: ElementModQ | null,
         check_c = true): boolean {
         const in_bounds_a = this.a.is_valid_residue();
         const in_bounds_b = this.b.is_valid_residue();
@@ -382,7 +382,7 @@ export function make_chaum_pedersen_generic(
     h: ElementModP,
     x: ElementModQ,
     seed: ElementModQ,
-    base_hash: ElementModQ[] | null,
+    base_hash: ElementModQ | null,
 ): ChaumPedersenProofGeneric {
     const nonce = new Nonces(seed, "generic-chaum-pedersen-proof");
     const w = nonce.get(0);
@@ -423,7 +423,7 @@ export class ChaumPedersenDecryptionProof {
         plaintext: bigint,
         ciphertext: ElGamalCiphertext,
         public_key: ElementModP,
-        base_hash: ElementModQ[] | null
+        base_hash: ElementModQ | null
     ): boolean {
         const plaintext_p = int_to_p(plaintext);
         if (plaintext_p == undefined){
@@ -453,7 +453,7 @@ export function make_chaum_pedersen_decryption_proof(
     ciphertext: ElGamalCiphertext,
     secret_key: ElementModQ,
     seed: ElementModQ,
-    base_hash: ElementModQ[] | null
+    base_hash: ElementModQ | null
 ): ChaumPedersenDecryptionProof {
     return new ChaumPedersenDecryptionProof(
         make_chaum_pedersen_generic(
