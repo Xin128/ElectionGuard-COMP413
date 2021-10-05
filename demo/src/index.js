@@ -1,10 +1,6 @@
 import "./styles.css";
 
-document.getElementById("app").innerHTML = `
-<h1>Hello Vanilla!</h1>
-<div>
-  We use the same configuration as Parcel to bundle this sandbox, you can find more
-  info about Parcel 
-  <a href="https://parceljs.org" target="_blank" rel="noopener noreferrer">here</a>.
-</div>
-`;
+document.getElementById("myBtn").addEventListener("click", function () {
+  document.getElementById("output").innerHTML =
+    "4E88B37B6887A8AD04885850A9E3F33A267E8907F16446506B3566F2B1177819";
+});
