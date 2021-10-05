@@ -20,6 +20,10 @@ export class PlaintextSelection{
         this.name = name;
         this.choice = choice;
     }
+
+    public equals(any: PlaintextSelection): boolean {
+        return this.name === any.name && this.choice === any.choice;
+    }
 }
 
 export class PlaintextBallot {

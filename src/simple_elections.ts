@@ -250,20 +250,23 @@ export function tally_encrypted_ballots(
         return [];
     }
     // a type-safe mapping of <K,T>, more detail refers to Record<K,T>
-    const total_votes: Record<string, el.ElGamalCiphertext> = {};
+    const total_votes: Map<string, ElGamalCiphertext> = new Map();
     for (const b of ballots) {
         for (const s of b.selections) {
-            if (s.name in Object.keys(total_votes)) {
-                total_votes[s.name] = s.ciphertext;
+            if (!(s.name in total_votes.keys())) {
+                total_votes.set(s.name, s.ciphertext);
             } else {
-                total_votes[s.name] = el.elgamal_add(total_votes[s.name], s.ciphertext);
+                // total_votes[s.name] = el.elgamal_add(total_votes[s.name], s.ciphertext);
+                const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext)
+                total_votes.set(s.name, new_val);
             }
         }
     }
     const return_list = [];
-    for (const name of Object.keys(total_votes)) { // return string[] of keys of total_votes
-        return_list.push(new CiphertextSelectionTally(name, total_votes[name]));
+    for (const name of total_votes.keys()) { // return string[] of keys of total_votes
+        return_list.push(new CiphertextSelectionTally(name, get_optional(total_votes.get(name))));
     }
+
     return return_list;
 }
 

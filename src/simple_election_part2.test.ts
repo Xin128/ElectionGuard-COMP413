@@ -100,8 +100,8 @@ describe("TestPart2", () => {
         expect(all_pads.length).toEqual(new Set(all_pads).size);
         expect(sum_pads.length).toEqual(new Set(sum_pads).size);
         expect(sum_challenges.length).toEqual(new Set(sum_challenges).size);
-        expect(all_proof_a_vals.length).toEqual(new Set(all_proof_a_vals));
-        expect(all_proof_c_vals.length).toEqual(new Set(all_proof_c_vals));
+        expect(all_proof_a_vals.length).toEqual(new Set(all_proof_a_vals).size);
+        expect(all_proof_c_vals.length).toEqual(new Set(all_proof_c_vals).size);
 
         // Now, we're going to decrypt the ballots and make similar assertions about
         // the uniqueness of the proofs used in the decryption.
@@ -240,8 +240,9 @@ describe("TestPart2", () => {
         // while we're here, let's make sure that if we leave out a ballot, the tallies
         // won't validate.
         if (cballots.length > 1) {
-            tally = tally_encrypted_ballots(context, cballots)
+            // tally = tally_encrypted_ballots(context, cballots)
             let bad_tally = tally_encrypted_ballots(context, cballots.slice(1));
+
             expect(tally.length).toEqual(bad_tally.length);  // same number of candidates
             expect(validate_tallies(context, pballots, bad_tally)).toBe(false);
 
@@ -250,7 +251,7 @@ describe("TestPart2", () => {
         let plain_tally = tally_plaintext_ballots(context, ballots);
         let same_totals: boolean[] = [];
         plain_tally.selections.forEach((tally, idx) => {
-            same_totals = [...same_totals, tally === pballots[idx].selection];
+            same_totals = [...same_totals, tally.equals(pballots[idx].selection)];
         });
 
         expect(same_totals.every(Boolean)).toBe(true);
