@@ -343,17 +343,17 @@ export class ChaumPedersenProofGeneric {
         const in_bounds_h = h.is_valid_residue();
         const in_bounds_hx = hx.is_valid_residue();
 
-        const hash_good = (this.c == hash_elems([base_hash, this.a, this.b])) || (!check_c);
+        const hash_good = (this.c.equals(hash_elems([base_hash, this.a, this.b]))) || (!check_c);
 
         const agxc = mult_p(this.a, pow_p(gx, this.c));  // should yield g^{w + xc}
         const gr = pow_p(g, this.r);  // should also yield g^{w + xc}
 
-        const good_g = agxc == gr;
+        const good_g = agxc.equals(gr);
 
         const bhxc = mult_p(this.b, pow_p(hx, this.c));
         const hr = pow_p(h, this.r);
 
-        const good_h = bhxc == hr;
+        const good_h = bhxc.equals(hr);
 
         const success = (
             hash_good

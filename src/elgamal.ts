@@ -147,7 +147,6 @@ export function elgamal_add(...ciphertexts: ElGamalCiphertext[]): ElGamalCiphert
   for (let i = 1; i < ciphertexts.length; i++) {
     const c:ElGamalCiphertext = ciphertexts[i];
     result = new ElGamalCiphertext(mult_p(result.pad, c.pad), mult_p(result.data, c.data));
-
   }
   return result;
 }

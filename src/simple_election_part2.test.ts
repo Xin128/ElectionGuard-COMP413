@@ -1,3 +1,4 @@
+/*eslint prefer-const: "warn"*/
 import { elgamal_encrypt } from "./elgamal";
 import { ElementModQ, ElementModP } from "./group";
 import { Nonces } from "./nonces";
@@ -32,10 +33,13 @@ describe("TestPart2", () => {
     test("test_encryption_decryption_inverses", () => {
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
+        // eslint-disable-next-line prefer-const
         [context, ballots] = context_and_ballots(1);
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         ballots.forEach((ballot) => {
-            let encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+            // eslint-disable prefer-const
+            const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+            // eslint-disable-next-line prefer-const
             let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
             for (let i = 0; i < ballot.num_selections(); i++) {
                 expect(ballot.selections[i]).toEqual(decrypted_ballot.selections[i].selection);
@@ -49,7 +53,9 @@ describe("TestPart2", () => {
         let ballots: PlaintextBallot[];
         let cballots: CiphertextBallot[];
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
+        // eslint-disable-next-line prefer-const
         [context, ballots] = context_and_ballots(getRandomNumberInclusive(2, 20));
+        // eslint-disable-next-line prefer-const
         cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
@@ -94,8 +100,8 @@ describe("TestPart2", () => {
         expect(all_pads.length).toEqual(new Set(all_pads).size);
         expect(sum_pads.length).toEqual(new Set(sum_pads).size);
         expect(sum_challenges.length).toEqual(new Set(sum_challenges).size);
-        expect(all_proof_a_vals.length).toEqual(new Set(all_proof_a_vals));
-        expect(all_proof_c_vals.length).toEqual(new Set(all_proof_c_vals));
+        expect(all_proof_a_vals.length).toEqual(new Set(all_proof_a_vals).size);
+        expect(all_proof_c_vals.length).toEqual(new Set(all_proof_c_vals).size);
 
         // Now, we're going to decrypt the ballots and make similar assertions about
         // the uniqueness of the proofs used in the decryption.
@@ -205,10 +211,10 @@ describe("TestPart2", () => {
     test("test_invalid_ballots_dont_encrypt", () => {
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
-        let cballot: CiphertextBallot;
+        let cballot: CiphertextBallot | null;
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_arbitrary_ballots(1);
-        cballot = get_optional(encrypt_ballot(context, ballots[0], seed_nonce));
+        cballot = encrypt_ballot(context, ballots[0], seed_nonce);
         if (ballots[0].is_overvoted()) {
             expect(cballot).toEqual(null);
         } else {
@@ -233,8 +239,7 @@ describe("TestPart2", () => {
 
         // while we're here, let's make sure that if we leave out a ballot, the tallies
         // won't validate.
-        if (cballots.length > 1) {
-            tally = tally_encrypted_ballots(context, cballots)
+        if (cballots.length > 1) {           
             let bad_tally = tally_encrypted_ballots(context, cballots.slice(1));
             expect(tally.length).toEqual(bad_tally.length);  // same number of candidates
             expect(validate_tallies(context, pballots, bad_tally)).toBe(false);
@@ -244,9 +249,8 @@ describe("TestPart2", () => {
         let plain_tally = tally_plaintext_ballots(context, ballots);
         let same_totals: boolean[] = [];
         plain_tally.selections.forEach((tally, idx) => {
-            same_totals = [...same_totals, tally === pballots[idx].selection];
+            same_totals = [...same_totals, tally.equals(pballots[idx].selection)];
         });
-
         expect(same_totals.every(Boolean)).toBe(true);
 
     });

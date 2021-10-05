@@ -250,20 +250,25 @@ export function tally_encrypted_ballots(
         return [];
     }
     // a type-safe mapping of <K,T>, more detail refers to Record<K,T>
-    const total_votes: Record<string, el.ElGamalCiphertext> = {};
+    const total_votes: Map<string, ElGamalCiphertext> = new Map();
     for (const b of ballots) {
         for (const s of b.selections) {
-            if (s.name in Object.keys(total_votes)) {
-                total_votes[s.name] = s.ciphertext;
+            if (!total_votes.has(s.name)) {
+                total_votes.set(s.name, s.ciphertext);
+                // console.log("the original value for ballot length ", ballots.length + " with name " + s.name + " is ", s.ciphertext);
             } else {
-                total_votes[s.name] = el.elgamal_add(total_votes[s.name], s.ciphertext);
+                const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext);
+                total_votes.set(s.name, new_val);
+                // console.log("the updated value for ballot length ", ballots.length + " with name " + s.name + " is ", new_val);
+                
             }
         }
     }
     const return_list = [];
-    for (const name of Object.keys(total_votes)) { // return string[] of keys of total_votes
-        return_list.push(new CiphertextSelectionTally(name, total_votes[name]));
+    for (const name of total_votes.keys()) { // return string[] of keys of total_votes
+        return_list.push(new CiphertextSelectionTally(name, get_optional(total_votes.get(name))));
     }
+
     return return_list;
 }
 
@@ -325,6 +330,7 @@ export function validate_tallies(
 
     for (let i = 0; i < tally_plaintext.length; i++) {
         if (!validate_tally(context, tally_plaintext[i], tally_ciphertext[i])) {
+            // console.log("current context is ", context, "tally plaintext ", tally_plaintext[i], "tally ciphertext ", tally_ciphertext[i]);
             return false;
         }
     }
@@ -336,19 +342,20 @@ export function tally_plaintext_ballots(
     ballots: PlaintextBallot[]): PlaintextBallot {
     //Given a list of ballots, adds their counters and returns a ballot representing the totals of the contest.
 
-    const totals: Record<string, number> = {};
+    let totals: Map<string, number> = new Map();
     for (const b of ballots) {
         for (const s of b.selections) {
-            if (!(s.name in Object.keys(totals))) {
-                totals[s.name] = s.choice;
+            if (!totals.has(s.name)) {
+                totals.set(s.name, s.choice);
             } else {
-                totals[s.name] += s.choice;
+                const new_val = get_optional(totals.get(s.name)) + s.choice;
+                totals.set(s.name, new_val);
             }
         }
     }
     const lst = [];
     for (const name of context.names) {
-        lst.push(new PlaintextSelection(name, totals[name]));
+        lst.push(new PlaintextSelection(name, get_optional(totals.get(name))));
     }
     return new PlaintextBallot("TOTALS", lst);
 }
