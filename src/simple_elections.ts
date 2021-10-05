@@ -253,12 +253,20 @@ export function tally_encrypted_ballots(
     const total_votes: Map<string, ElGamalCiphertext> = new Map();
     for (const b of ballots) {
         for (const s of b.selections) {
-            if (!(s.name in total_votes.keys())) {
+            if (!total_votes.has(s.name)) {
+                console.log("should enter here only ", b.selections.length + " times!!!!");
                 total_votes.set(s.name, s.ciphertext);
+                // console.log("the original value for ballot length ", ballots.length + " with name " + s.name + " is ", s.ciphertext);
             } else {
                 // total_votes[s.name] = el.elgamal_add(total_votes[s.name], s.ciphertext);
-                const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext)
+                const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext);
+                const before = get_optional(total_votes.get(s.name));
                 total_votes.set(s.name, new_val);
+                if (!before.data.equals(total_votes.get(s.name)?.data) && !before.pad.equals(total_votes.get(s.name)?.pad)) {
+                    console.log("the total votes mapping is updated!!!");
+                }
+                console.log("the updated value for ballot length ", ballots.length + " with name " + s.name + " is ", new_val);
+                
             }
         }
     }
@@ -268,6 +276,16 @@ export function tally_encrypted_ballots(
     }
 
     return return_list;
+    // return res;
+}
+
+export function validate_tally_encrypted_ballots(t1: CiphertextSelectionTally[], t2: CiphertextSelectionTally[]) {
+    console.log("inside validate tally encrypted ballots");
+    t1.forEach((t, idx) => {
+        if (t.name != t2[idx].name) console.log("two names not equal!");
+        if (!t.total.data.equals(t2[idx].total.data)) console.log("two data field not equal!!!");
+        if (!t.total.pad.equals(t2[idx].total.pad)) console.log("two pads not equal!!!");
+    });
 }
 
 export function decrypt_tally(
@@ -327,7 +345,9 @@ export function validate_tallies(
     //     everything is good.
 
     for (let i = 0; i < tally_plaintext.length; i++) {
+        // console.log("current context is ", context, "tally plaintext ", tally_plaintext[i], "tally ciphertext ", tally_ciphertext[i]);
         if (!validate_tally(context, tally_plaintext[i], tally_ciphertext[i])) {
+            // console.log("current context is ", context, "tally plaintext ", tally_plaintext[i], "tally ciphertext ", tally_ciphertext[i]);
             return false;
         }
     }
