@@ -1,7 +1,8 @@
-// import {discrete_log} from "./dlog"
+import {discrete_log} from "./dlog"
 import {
   ElementModQ,
   ElementModP,
+  mult_inv_p,
   g_pow_p,
   mult_p,
   // mult_inv_p,
@@ -51,35 +52,35 @@ export class ElGamalCiphertext {
     this.pad = pad;
     this.data = data;
   }
-  // /**
-  //  * Decrypts an ElGamal ciphertext with a "known product"
-  //  * (the blinding factor used in the encryption).
-  //  * @param product the blinding factor used in the encryption
-  //  */
-  // public decrypt_known_product(product: ElementModP): number {
-  //   return discrete_log(mult_p(this.data, mult_inv_p(product)));
-  // }
-  //
-  // /**
-  //  * Decrypt an ElGamal ciphertext using a known ElGamal secret key.
-  //  * @param secret_key The corresponding ElGamal secret key.
-  //  * Return A plaintext message.
-  //  */
-  // public decrypt(secret_key: ElementModQ): number {
-  //
-  //   return this.decrypt_known_product(pow_p(this.pad, secret_key));
-  // }
-  //
-  // /**
-  //  * Decrypt an ElGamal ciphertext using a known nonce and the ElGamal public key.
-  //  * @param public_key The corresponding ElGamal public key.
-  //  * @param nonce The secret nonce used to create the ciphertext.
-  //  * Return A plaintext message.
-  //  */
-  // public decrypt_known_nonce(public_key: ElementModP,
-  //                            nonce: ElementModQ): number{
-  //   return this.decrypt_known_product(pow_p(public_key, nonce));
-  // }
+  /**
+   * Decrypts an ElGamal ciphertext with a "known product"
+   * (the blinding factor used in the encryption).
+   * @param product the blinding factor used in the encryption
+   */
+  public decrypt_known_product(product: ElementModP): number {
+    return Number(discrete_log(mult_p(this.data, mult_inv_p(product))));
+  }
+
+  /**
+   * Decrypt an ElGamal ciphertext using a known ElGamal secret key.
+   * @param secret_key The corresponding ElGamal secret key.
+   * Return A plaintext message.
+   */
+  public decrypt(secret_key: ElementModQ): number {
+
+    return this.decrypt_known_product(pow_p(this.pad, secret_key));
+  }
+
+  /**
+   * Decrypt an ElGamal ciphertext using a known nonce and the ElGamal public key.
+   * @param public_key The corresponding ElGamal public key.
+   * @param nonce The secret nonce used to create the ciphertext.
+   * Return A plaintext message.
+   */
+  public decrypt_known_nonce(public_key: ElementModP,
+                             nonce: ElementModQ): number{
+    return this.decrypt_known_product(pow_p(public_key, nonce));
+  }
 
   /**
    * Computes a cryptographic hash of this ciphertext.
@@ -146,7 +147,6 @@ export function elgamal_add(...ciphertexts: ElGamalCiphertext[]): ElGamalCiphert
   for (let i = 1; i < ciphertexts.length; i++) {
     const c:ElGamalCiphertext = ciphertexts[i];
     result = new ElGamalCiphertext(mult_p(result.pad, c.pad), mult_p(result.data, c.data));
-
   }
   return result;
 }

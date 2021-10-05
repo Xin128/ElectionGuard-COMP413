@@ -32,10 +32,10 @@ const getRandomIntExclusive: (range: bigint) => bigint = (range) => {
 const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
     let i = 1n;
     let c = 0n;
-    let cnt = 0;
-    // while (true) {
-    while ( cnt < 100000) {
-        cnt += 1;
+    // let cnt = 0;
+    while (true) {
+    // while ( cnt < 100000) {
+        // cnt += 1;
         c = n * i + 1n;
         if (c % a === 0n) {
             c = c / a;
@@ -43,9 +43,9 @@ const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
         }
         i++;
     }
-    if ( cnt == 10000) {
-        throw Error();
-    }
+    // if ( cnt == 10000) {
+    //     throw Error();
+    // }
     return c;
 }
 
@@ -59,7 +59,7 @@ const bnToHex: (bn: bigint) => string = (bn) => {
     
     let hex = bn.toString(16);
     if (hex.length % 2) { hex = '0' + hex; }
-    
+
     if (pos && (0x80 & parseInt(hex.slice(0, 2), 16))) {
         hex = '00' + hex;
     }
