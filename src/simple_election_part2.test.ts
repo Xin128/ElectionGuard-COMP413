@@ -211,10 +211,10 @@ describe("TestPart2", () => {
     test("test_invalid_ballots_dont_encrypt", () => {
         let context: PrivateElectionContext;
         let ballots: PlaintextBallot[];
-        let cballot: CiphertextBallot;
+        let cballot: CiphertextBallot | null;
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
         [context, ballots] = context_and_arbitrary_ballots(1);
-        cballot = get_optional(encrypt_ballot(context, ballots[0], seed_nonce));
+        cballot = encrypt_ballot(context, ballots[0], seed_nonce);
         if (ballots[0].is_overvoted()) {
             expect(cballot).toEqual(null);
         } else {
