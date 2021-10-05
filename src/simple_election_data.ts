@@ -196,6 +196,7 @@ export class PrivateElectionContext {
 
 }
 
+export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
 
 

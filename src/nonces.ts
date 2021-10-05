@@ -21,4 +21,12 @@ export class Nonces {
         hash_lst.concat(headers);
         return hash_elems(hash_lst);
     }
+
+    public slice(start: number, end:number): ElementModQ[] {
+        const return_list: ElementModQ[] = [];
+        for(let i = start; i < end; i++) {
+            return_list.push(this.get(i));
+        }
+        return return_list;
+    }
 }
