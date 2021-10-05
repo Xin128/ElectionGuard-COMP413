@@ -239,10 +239,8 @@ describe("TestPart2", () => {
 
         // while we're here, let's make sure that if we leave out a ballot, the tallies
         // won't validate.
-        if (cballots.length > 1) {
-            // tally = tally_encrypted_ballots(context, cballots)
+        if (cballots.length > 1) {           
             let bad_tally = tally_encrypted_ballots(context, cballots.slice(1));
-
             expect(tally.length).toEqual(bad_tally.length);  // same number of candidates
             expect(validate_tallies(context, pballots, bad_tally)).toBe(false);
 
@@ -253,7 +251,6 @@ describe("TestPart2", () => {
         plain_tally.selections.forEach((tally, idx) => {
             same_totals = [...same_totals, tally.equals(pballots[idx].selection)];
         });
-
         expect(same_totals.every(Boolean)).toBe(true);
 
     });
