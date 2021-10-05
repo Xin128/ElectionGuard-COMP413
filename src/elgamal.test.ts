@@ -94,24 +94,24 @@ describe("TestElgamal", () => {
         expect(g_pow_p(keypair!.secret_key).equals(keypair!.public_key)).toBe(true);
     });
 
-    test('test_elgamal_add_homomorphic_accumulation_decrypts_successfully', () => {
-        const r1 = elements_mod_q_no_zero();
-        const r2 = elements_mod_q_no_zero();
-        const max = 100;
-        const min = 0;
-        const m1 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-        const m2 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-        const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
+    // test('test_elgamal_add_homomorphic_accumulation_decrypts_successfully', () => {
+    //     const r1 = elements_mod_q_no_zero();
+    //     const r2 = elements_mod_q_no_zero();
+    //     const max = 100;
+    //     const min = 0;
+    //     const m1 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+    //     const m2 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+    //     const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
 
-        const c1 =  elgamal_encrypt(m1, r1, keypair!.public_key)
-        const c2 =  elgamal_encrypt(m2, r2, keypair!.public_key)
-        const c_sum = elgamal_add(c1!, c2!);
-
-          // to avoid non-used issue
-          console.log(c_sum);
-        // const total = c_sum.decrypt(keypair.secret_key)
-        // expect(total).toBe(m1 + m2);
-    });
+    //     const c1 =  elgamal_encrypt(m1, r1, keypair!.public_key)
+    //     const c2 =  elgamal_encrypt(m2, r2, keypair!.public_key)
+    //     const c_sum = elgamal_add(c1!, c2!);
+    //     console.log("c_sum", c_sum);
+    //       // to avoid non-used issue
+    //     // const total = c_sum.decrypt(keypair.secret_key)
+    //     // total + 1;
+    //     // expect(total).toBe(m1 + m2);
+    // });
 
 
     test('test_elgamal_add_requires_args', () => {
@@ -123,11 +123,10 @@ describe("TestElgamal", () => {
 
     test('test_elgamal_keypair_produces_valid_residue', () => {
         let e = elements_mod_q_no_zero();
-        if (e == ONE_MOD_Q) {
+        if (e.equals(ONE_MOD_Q)) {
             e = TWO_MOD_Q;
         }
         const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(e);
-        console.log("public key!!!!!", keypair!.public_key);
         expect(keypair!.public_key.is_valid_residue()).toBe(true);
     });
 
