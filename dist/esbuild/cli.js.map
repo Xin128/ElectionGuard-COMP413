@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "sources": ["../../src/main.ts", "../../src/cli.ts"],
-  "sourcesContent": ["export const delayMillis = (delayMs: number): Promise<void> => new Promise(resolve => setTimeout(resolve, delayMs));\r\n\r\nexport const greet = (name: string): string => `Hello ${name}`\r\n\r\nexport const foo = async (): Promise<boolean> => {\r\n  console.log(greet('World'))\r\n  await delayMillis(1000)\r\n  console.log('done')\r\n  return true\r\n}\r\n", "#!/usr/bin/env node\r\nimport { foo } from './main'\r\n\r\nfoo()\r\n"],
-  "mappings": ";;;AAAO,MAAM,cAAc,CAAC,YAAmC,IAAI,QAAQ,aAAW,WAAW,SAAS;AAEnG,MAAM,QAAQ,CAAC,SAAyB,SAAS;AAEjD,MAAM,MAAM,YAA8B;AAC/C,YAAQ,IAAI,MAAM;AAClB,UAAM,YAAY;AAClB,YAAQ,IAAI;AACZ,WAAO;AAAA;;;ACLT;",
+  "sources": [],
+  "sourcesContent": [],
+  "mappings": "",
   "names": []
 }

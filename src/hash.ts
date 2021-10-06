@@ -37,7 +37,7 @@ export type CRYPTO_HASHABLE_ALL = CRYPTO_HASHABLE_T[] | CRYPTO_HASHABLE_T | CRYP
 export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     let hash_me = 'null';
     if (x instanceof ElementModQ || x instanceof ElementModP) {
-      if (x.elem != 0n) {
+      if (x.elem != BigInt(0)) {
         hash_me = x.to_hex().toUpperCase();
       }
     } else if (x instanceof CryptoHashable) {
