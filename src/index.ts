@@ -1,6 +1,6 @@
 
-// import {
-//   encrypt_ballot,
+import {
+  encrypt_ballot,
 //   decrypt_ballot,
 //   validate_encrypted_ballot,
 //   validate_decrypted_ballot,
@@ -9,7 +9,7 @@
 //   validate_tallies,
 //   decrypt_tallies,
 //   tally_plaintext_ballots,
-// } from "../../simple_elections";
+} from "./simple_elections";
 
 // import {
 //   context_and_ballots,
@@ -25,7 +25,8 @@ import {
   PrivateElectionContext,
   // PlaintextBallot,
   // CiphertextSelection,
-  // CiphertextBallot,
+  CiphertextBallot,
+  PlaintextBallot,
   // PlaintextBallotWithProofs,
 } from "./simple_election_data";
 import { elements_mod_q_no_zero,elements_mod_q } from "./groupUtils";
@@ -51,10 +52,16 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
   for (let i = 0; i < num_candidates; i++) {
     selections = [...selections, new PlaintextSelection(context.names[i], 0)];
   } 
+  const ballot_id = "001";
+  const ballot:PlaintextBallot = new PlaintextBallot(ballot_id, selections)
   const seed_nonce:ElementModQ = elements_mod_q_no_zero();
+  const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+
   console.log('selections', names);
   console.log('selections', selections);
   console.log('seed nonce', seed_nonce);
+  console.log("encrypted ballot selections:", encrypted_ballot.selections);
+  console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
   get_optional(document.getElementById("output")).innerHTML =
-    "4E88B37B6887A8AD04885850A9E3F33A267E8907F16446506B3566F2B1177819";
+    seed_nonce.elem.toString();
 });
