@@ -63,5 +63,7 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
   console.log("encrypted ballot selections:", encrypted_ballot.selections);
   console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
   get_optional(document.getElementById("output")).innerHTML =
+    encrypted_ballot.valid_sum_proof.data.elem.toString();
+  get_optional(document.getElementById("seed_nonce")).innerHTML =
     seed_nonce.elem.toString();
 });
