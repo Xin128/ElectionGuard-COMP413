@@ -56,7 +56,7 @@ const __presidents = [
 
 // Generates a tuple of a PrivateElectionContext and a list of well-formed PlaintextBallots.
 // If the number of candidates is 0, then it will be drawn at random from a large set.
-export function context_and_ballots(num_ballots: number, num_candidates: number = 3): [PrivateElectionContext, PlaintextBallot[]] {
+export function context_and_ballots(num_ballots: number, num_candidates = 3): [PrivateElectionContext, PlaintextBallot[]] {
     if (num_candidates <= 0) {
         num_candidates = getRandomNumberInclusive(2, __presidents.length);
     }
@@ -68,7 +68,7 @@ export function context_and_ballots(num_ballots: number, num_candidates: number 
 
 // Generates a tuple of a PrivateElectionContext and a list of PlaintextBallots, some
 // of which might not be well-formed.
-export function context_and_arbitrary_ballots(num_ballots: number, num_candidates: number = 3): [PrivateElectionContext, PlaintextBallot[]] {
+export function context_and_arbitrary_ballots(num_ballots: number, num_candidates = 3): [PrivateElectionContext, PlaintextBallot[]] {
     if (num_candidates <= 0) {
         num_candidates = getRandomNumberInclusive(2, __presidents.length);
     }
@@ -92,7 +92,7 @@ export function plaintext_arbitrary_ballots(context: AnyElectionContext, num_bal
 // :param context: An election context, with the necessary crypto keys, etc.
 // :param ballot_id: A string to use for this ballot's identifier.
 export function plaintext_arbitrary_ballot(context: AnyElectionContext, ballot_id: string): PlaintextBallot {
-    let num_names = context.names.length;
+    const num_names = context.names.length;
     let selections: PlaintextSelection[] = [];
     for (let i = 0; i < num_names; i++) {
         selections = [...selections, new PlaintextSelection(context.names[i], getRandomNumberInclusive(0, 1))];
@@ -105,9 +105,9 @@ export function plaintext_arbitrary_ballot(context: AnyElectionContext, ballot_i
 // given number of candidates.
 // :param num_candidates: Desired number of candidates for the election.
 export function election_contexts(num_candidates: number): PrivateElectionContext {
-    let e = elements_mod_q_no_zero();
-    let keypair = elgamal_keypair_from_secret(e.notEqual(ONE_MOD_Q) ? e : TWO_MOD_Q);
-    let base_hash = elements_mod_q();
+    const e = elements_mod_q_no_zero();
+    const keypair = elgamal_keypair_from_secret(e.notEqual(ONE_MOD_Q) ? e : TWO_MOD_Q);
+    const base_hash = elements_mod_q();
     return new PrivateElectionContext(
         "Test Election", __presidents.slice(0, num_candidates), keypair as ElGamalKeyPair, base_hash
     );
@@ -128,8 +128,8 @@ export function plaintext_ballots(context: AnyElectionContext, num_ballots: numb
 // :param ballot_id: A string to use for this ballot's identifier.
 export function plaintext_ballot(context: AnyElectionContext, ballot_id: string): PlaintextBallot {
     // -1 means we select nobody, otherwise we select the nth candidate
-    let num_names = context.names.length;
-    let choice = getRandomNumberInclusive(-1, num_names - 1);
+    const num_names = context.names.length;
+    const choice = getRandomNumberInclusive(-1, num_names - 1);
     let selections: PlaintextSelection[] = [];
     for (let i = 0; i < num_names; i++) {
         selections = [...selections, new PlaintextSelection(context.names[i], choice === i ? 1 : 0)];
