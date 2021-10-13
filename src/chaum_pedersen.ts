@@ -1,4 +1,4 @@
-import { assert } from "console";
+// import { assert } from "console";
 import { ElGamalCiphertext } from "./elgamal"
 
 // import optional
@@ -106,11 +106,11 @@ export class DisjunctiveChaumPedersenProof {
         );
 
         if (!success) {
-            console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
-            "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
-            "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
-            "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
-            "k: ", k);
+            // console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
+            // "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
+            // "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
+            // "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
+            // "k: ", k);
         }
         return success;
 
@@ -196,10 +196,10 @@ export class ConstantChaumPedersenProof {
             && consistent_kv
         );
         if (!success){
-            console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a: ", in_bounds_a,
-            "in_bounds_b: ", in_bounds_b, "in_bounds_c: ", in_bounds_c, "in_bounds_v: ", in_bounds_v, "in_bounds_constant: ", in_bounds_constant,
-            "sane_constant: ", sane_constant, "same_c: ", same_c, "consistent_gv: ", consistent_gv, "consistent_kv: ", consistent_kv,
-            "k: ", k);
+            // console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a: ", in_bounds_a,
+            // "in_bounds_b: ", in_bounds_b, "in_bounds_c: ", in_bounds_c, "in_bounds_v: ", in_bounds_v, "in_bounds_constant: ", in_bounds_constant,
+            // "sane_constant: ", sane_constant, "same_c: ", same_c, "consistent_gv: ", consistent_gv, "consistent_kv: ", consistent_kv,
+            // "k: ", k);
         }
 
         return success
@@ -215,7 +215,7 @@ export function make_disjunctive_chaum_pedersen(
     seed: ElementModQ,
     plaintext: number): DisjunctiveChaumPedersenProof {
     //TODO for Alex: throw errors here.
-    assert(0 <= plaintext && plaintext <= 1);
+    // assert(0 <= plaintext && plaintext <= 1);
     if (plaintext == 0){
         return make_disjunctive_chaum_pedersen_zero(message, r, k, q, seed);
     } else {
@@ -242,18 +242,10 @@ export function make_disjunctive_chaum_pedersen_zero(
     const q_minus_c1 = negate_q(c1);
     const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
     const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
-    // console.log('to hash c:', q, alpha, beta, a0, b0, a1, b1);
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c0 = a_minus_b_q(c, c1);
 
     const v0 = a_plus_bc_q(u0, c0, r);
-    // console.log('make disjunctive: ');
-    // console.log('a_plus_bc_q(u0, c0, r)', a_plus_bc_q(u0, c0, r), u0, c0, r);
-    // console.log('alpha', alpha);
-    // console.log('v0', v0);
-    // console.log('a0', a0);
-    // console.log('b0', b0);
-    // console.log('c0', c0, c, c1);
 
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
@@ -367,9 +359,9 @@ export class ChaumPedersenProofGeneric {
             && good_h
         );
         if (!success){
-            console.log("hash_good: ", hash_good, "in_bounds_a: ", in_bounds_a, "in_bounds_b: ", in_bounds_b,
-            "in_bounds_g: ", in_bounds_g, "in_bounds_gx: ", in_bounds_gx, "in_bounds_h: ", in_bounds_h, "in_bounds_hx: ", in_bounds_hx,
-            "good_g: ", good_g, "good_h: ", good_h);
+            // console.log("hash_good: ", hash_good, "in_bounds_a: ", in_bounds_a, "in_bounds_b: ", in_bounds_b,
+            // "in_bounds_g: ", in_bounds_g, "in_bounds_gx: ", in_bounds_gx, "in_bounds_h: ", in_bounds_h, "in_bounds_hx: ", in_bounds_hx,
+            // "good_g: ", good_g, "good_h: ", good_h);
         }
 
         return success
@@ -442,8 +434,8 @@ export class ChaumPedersenDecryptionProof {
           true,
         );
         if (!valid_proof) {
-            console.log("plaintext: ", plaintext, "ciphertext: ", ciphertext, "public_key: ", public_key,
-            "proof: ", this.proof);
+            // console.log("plaintext: ", plaintext, "ciphertext: ", ciphertext, "public_key: ", public_key,
+            // "proof: ", this.proof);
         }
         return valid_proof;
     }

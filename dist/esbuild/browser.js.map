@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/main.ts", "../../src/browser.ts"],
-  "sourcesContent": ["export const delayMillis = (delayMs: number): Promise<void> => new Promise(resolve => setTimeout(resolve, delayMs));\r\n\r\nexport const greet = (name: string): string => `Hello ${name}`\r\n\r\nexport const foo = async (): Promise<boolean> => {\r\n  console.log(greet('World'))\r\n  await delayMillis(1000)\r\n  console.log('done')\r\n  return true\r\n}\r\n", "/**\r\n * This file is the entrypoint of browser builds.\r\n * The code executes when loaded in a browser.\r\n */\r\nimport { foo } from './main'\r\n\r\n// eslint-disable-next-line @typescript-eslint/no-explicit-any\r\ndeclare global {\r\n    interface Window {\r\n      foo:() => Promise<boolean> \r\n    }\r\n}\r\n\r\n(window as Window).foo = foo  // instead of casting window to any, you can extend the Window interface: https://stackoverflow.com/a/43513740/5433572\r\n\r\nconsole.log('Method \"foo\" was added to the window object. You can try it yourself by just entering \"await foo()\"')"],
-  "mappings": "MAAO,GAAM,GAAc,AAAC,GAAmC,GAAI,SAAQ,GAAW,WAAW,EAAS,IAE7F,EAAQ,AAAC,GAAyB,SAAS,IAE3C,EAAM,SACjB,SAAQ,IAAI,EAAM,UAClB,KAAM,GAAY,KAClB,QAAQ,IAAI,QACL,ICKT,AAAC,OAAkB,IAAM,EAEzB,QAAQ,IAAI",
-  "names": []
-}

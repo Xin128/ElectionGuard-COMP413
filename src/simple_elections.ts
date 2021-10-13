@@ -342,7 +342,7 @@ export function tally_plaintext_ballots(
     ballots: PlaintextBallot[]): PlaintextBallot {
     //Given a list of ballots, adds their counters and returns a ballot representing the totals of the contest.
 
-    let totals: Map<string, number> = new Map();
+    const totals: Map<string, number> = new Map();
     for (const b of ballots) {
         for (const s of b.selections) {
             if (!totals.has(s.name)) {

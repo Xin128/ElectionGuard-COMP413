@@ -10,9 +10,13 @@
     "boilerplate",
     "esbuild"
   ],
-  "main": "./dist/tsc/main.js",
+  "main": "./dist/tsc/index.js",
   "types": "./dist/tsc/main.d.ts",
-  "browser": "./dist/esbuild/browser.js",
+  "browser": {
+    "crypto": "crypto-browserify",
+    "assert": "assert-browserify",
+    "stream": "stream-browserify"
+  },
   "bin": {
     "my-cli-tool": "./dist/esbuild/cli.js"
   },
@@ -25,9 +29,9 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "build": "tsc -p tsconfig.json",
     "build-all": "yarn clean && yarn build && yarn esbuild-node && yarn esbuild-browser",
-    "esbuild-browser": "esbuild src/browser.ts --bundle --minify --sourcemap=external --outfile=dist/esbuild/browser.js",
-    "esbuild-browser:dev": "esbuild src/browser.ts --bundle --outfile=dist/esbuild/browser.js",
-    "esbuild-browser:watch": "esbuild src/browser.ts --bundle --watch --outfile=dist/esbuild/browser.js",
+    "esbuild-browser": "esbuild src/index.ts --bundle --minify --sourcemap=external --outfile=dist/esbuild/out.js",
+    "esbuild-browser:dev": "esbuild src/index.ts --bundle --outfile=dist/esbuild/out.js",
+    "esbuild-browser:watch": "esbuild src/index.ts --bundle --watch --outfile=dist/esbuild/out.js",
     "esbuild-node": "esbuild src/cli.ts --bundle --platform=node --minify --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:dev": "esbuild src/cli.ts --bundle --sourcemap=external --outfile=dist/esbuild/cli.js",
     "esbuild-node:watch": "esbuild src/cli.ts --bundle --watch --sourcemap=external --outfile=dist/esbuild/cli.js"
@@ -46,6 +50,11 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "bigint-mod-arith": "^3.0.1"
+    "assert-browserify": "^2.0.0",
+    "bigint-mod-arith": "^3.0.1",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.3.0",
+    "stream-browserify": "^3.0.0"
   }
 }
