@@ -60,7 +60,7 @@ describe("TestPart2", () => {
         expect(cballots).not.toEqual(null);
 
         // convert to a set, which will collapse duplicates
-        let bids = new Set();
+        const bids = new Set();
         cballots.forEach((c) => {
             bids.add(c);
         });
@@ -87,7 +87,7 @@ describe("TestPart2", () => {
         let sum_pads: ElementModP[] = [];
         let sum_challenges: ElementModQ[] = [];
         let all_proof_a_vals: ElementModP[] = [];
-        let all_proof_c_vals: ElementModQ[] = [];
+        const all_proof_c_vals: ElementModQ[] = [];
         cballots.forEach((c) => {
             sum_pads = [...sum_pads, c.valid_sum_proof.pad];
             sum_challenges = [...sum_challenges, c.valid_sum_proof.challenge];
@@ -106,7 +106,7 @@ describe("TestPart2", () => {
         // Now, we're going to decrypt the ballots and make similar assertions about
         // the uniqueness of the proofs used in the decryption.
 
-        let decrypt_seeds = new Nonces(seed_nonce, "test_unique_nonce_seeds").slice(0, cballots.length);
+        const decrypt_seeds = new Nonces(seed_nonce, "test_unique_nonce_seeds").slice(0, cballots.length);
         let decrypt_ballots: PlaintextBallotWithProofs[] = [];
         cballots.forEach((cballot, idx) => {
             decrypt_ballots = [...decrypt_ballots, decrypt_ballot(context, cballot, decrypt_seeds[idx])];
@@ -232,7 +232,7 @@ describe("TestPart2", () => {
         cballots = get_optional(encrypt_ballots(context, ballots, seed_nonce));
         expect(cballots).not.toEqual(null);
 
-        let tally = tally_encrypted_ballots(context, cballots);
+        const tally = tally_encrypted_ballots(context, cballots);
         const pballots = decrypt_tallies(context, tally, decrypt_nonce);
 
         expect(validate_tallies(context, pballots, tally)).toBe(true);
@@ -240,13 +240,13 @@ describe("TestPart2", () => {
         // while we're here, let's make sure that if we leave out a ballot, the tallies
         // won't validate.
         if (cballots.length > 1) {           
-            let bad_tally = tally_encrypted_ballots(context, cballots.slice(1));
+            const bad_tally = tally_encrypted_ballots(context, cballots.slice(1));
             expect(tally.length).toEqual(bad_tally.length);  // same number of candidates
             expect(validate_tallies(context, pballots, bad_tally)).toBe(false);
 
         }
             
-        let plain_tally = tally_plaintext_ballots(context, ballots);
+        const plain_tally = tally_plaintext_ballots(context, ballots);
         let same_totals: boolean[] = [];
         plain_tally.selections.forEach((tally, idx) => {
             same_totals = [...same_totals, tally.equals(pballots[idx].selection)];
