@@ -30,14 +30,14 @@ const getRandomIntExclusive: (range: bigint) => bigint = (range) => {
 // compute the modular multiplicative inverse 
 // solution found: https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python
 const powmod: (a: bigint, n: bigint) => bigint = (a, n) => {
-    let i = 1n;
-    let c = 0n;
+    let i = BigInt(1);
+    let c = BigInt(0);
     // let cnt = 0;
     while (true) {
     // while ( cnt < 100000) {
         // cnt += 1;
-        c = n * i + 1n;
-        if (c % a === 0n) {
+        c = n * i + BigInt(1);
+        if (c % a === BigInt(0)) {
             c = c / a;
             break;
         }

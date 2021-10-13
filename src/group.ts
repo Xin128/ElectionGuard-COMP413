@@ -15,10 +15,10 @@ const P: bigint = BigInt('104438888141315250669175271071662438257996424904738378
 // ((P - 1) * pow(Q, -1, P)) % P
 // rewrite pow(a,-b,c) as pow((a^-1) mod c, b, c)
 
-const R: bigint = ((P - 1n) * bigintModArith.modPow(Q, -1, P)) % P;
+const R: bigint = ((P - BigInt(1)) * bigintModArith.modPow(Q, -1, P)) % P;
 // const R: bigint = ((P - 1n) * (powmod(Q, P) % P)) % P;
 const G: bigint  = BigInt('14245109091294741386751154342323521003543059865261911603340669522218159898070093327838595045175067897363301047764229640327930333001123401070596314469603183633790452807428416775717923182949583875381833912370889874572112086966300498607364501764494811956017881198827400327403252039184448888877644781610594801053753235453382508543906993571248387749420874609737451803650021788641249940534081464232937193671929586747339353451021712752406225276255010281004857233043241332527821911604413582442915993833774890228705495787357234006932755876972632840760599399514028393542345035433135159511099877773857622699742816228063106927776147867040336649025152771036361273329385354927395836330206311072577683892664475070720408447257635606891920123791602538518516524873664205034698194561673019535564273204744076336022130453963648114321050173994259620611015189498335966173440411967562175734606706258335095991140827763942280037063180207172918769921712003400007923888084296685269233298371143630883011213745082207405479978418089917768242592557172834921185990876960527013386693909961093302289646193295725135238595082039133488721800071459503353417574248679728577942863659802016004283193163470835709405666994892499382890912238098413819320185166580019604608311466');
-const Q_MINUS_ONE: bigint = Q - 1n;
+const Q_MINUS_ONE: bigint = Q - BigInt(1);
 
 const mod: (a: bigint, b: bigint) => bigint = (a, b) => {
     return ((a % b) + b) % b
@@ -38,7 +38,7 @@ class ElementModQ {
     // This is preferable to directly accessing `elem`, whose representation might change.
     public to_bytes(): bigint {
         // return base16decode(this.bnToHex(this.elem));
-        return 0n;
+        return BigInt(0);
     }
 
     // Converts from the element to the hex representation of bytes. This is preferable to directly
@@ -316,7 +316,7 @@ const mult_inv_p: (e: ElementModPOrQorInt) => ElementModP = (e) => {
     if (typeof e === 'bigint') {
         e = int_to_p_unchecked(e);
     }
-    if (e.elem === 0n) throw(new Error("No multiplicative inverse for zero"));
+    if (e.elem === BigInt(0)) throw(new Error("No multiplicative inverse for zero"));
     // return new ElementModP(powmod(e.elem, P));
     return new ElementModP(bigintModArith.modPow(e.elem, -1, P));
 }
@@ -393,7 +393,7 @@ const rand_range_q: (start: ElementModQorInt) => ElementModQ = (start) => {
     if (start instanceof ElementModQ) {
         start = start.to_int();
     }
-    let random = 0n;
+    let random = BigInt(0);
     while (random < start) {
         random = getRandomIntExclusive(Q);
     }
@@ -408,9 +408,9 @@ const eq_elems: (a: ElementModPOrQ, b: ElementModPOrQ) => boolean = (a, b) => {
 // Manually hash a string, code taken from https://gist.github.com/hyamamoto/fd435505d29ebfa3d9716fd2be8d42f0
 // The hash value of the empty string is zero.
 const createStrHashCode: (s: string) => bigint = (s) => {
-    let h = 0n;
+    let h = BigInt(0);
     for(let i = 0; i < s.length; i++) {
-        h = 31n * h + BigInt(s.charCodeAt(i)) | 0n;
+        h = BigInt(31) * h + BigInt(s.charCodeAt(i)) | BigInt(0);
     }
     return h;
 }
