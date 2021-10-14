@@ -34,7 +34,7 @@ import {
   ElGamalKeyPair, 
   elgamal_keypair_from_secret } from "./elgamal";
 
-import { ElementModQ, ONE_MOD_Q, TWO_MOD_Q } from "./group";
+import { ElementModQ, ONE_MOD_Q, TWO_MOD_Q} from "./group";
 
 
 
@@ -61,7 +61,8 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
   console.log('selections', selections);
   console.log('seed nonce', seed_nonce);
   console.log("encrypted ballot selections:", encrypted_ballot.selections);
-  console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
+  console.log("index!!!!!");
+  console.log('index', encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   get_optional(document.getElementById("output")).innerHTML =
     encrypted_ballot.valid_sum_proof.data.elem.toString();
   get_optional(document.getElementById("seed_nonce")).innerHTML =
