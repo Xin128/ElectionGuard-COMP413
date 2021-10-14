@@ -65,10 +65,6 @@ export class CiphertextSelectionTally{
 }
 
 export class CiphertextSelection extends CryptoHashable{
-    
-    crypto_hash(): ElementModQ {
-        return this.ciphertext.crypto_hash();
-    }
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -83,6 +79,10 @@ export class CiphertextSelection extends CryptoHashable{
         this.name = name;
         this.ciphertext = ciphertext;
         this.zero_or_one_proof = zero_or_one_proof;
+    }
+
+    public crypto_hash(): ElementModQ {
+        return this.ciphertext.crypto_hash();
     }
 }
 
