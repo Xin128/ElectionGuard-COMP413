@@ -61,10 +61,9 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
   console.log('selections', selections);
   console.log('seed nonce', seed_nonce);
   console.log("encrypted ballot selections:", encrypted_ballot.selections);
-  console.log("index!!!!!");
-  console.log('index', encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+  console.log('hash result of encrypted ballot', encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   get_optional(document.getElementById("output")).innerHTML =
-    encrypted_ballot.valid_sum_proof.data.elem.toString();
+  encrypted_ballot.crypto_hash_with(seed_nonce).toString();
   get_optional(document.getElementById("seed_nonce")).innerHTML =
     seed_nonce.elem.toString();
 });
