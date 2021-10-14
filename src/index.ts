@@ -35,7 +35,7 @@ import { elements_mod_q_no_zero } from "./groupUtils";
 // import { 
 //   ElGamalKeyPair, 
 //   elgamal_keypair_from_secret } from "./elgamal";
-import { ElementModQ } from "./group";
+import { add_q, ElementModQ } from "./group";
 // import { ElementModQ, ONE_MOD_Q, TWO_MOD_Q } from "./group";
 import { Ballot, BallotItem, BallotOption, LanguageText } from "./API/typical_ballot_data";
 import { ballot2Context, ballot2PlainTextBallots } from "./API/APIUtils";
@@ -119,14 +119,18 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
 
   const seed_nonce:ElementModQ = elements_mod_q_no_zero();
   const encrypted_ballots: CiphertextBallot[] = get_optional(encrypt_ballots(context, ballots, seed_nonce));
+  let final_hash = new ElementModQ(0n);
+  encrypted_ballots.forEach(eBallot => {
+    final_hash = add_q(final_hash, eBallot.crypto_hash_with(seed_nonce));
+  });
 
   console.log('selections', names);
   // console.log('selections', selections);
-  // console.log('seed nonce', seed_nonce);
+  console.log('seed nonce', seed_nonce);
   // console.log("encrypted ballot selections:", encrypted_ballot.selections);
-  // console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
+  // console.log('hash result of encrypted ballot', encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   get_optional(document.getElementById("output")).innerHTML =
-    encrypted_ballots[0].valid_sum_proof.data.elem.toString();
+  final_hash.elem.toString();
   get_optional(document.getElementById("seed_nonce")).innerHTML =
     seed_nonce.elem.toString();
 });
