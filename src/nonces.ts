@@ -1,12 +1,13 @@
-import { ElementModQ} from "./group"
+import {ElementModPOrQ, ElementModQ} from "./group"
 import { hash_elems } from "./hash"
 
 
 export class Nonces {
     __seed: ElementModQ;
-    public constructor(seed: ElementModQ, ...header: any[]) {
+    public constructor(seed: ElementModQ, ...header: (ElementModPOrQ | string)[]) {
         if (header.length > 0) {
-            this.__seed = hash_elems([seed].concat(header));
+            const hash_lst:(ElementModPOrQ | string)[] = [seed,...header];
+            this.__seed = hash_elems(hash_lst);
         }  else {
             this.__seed = seed;
         }
@@ -17,7 +18,7 @@ export class Nonces {
     }
 
     public get_with_headers(item: number, ...headers: string[]): ElementModQ {
-        const hash_lst:any[] = [this.__seed,item]
+        const hash_lst:(ElementModQ | number | string)[] = [this.__seed,item];
         hash_lst.concat(headers);
         return hash_elems(hash_lst);
     }

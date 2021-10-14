@@ -22,7 +22,7 @@ const Q_MINUS_ONE: bigint = Q - BigInt(1);
 
 const mod: (a: bigint, b: bigint) => bigint = (a, b) => {
     return ((a % b) + b) % b
-}   
+}
 
 
 class ElementModQ {
@@ -30,7 +30,7 @@ class ElementModQ {
     public elem: bigint;
 
     constructor(elem: bigint) {
-        this.elem = elem; 
+        this.elem = elem;
     }
 
     // TODO: Probably don't need this function since it's not used anywhere else in the code base
@@ -64,14 +64,14 @@ class ElementModQ {
     public is_in_bounds_no_zero(): boolean {
         return 0 < this.elem && this.elem < Q;
     }
-    
+
     // Operator overloading not supported in TypeScript, need to call the function instead
-    public notEqual(other: any): boolean {
+    public notEqual(other: ElementModPOrQ): boolean {
         return (other instanceof ElementModP || other instanceof ElementModQ) && !eq_elems(this, other);
     }
 
     // overload == (equal to) operator
-    public equals(other: any): boolean {
+    public equals(other: ElementModPOrQ): boolean {
         return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
@@ -103,7 +103,7 @@ class ElementModP {
     public elem: bigint;
 
     constructor(elem: bigint) {
-        this.elem = elem; 
+        this.elem = elem;
     }
 
     // Converts from the element to the hex representation of bytes. This is preferable to directly
@@ -129,11 +129,11 @@ class ElementModP {
         return this.is_in_bounds() && residue;
     }
 
-    public notEqual(other: any): boolean {
+    public notEqual(other: ElementModPOrQ): boolean {
         return (other instanceof ElementModP || other instanceof ElementModQ) && !eq_elems(this, other);
     }
 
-    public equals(other: any): boolean {
+    public equals(other: ElementModPOrQ): boolean {
         return (other instanceof ElementModP || other instanceof ElementModQ) && eq_elems(this, other);
     }
 
@@ -228,7 +228,7 @@ const int_to_p_unchecked: (i: string | bigint) => ElementModP = (i) => {
 //TODO: what is bytes in python equivalent of?
 // const qToBytes: (e: ElementModQ) => [] = (e) => {
 //     return [];
-// } 
+// }
 
 // TODO
 // const bytesToQ: (b: []) => ElementModQ = (b) => {
@@ -263,7 +263,7 @@ const div_p: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModP = (
     }
     if (typeof b === 'bigint') {
         b = int_to_p_unchecked(b);
-    } 
+    }
 
     // Calculate modular multiplicative inverse in typescript
     // bigintModArith.modPow(Q, -1, P)
@@ -279,10 +279,10 @@ const div_q: (a: ElementModPOrQorInt, b: ElementModPOrQorInt) => ElementModQ = (
     }
     if (typeof b === 'bigint') {
         b = int_to_q_unchecked(b);
-    } 
+    }
 
     // Calculate modular multiplicative inverse in typescript
-    
+
     const inverse = bigintModArith.modPow(b.elem, -1, Q);
     // const inverse = powmod(b.elem, Q);
     return mult_q(a, int_to_q_unchecked(inverse));
@@ -424,7 +424,7 @@ const parseBigInt: (bigint:string, base: number) => Array<number> = (bigint, bas
     }
     return values;
   }
-  
+
   const formatBigInt: (values:Array<number> , base:number) => string = (values, base) =>{
     //convert array of digit values to bigint string
     let bigint = '';
@@ -433,7 +433,7 @@ const parseBigInt: (bigint:string, base: number) => Array<number> = (bigint, bas
     }
     return bigint;
   }
-  
+
   const convertBase: (bigint:string, inputBase:number, outputBase:number)  => string = (bigint, inputBase, outputBase) => {
     //takes a bigint string and converts to different base
     const inputValues = parseBigInt(bigint, inputBase),
@@ -457,11 +457,11 @@ const parseBigInt: (bigint:string, base: number) => Array<number> = (bigint, bas
     outputValues.reverse(); //transform to big-endian/msd order
     return formatBigInt(outputValues, outputBase);
   }
-  
+
   const groupDigits: (bigint:string) => string = (bigint) => {//3-digit grouping
     return bigint.replace(/(\d)(?=(\d{3})+$)/g, "$1 ");
   }
-  
+
 
 
 export {ElementModP, ElementModQ, P, Q, ONE_MOD_P, ZERO_MOD_P, ZERO_MOD_Q, ONE_MOD_Q, G, R, Q_MINUS_ONE, TWO_MOD_P, TWO_MOD_Q, ElementModPOrQ, ElementModPOrQorInt, ElementModQorInt, ElementModPorInt, hex_to_q, int_to_q, int_to_q_unchecked, int_to_p, int_to_p_unchecked, add_q, a_minus_b_q, div_p, div_q, negate_q, a_plus_bc_q, mult_inv_p, pow_p, pow_q, mult_p, mult_q, g_pow_p, rand_q, rand_range_q, eq_elems, convertBase, groupDigits, formatBigInt, parseBigInt};
