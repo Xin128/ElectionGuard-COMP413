@@ -21,12 +21,13 @@ import {get_optional} from "./utils";
 
 import {
   // AnyElectionContext,
-  PlaintextSelection,
+  PlaintextBallotSelection,
   PrivateElectionContext,
   // PlaintextBallot,
-  // CiphertextSelection,
+  // CiphertextBallotSelection,
   CiphertextBallot,
   PlaintextBallot,
+  PlaintextBallotContest,
   // PlaintextBallotWithProofs,
 } from "./simple_election_data";
 import { elements_mod_q_no_zero,elements_mod_q } from "./groupUtils";
@@ -47,21 +48,22 @@ get_optional(document.getElementById("myBtn")).addEventListener("click", functio
   const keypair:ElGamalKeyPair = get_optional(elgamal_keypair_from_secret(e.notEqual(ONE_MOD_Q) ? e : TWO_MOD_Q));
   const base_hash:ElementModQ = elements_mod_q();
   const context = new PrivateElectionContext('firstTest', names, keypair, base_hash);
-  let selections:PlaintextSelection[] = [];
+  let selections:PlaintextBallotSelection[] = [];
 
   for (let i = 0; i < num_candidates; i++) {
-    selections = [...selections, new PlaintextSelection(context.names[i], 0)];
+    selections = [...selections, new PlaintextBallotSelection(context.names[i], 0)];
   } 
+  const contests = [new PlaintextBallotContest(selections)];
   const ballot_id = "001";
-  const ballot:PlaintextBallot = new PlaintextBallot(ballot_id, selections)
+  const ballot:PlaintextBallot = new PlaintextBallot(ballot_id, contests)
   const seed_nonce:ElementModQ = elements_mod_q_no_zero();
   const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
 
   console.log('selections', names);
   console.log('selections', selections);
   console.log('seed nonce', seed_nonce);
-  console.log("encrypted ballot selections:", encrypted_ballot.selections);
-  console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
+  // console.log("encrypted ballot selections:", encrypted_ballot.selections);
+  // console.log("encrypted ballot proof:", encrypted_ballot.valid_sum_proof);
   get_optional(document.getElementById("output")).innerHTML =
     encrypted_ballot.valid_sum_proof.data.elem.toString();
   get_optional(document.getElementById("seed_nonce")).innerHTML =
