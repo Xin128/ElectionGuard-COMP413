@@ -3,7 +3,8 @@ import { DisjunctiveChaumPedersenProof,
     ConstantChaumPedersenProof } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
-import {ElementModP, ElementModQ} from "./group"
+import {ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
+import { hash_elems, CryptoHashable, CryptoHashCheckable } from "./hash";
 
 
 export class PlaintextBallot {
@@ -56,7 +57,7 @@ export class PlaintextBallotSelection{
     }
 }
 
-export class CiphertextBallotSelectionTally{
+export class CiphertextSelectionTally{
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -69,18 +70,31 @@ export class CiphertextBallotSelectionTally{
 }
 
 
-export class CiphertextBallot {
+export class CiphertextBallot extends CryptoHashCheckable{
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
     contests: CiphertextBallotContest[];
 
     public constructor(ballot_id: string, contests: CiphertextBallotContest[]) {
+        super();
         this.ballot_id = ballot_id;
         this.contests = contests;
     }
+    public crypto_hash_with(encryption_seed: ElementModQ):ElementModQ{
+        if (this.contests == null) {
+            return ZERO_MOD_Q;
+        }
+        const contest_hashes = []
+        for ( let i = 0; i < this.contests.length; i ++) {
+            contest_hashes.push(this.contests[i].crypto_hash);
+        }
+        return hash_elems([this.ballot_id, encryption_seed, contest_hashes]);
+    }
+
 }
 
-export class CiphertextBallotContest{
+export class CiphertextBallotContest extends CryptoHashCheckable{
+
 
     selections: CiphertextBallotSelection[];
     // Encrypted selections. This will include a "placeholder" selection (with `selection_id` == "PLACEHOLDER"),
@@ -89,17 +103,26 @@ export class CiphertextBallotContest{
     valid_sum_proof: ConstantChaumPedersenProof;
     // Proof that the sum of the selections (including the placeholder) is exactly one.
 
-    public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof){
+    crypto_hash:ElementModQ;
+    //Hash of the encrypted values.
+    public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof, crypto_hash:ElementModQ){
+        super();
         this.selections = selections;
         this.valid_sum_proof = valid_sum_proof;
+        this.crypto_hash = crypto_hash;
     }
 
     public num_selections(): number{
         return this.selections.length;
     }
+
+    public crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
+        return _ciphertext_ballot_context_crypto_hash(this.selections, encryption_seed)
+    }
+
 }
 
-export class CiphertextBallotSelection{
+export class CiphertextBallotSelection extends CryptoHashCheckable{
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -108,10 +131,18 @@ export class CiphertextBallotSelection{
 
     zero_or_one_proof: DisjunctiveChaumPedersenProof;
     // Proof that the encrypted selection is either zero or one.
-    public constructor(name: string, ciphertext: ElGamalCiphertext, zero_or_one_proof: DisjunctiveChaumPedersenProof){
+
+    crypto_hash: ElementModQ;
+    public constructor(name: string, ciphertext: ElGamalCiphertext, zero_or_one_proof: DisjunctiveChaumPedersenProof, crypto_hash:ElementModQ){
+        super();
         this.name = name;
         this.ciphertext = ciphertext;
         this.zero_or_one_proof = zero_or_one_proof;
+        this.crypto_hash = crypto_hash;
+    }
+
+    crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
+        return _ciphertext_ballot_selection_crypto_hash_with(encryption_seed, this.ciphertext)
     }
 }
 
@@ -214,6 +245,23 @@ export class PrivateElectionContext {
 
 }
 
+// Notes for Arthur: I deleted all object-id for now for simplicity. Let me know if it is required and I can add it later.
+export function _ciphertext_ballot_context_crypto_hash(
+    ballot_selections: CiphertextBallotSelection[], encryption_seed: ElementModQ):ElementModQ{
+    if (ballot_selections.length == 0){
+        console.log(
+            "mismatching ballot_selections state: {object_id} expected(some), actual(none)");
+        return ZERO_MOD_Q;
+    }
+    const selection_hashes = []
+    for ( let i = 0; i < ballot_selections.length; i ++) {
+        selection_hashes.push(ballot_selections[i].crypto_hash);
+    }
+    return hash_elems([encryption_seed, selection_hashes])
+}
+export function _ciphertext_ballot_selection_crypto_hash_with(encryption_seed: ElementModQ, ciphertext: ElGamalCiphertext): ElementModQ{
+    return hash_elems([encryption_seed, ciphertext.crypto_hash()]);
+}
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
 

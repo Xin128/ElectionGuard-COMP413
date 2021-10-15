@@ -1,4 +1,4 @@
-import { AnyElectionContext, PlaintextBallot, PlaintextSelection, PrivateElectionContext } from "./simple_election_data";
+import { AnyElectionContext, PlaintextBallot, PlaintextBallotSelection, PrivateElectionContext } from "./simple_election_data";
 import { ElGamalKeyPair, elgamal_keypair_from_secret } from "./elgamal";
 import { elements_mod_q, elements_mod_q_no_zero } from "./groupUtils";
 import { ONE_MOD_Q, TWO_MOD_Q } from "./group";
@@ -93,9 +93,9 @@ export function plaintext_arbitrary_ballots(context: AnyElectionContext, num_bal
 // :param ballot_id: A string to use for this ballot's identifier.
 export function plaintext_arbitrary_ballot(context: AnyElectionContext, ballot_id: string): PlaintextBallot {
     const num_names = context.names.length;
-    let selections: PlaintextSelection[] = [];
+    let selections: PlaintextBallotSelection[] = [];
     for (let i = 0; i < num_names; i++) {
-        selections = [...selections, new PlaintextSelection(context.names[i], getRandomNumberInclusive(0, 1))];
+        selections = [...selections, new PlaintextBallotSelection(context.names[i], getRandomNumberInclusive(0, 1))];
     }
 
     return new PlaintextBallot(ballot_id, selections);
@@ -130,9 +130,9 @@ export function plaintext_ballot(context: AnyElectionContext, ballot_id: string)
     // -1 means we select nobody, otherwise we select the nth candidate
     const num_names = context.names.length;
     const choice = getRandomNumberInclusive(-1, num_names - 1);
-    let selections: PlaintextSelection[] = [];
+    let selections: PlaintextBallotSelection[] = [];
     for (let i = 0; i < num_names; i++) {
-        selections = [...selections, new PlaintextSelection(context.names[i], choice === i ? 1 : 0)];
+        selections = [...selections, new PlaintextBallotSelection(context.names[i], choice === i ? 1 : 0)];
     }
     // console.log("selections in plaintext_ballot", selections);
     return new PlaintextBallot(ballot_id, selections);

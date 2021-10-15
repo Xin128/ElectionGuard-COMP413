@@ -1,12 +1,12 @@
 import {
     CiphertextBallot,
     PlaintextBallot,
-    PlaintextSelection,
-    CiphertextSelection,
+    PlaintextBallotSelection,
+    CiphertextBallotSelection,
     PrivateElectionContext,
     CiphertextSelectionTally,
     AnyElectionContext,
-    PlaintextSelectionWithProof,
+    PlaintextBallotSelectionWithProof,
     PlaintextBallotWithProofs,
 } from "./simple_election_data"
 import { ElGamalCiphertext } from "./elgamal"
@@ -19,9 +19,9 @@ import {get_optional} from "./utils";
 const PLACEHOLDER_NAME = "PLACEHOLDER"
 
 export function encrypt_selection(context: AnyElectionContext,
-                                  selection: PlaintextSelection,
+                                  selection: PlaintextBallotSelection,
                                   seed_nonce: ElementModQ):
-    ([CiphertextSelection, ElementModQ] | null) {
+    ([CiphertextBallotSelection, ElementModQ] | null) {
     //Given a selection and the necessary election context, encrypts the selection and returns the
     //     encrypted selection plus the encryption nonce. If anything goes wrong, `None` is returned.
     const public_key = context.get_public_key();
@@ -37,7 +37,7 @@ export function encrypt_selection(context: AnyElectionContext,
         seed_nonce,
         selection.choice
     )
-    const cipher = new CiphertextSelection(selection.name, encryption, zero_or_one_pad)
+    const cipher = new CiphertextBallotSelection(selection.name, encryption, zero_or_one_pad)
     return [cipher, seed_nonce]
 }
 
@@ -59,7 +59,7 @@ export function encrypt_ballot(context: AnyElectionContext,
     }
 
     const public_key = context.get_public_key();
-    const ciphered_selections: CiphertextSelection[] = [];
+    const ciphered_selections: CiphertextBallotSelection[] = [];
     let start = true;
     let total_constant_int: number;
     total_constant_int = 0;
@@ -74,7 +74,7 @@ export function encrypt_ballot(context: AnyElectionContext,
             return null;
         }
         const encrypted_text = encrypted_tuple[0];
-        if (!(encrypted_text instanceof CiphertextSelection)){
+        if (!(encrypted_text instanceof CiphertextBallotSelection)){
             return null;
         }
         ciphered_selections.push(encrypted_text);
@@ -96,13 +96,13 @@ export function encrypt_ballot(context: AnyElectionContext,
     } else {
         placeholder_choice = 0;
     }
-    const placeHolderSelection = new PlaintextSelection(PLACEHOLDER_NAME, placeholder_choice);
-    const placeholder_encrypt_selection: ([CiphertextSelection, ElementModQ] | null) = encrypt_selection(context, placeHolderSelection, seed_nonce);
+    const placeHolderSelection = new PlaintextBallotSelection(PLACEHOLDER_NAME, placeholder_choice);
+    const placeholder_encrypt_selection: ([CiphertextBallotSelection, ElementModQ] | null) = encrypt_selection(context, placeHolderSelection, seed_nonce);
     if (placeholder_encrypt_selection === null){
         return null;
     }
-    const placeholder_encrypt_text: CiphertextSelection | null = placeholder_encrypt_selection[0]
-    if (!(placeholder_encrypt_text instanceof CiphertextSelection)) {
+    const placeholder_encrypt_text: CiphertextBallotSelection | null = placeholder_encrypt_selection[0]
+    if (!(placeholder_encrypt_text instanceof CiphertextBallotSelection)) {
         return null;
     }
     ciphered_selections.push(placeholder_encrypt_text);
@@ -154,7 +154,7 @@ export function encrypt_ballots(
     return encrypted_ballots;
 }
 
-export function validate_encrypted_selection(context: AnyElectionContext, selection: CiphertextSelection): boolean {
+export function validate_encrypted_selection(context: AnyElectionContext, selection: CiphertextBallotSelection): boolean {
     //Validates the proof on an encrypted selection. Returns true if everything is good.
     const message = selection.ciphertext;
     const public_key = context.get_public_key();
@@ -185,16 +185,16 @@ export function validate_encrypted_ballot(context: AnyElectionContext, ballot: C
 
 export function decrypt_selection(
     context: PrivateElectionContext,
-    selection: CiphertextSelection,
-    seed: ElementModQ):PlaintextSelectionWithProof {
+    selection: CiphertextBallotSelection,
+    seed: ElementModQ):PlaintextBallotSelectionWithProof {
     //Given an encrypted selection and the necessary crypto context, decrypts it, returning
     //     the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
     //     ciphertext. The optional seed is used for computing the proof.
     const secret_key = context.keypair.secret_key;
     const choice = selection.ciphertext.decrypt(secret_key);
-    const plaintextSelection = new PlaintextSelection(selection.name, choice);
+    const PlaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
-    return new PlaintextSelectionWithProof(plaintextSelection, descryption_proof);
+    return new PlaintextBallotSelectionWithProof(PlaintextBallotSelection, descryption_proof);
 }
 
 export function decrypt_ballot(
@@ -210,7 +210,7 @@ export function decrypt_ballot(
         const value:ElementModQ = n.get(i);
         nonces.push(value);
     }
-    const ballot_decrypted_lst: PlaintextSelectionWithProof[] = [];
+    const ballot_decrypted_lst: PlaintextBallotSelectionWithProof[] = [];
     for(let selection_idx = 0; selection_idx < num_selection - 1; selection_idx++) {
         ballot_decrypted_lst.push(decrypt_selection(context, ballot.selections[selection_idx], nonces[selection_idx]));
     }
@@ -219,8 +219,8 @@ export function decrypt_ballot(
 
 export function validate_decrypted_selection(
     context: AnyElectionContext,
-    plaintext: PlaintextSelectionWithProof,
-    ciphertext: CiphertextSelection): boolean {
+    plaintext: PlaintextBallotSelectionWithProof,
+    ciphertext: CiphertextBallotSelection): boolean {
     //Validates that the plaintext is provably generated from the ciphertext. Returns true if everything is good.
     const plaintext_msg = plaintext.selection.choice;
     const public_key = context.get_public_key();
@@ -275,21 +275,21 @@ export function tally_encrypted_ballots(
 export function decrypt_tally(
     context: PrivateElectionContext,
     selection: CiphertextSelectionTally,
-    seed: ElementModQ): PlaintextSelectionWithProof {
+    seed: ElementModQ): PlaintextBallotSelectionWithProof {
     //Given an encrypted, tallied selection, and the necessary crypto context, decrypts it,
     //     returning the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
     //     ciphertext. The optional seed is used for computing the proof.
 
     const secret_key = context.keypair.secret_key;
-    const plain_selections = new PlaintextSelection(selection.name, selection.total.decrypt(secret_key));
+    const plain_selections = new PlaintextBallotSelection(selection.name, selection.total.decrypt(secret_key));
     const decryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.total, secret_key, seed, context.base_hash);
-    return new PlaintextSelectionWithProof(plain_selections, decryption_proof);
+    return new PlaintextBallotSelectionWithProof(plain_selections, decryption_proof);
 }
 
 export function decrypt_tallies(
     context: PrivateElectionContext,
     tally: CiphertextSelectionTally[],
-    seed: ElementModQ):PlaintextSelectionWithProof[] {
+    seed: ElementModQ):PlaintextBallotSelectionWithProof[] {
     //"Given a list of encrypted tallies and the necessary crypto context, does the
     //     decryption on the entire list. The optional seed is used for computing the proofs.
     const lst = [];
@@ -301,7 +301,7 @@ export function decrypt_tallies(
 
 export function validate_tally(
     context: AnyElectionContext,
-    tally_plaintext: PlaintextSelectionWithProof,
+    tally_plaintext: PlaintextBallotSelectionWithProof,
     tally_ciphertext: CiphertextSelectionTally): boolean {
     //Validates that the plaintext is provably generated from the ciphertext. Returns true if everything is good.
 
@@ -323,7 +323,7 @@ export function validate_tally(
 
 export function validate_tallies(
     context: AnyElectionContext,
-    tally_plaintext: PlaintextSelectionWithProof[],
+    tally_plaintext: PlaintextBallotSelectionWithProof[],
     tally_ciphertext: CiphertextSelectionTally[]): boolean {
     //Validates that the plaintext is provably generated from the ciphertext for every tally. Returns true if
     //     everything is good.
@@ -355,7 +355,7 @@ export function tally_plaintext_ballots(
     }
     const lst = [];
     for (const name of context.names) {
-        lst.push(new PlaintextSelection(name, get_optional(totals.get(name))));
+        lst.push(new PlaintextBallotSelection(name, get_optional(totals.get(name))));
     }
     return new PlaintextBallot("TOTALS", lst);
 }
