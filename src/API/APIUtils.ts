@@ -1,7 +1,8 @@
 import { ElGamalKeyPair, elgamal_keypair_from_secret } from "../elgamal";
-import { ElementModQ, ONE_MOD_Q, TWO_MOD_Q } from "../group";
+import { add_q, ElementModQ, ONE_MOD_Q, TWO_MOD_Q } from "../group";
 import { elements_mod_q, elements_mod_q_no_zero } from "../groupUtils";
-import { PlaintextBallot, PlaintextSelection, PrivateElectionContext } from "../simple_election_data";
+import { encrypt_ballots } from "../simple_elections";
+import { CiphertextBallot, PlaintextBallot, PlaintextSelection, PrivateElectionContext } from "../simple_election_data";
 import { get_optional } from "../utils";
 import { Ballot, BallotItem } from "./typical_ballot_data";
 
@@ -49,4 +50,19 @@ export function ballot2Context(ballot: Ballot): PrivateElectionContext {
     const base_hash:ElementModQ = elements_mod_q();
 
     return new PrivateElectionContext(ballot.electionName[0].text, namesArr, keypair, base_hash);
+}
+
+export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElectionContext) : JSON {
+    const seed_nonce:ElementModQ = elements_mod_q_no_zero();
+    const encrypted_ballots: CiphertextBallot[] = get_optional(encrypt_ballots(context, ballots, seed_nonce));
+    let final_hash = new ElementModQ(0n);
+    encrypted_ballots.forEach(eBallot => {
+        final_hash = add_q(final_hash, eBallot.crypto_hash_with(seed_nonce));
+    });
+
+    let objs : any = {};
+    objs.seed = seed_nonce;
+    objs.hash = final_hash;
+
+    return JSON.parse(JSON.stringify(objs));
 }
