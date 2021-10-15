@@ -37,18 +37,8 @@ import {
     elements_mod_p,
     elements_mod_p_no_zero,
     elements_mod_q_no_zero,
-    powmod,
     // getRandomIntExclusive
 } from './groupUtils';
-
-// values taken from the slackoverflow thread: https://stackoverflow.com/questions/34119110/negative-power-in-modular-pow
-describe("TestGroupUtil", () => {
-    test('testPowMod', () => {
-        expect(powmod(3n, 26n)).toEqual(9n);
-        expect(powmod(7n, 29n)).toEqual(25n);
-        expect(powmod(29n, 31n)).toEqual(15n);
-    });
-});
 
 describe("TestBigIntToHex", () => {
     const randomQ: ElementModQ = elements_mod_q();
@@ -59,7 +49,7 @@ describe("TestBigIntToHex", () => {
 
 describe("TestBinaryBigIntConversion", () => {
     const largeNumber:string =
-        '1101001101011010000101001111101001011101' + 
+        '1101001101011010000101001111101001011101' +
         '1111000010010111000111110011111011111000' +
         '0011000001100000110000011001110101001110' +
         '1010111010001000101101010111001111000001' +
@@ -78,7 +68,7 @@ describe("TestBinaryBigIntConversion", () => {
         '0110010011001001111101';
 
     test('testConvertBaseFrom2To10', () => {
-        
+
       //convert largeNumber from base 2 to base 10
       const largeIntDecimal = convertBase(largeNumber, 2, 10);
       const expectedLargeIntStr = '15 798 770 299 367 407 029 725 345 423 297 491 683 306 908 462 684 165 669 735 033 278 996 876 231 474 309 788 453 071 122 111 686 268 816 862 247 538 905 966 252 886 886 438 931 450 432 740 640 141 331 094 589 505 960 171 298 398 097 197 475 262 433 234 991 526 525';
@@ -101,7 +91,7 @@ describe("TestEquality", () => {
         const q2 = elements_mod_q();
         const p: ElementModP = int_to_p_unchecked(q.to_int());
         const p2: ElementModP = int_to_p_unchecked(q2.to_int());
-        
+
         // same value should imply they're equal
         expect(q.equals(p)).toBe(true);
         expect(q2.equals(p2)).toBe(true);
@@ -257,7 +247,12 @@ describe("TestOptionalFunctions", () => {
         const good: number | null = 3;
         const bad: number | null = null;
         expect(match_optional(good, () => 1, (x) => x + 2)).toEqual(5);
-        expect(match_optional(bad, () => 1, (x) => x! + 2)).toEqual(1);
+        expect(match_optional(bad, () => 1, (x) => {
+          if (x == null || x == undefined) {
+            throw Error("match called on null or undefined.");
+          }
+          return x + 2;
+        })).toEqual(1);
     });
 
     test('testGetOrElse', () => {
@@ -271,7 +266,12 @@ describe("TestOptionalFunctions", () => {
         const good: number | null = 3;
         const bad: number | null = null;
         expect(get_optional(flatmap_optional(good, (x) => x + 2))).toEqual(5);
-        expect(flatmap_optional(bad, (x) => x! + 2)).toBeUndefined();
+        expect(flatmap_optional(bad, (x) => {
+          if (x == null || x == undefined) {
+            throw Error("flatmap called on null or undefined")
+          }
+          return x + 2;
+        })).toBeUndefined();
     });
 });
 

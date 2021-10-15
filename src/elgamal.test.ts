@@ -48,7 +48,7 @@ describe("TestElgamal", () => {
         const min = 0;
         const message = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
         const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
-        expect(elgamal_encrypt(message, ZERO_MOD_Q, keypair!.public_key)).toBe(null);
+        expect(elgamal_encrypt(message, ZERO_MOD_Q, get_optional(keypair).public_key)).toBe(null);
     });
 
     test('test_elgamal_keypair_from_secret_requires_key_greater_than_one', () => {
@@ -89,9 +89,9 @@ describe("TestElgamal", () => {
 
     test('test_elgamal_generated_keypairs_are_within_range', () => {
         const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
-        expect(keypair!.public_key.to_int()).toBeLessThan(P);
-        expect(keypair!.secret_key.to_int()).toBeLessThan(Q);
-        expect(g_pow_p(keypair!.secret_key).equals(keypair!.public_key)).toBe(true);
+        expect(get_optional(keypair).public_key.to_int()).toBeLessThan(P);
+        expect(get_optional(keypair).secret_key.to_int()).toBeLessThan(Q);
+        expect(g_pow_p(get_optional(keypair).secret_key).equals(get_optional(keypair).public_key)).toBe(true);
     });
 
     // test('test_elgamal_add_homomorphic_accumulation_decrypts_successfully', () => {
@@ -127,7 +127,7 @@ describe("TestElgamal", () => {
             e = TWO_MOD_Q;
         }
         const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(e);
-        expect(keypair!.public_key.is_valid_residue()).toBe(true);
+        expect(get_optional(keypair).public_key.is_valid_residue()).toBe(true);
     });
 
 
