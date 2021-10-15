@@ -1,6 +1,8 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
-    ConstantChaumPedersenProof } from "./chaum_pedersen"
+    ConstantChaumPedersenProof, 
+    make_constant_chaum_pedersen,
+    make_disjunctive_chaum_pedersen} from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
@@ -262,6 +264,31 @@ export function _ciphertext_ballot_context_crypto_hash(
 export function _ciphertext_ballot_selection_crypto_hash_with(encryption_seed: ElementModQ, ciphertext: ElGamalCiphertext): ElementModQ{
     return hash_elems([encryption_seed, ciphertext.crypto_hash()]);
 }
+
+
+export function make_ciphertext_ballot_selection(
+    name: string,
+    seed_nonce: ElementModQ,
+    ciphertext: ElGamalCiphertext,
+    crypto_hash: ElementModQ|null,
+    proof: DisjunctiveChaumPedersenProof):CiphertextBallotSelection{
+    if (crypto_hash == null) {
+        crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(seed_nonce, ciphertext);
+    }
+    return new CiphertextBallotSelection(name, ciphertext, proof, crypto_hash);
+}
+
+export function make_ciphertext_ballot_contest(
+    ballot_selections: CiphertextBallotSelection[],
+    proof: ConstantChaumPedersenProof,
+    crypto_hash: ElementModQ|null, 
+    encryption_seed:ElementModQ):CiphertextBallotContest {
+    if (crypto_hash == null) {
+        crypto_hash = _ciphertext_ballot_context_crypto_hash(ballot_selections, encryption_seed);
+    }
+    return new CiphertextBallotContest(ballot_selections,proof, crypto_hash)
+}
+
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
 

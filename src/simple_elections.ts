@@ -8,6 +8,9 @@ import {
     AnyElectionContext,
     PlaintextBallotSelectionWithProof,
     PlaintextBallotWithProofs,
+    make_ciphertext_ballot_selection,
+    CiphertextBallotContest,
+    make_ciphertext_ballot_contest,
 } from "./simple_election_data"
 import { ElGamalCiphertext } from "./elgamal"
 import { ElementModQ, TWO_MOD_Q, add_q } from "./group"
@@ -37,9 +40,23 @@ export function encrypt_selection(context: AnyElectionContext,
         seed_nonce,
         selection.choice
     )
-    const cipher = new CiphertextBallotSelection(selection.name, encryption, zero_or_one_pad)
+    const cipher = make_ciphertext_ballot_selection(selection.name, seed_nonce, encryption, null, zero_or_one_pad);
     return [cipher, seed_nonce]
 }
+
+
+// export function encrypt_ballot_contests(ballot:PlaintextBallot, context: AnyElectionContext, seed_nonce:ElementModQ,):CiphertextBallotContest[]|null {
+//     const encrypted_contests: CiphertextBallotContest[] = [];
+//     for (const contest of ballot.contests) {
+//         const encrypted_selections = [];
+//         for (const selection of contest.selections) {
+//             encrypted_selections.push( get_optional(encrypt_selection(context, selection,seed_nonce))[0]);
+//         }
+//         encrypted_contests.push(make_ciphertext_ballot_contest(encrypted_selections, ));
+//     }
+//     return encrypted_contests;
+// }
+
 
 export function encrypt_ballot(context: AnyElectionContext,
                                ballot: PlaintextBallot,
