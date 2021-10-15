@@ -52,7 +52,9 @@ export function ballot2Context(ballot: Ballot): PrivateElectionContext {
     return new PrivateElectionContext(ballot.electionName[0].text, namesArr, keypair, base_hash);
 }
 
-export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElectionContext) : JSON {
+export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElectionContext) : any {
+
+    // Is type any safe
     const seed_nonce:ElementModQ = elements_mod_q_no_zero();
     const encrypted_ballots: CiphertextBallot[] = get_optional(encrypt_ballots(context, ballots, seed_nonce));
     let final_hash = new ElementModQ(0n);
@@ -60,9 +62,5 @@ export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElection
         final_hash = add_q(final_hash, eBallot.crypto_hash_with(seed_nonce));
     });
 
-    let objs : any = {};
-    objs.seed = seed_nonce;
-    objs.hash = final_hash;
-
-    return JSON.parse(JSON.stringify(objs));
+    return JSON.parse(JSON.stringify({seed: seed_nonce.elem.toString(), hash: final_hash.elem.toString()}));
 }
