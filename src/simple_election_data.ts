@@ -3,7 +3,8 @@ import { DisjunctiveChaumPedersenProof,
     ConstantChaumPedersenProof } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
-import {ElementModP, ElementModQ} from "./group"
+import {ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
+import { hash_elems, CryptoHashable } from "./hash";
 
 
 // python import that has not been converted
@@ -63,7 +64,7 @@ export class CiphertextSelectionTally{
     }
 }
 
-export class CiphertextSelection{
+export class CiphertextSelection extends CryptoHashable{
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -71,11 +72,17 @@ export class CiphertextSelection{
     // Encrypted selection.
 
     zero_or_one_proof: DisjunctiveChaumPedersenProof;
+
     // Proof that the encrypted selection is either zero or one.
     public constructor(name: string, ciphertext: ElGamalCiphertext, zero_or_one_proof: DisjunctiveChaumPedersenProof){
+        super();
         this.name = name;
         this.ciphertext = ciphertext;
         this.zero_or_one_proof = zero_or_one_proof;
+    }
+
+    public crypto_hash(): ElementModQ {
+        return this.ciphertext.crypto_hash();
     }
 }
 
@@ -98,6 +105,13 @@ export class CiphertextBallot {
 
     public num_selections(): number{
         return this.selections.length;
+    }
+
+    public crypto_hash_with(encryption_seed: ElementModQ):ElementModQ{
+        if (this.selections == null) {
+            return ZERO_MOD_Q;
+        }
+        return hash_elems([this.ballot_id, encryption_seed, this.selections]);
     }
 }
 
