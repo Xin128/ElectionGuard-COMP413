@@ -5,7 +5,7 @@ import { Nonces } from "./nonces";
 import {
     PrivateElectionContext,
     PlaintextBallot,
-    CiphertextSelection,
+    CiphertextBallotSelection,
     CiphertextBallot,
     PlaintextBallotWithProofs,
 } from "./simple_election_data";
@@ -200,7 +200,7 @@ describe("TestPart2", () => {
             )
         ).toBe(false);
 
-        const selection0_bad = new CiphertextSelection(name, ciphertext_bad, zero_or_one_proof);
+        const selection0_bad = new CiphertextBallotSelection(name, ciphertext_bad, zero_or_one_proof);
         const cballot_bad = new CiphertextBallot(
             bid, [selection0_bad, ...selections.slice(1)], valid_sum_proof
         )

@@ -6,35 +6,23 @@ import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {ElementModP, ElementModQ} from "./group"
 
 
-// python import that has not been converted
-// from typing import NamedTuple, List, Union
-
-
-export class PlaintextSelection{
-    name: string;
-    // Candidate name
-
-    public choice: number;
-    // 1 implies a vote for. 0 implies no vote.
-    public constructor(name: string, choice: number){
-        this.name = name;
-        this.choice = choice;
-    }
-
-    public equals(any: PlaintextSelection): boolean {
-        return this.name === any.name && this.choice === any.choice;
-    }
-}
-
 export class PlaintextBallot {
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
+    contests: PlaintextBallotContest[];
+    // The list of contests for this ballot
+    public constructor(ballot_id: string, contests: PlaintextBallotContest[]){
+        this.ballot_id = ballot_id;
+        this.contests = contests;
+    }
+}
 
-    selections: PlaintextSelection[];
+export class PlaintextBallotContest{
+
+    selections: PlaintextBallotSelection[];
     // The voter's selections. 1 implies a vote for. 0 implies no vote.
 
-    public constructor(ballot_id: string, selections: PlaintextSelection[]){
-        this.ballot_id = ballot_id;
+    public constructor(selections: PlaintextBallotSelection[]){
         this.selections = selections;
     }
 
@@ -51,7 +39,24 @@ export class PlaintextBallot {
     }
 }
 
-export class CiphertextSelectionTally{
+
+export class PlaintextBallotSelection{
+    name: string;
+    // Candidate name
+
+    public choice: number;
+    // 1 implies a vote for. 0 implies no vote.
+    public constructor(name: string, choice: number){
+        this.name = name;
+        this.choice = choice;
+    }
+
+    public equals(any: PlaintextBallotSelection): boolean {
+        return this.name === any.name && this.choice === any.choice;
+    }
+}
+
+export class CiphertextBallotSelectionTally{
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -63,7 +68,38 @@ export class CiphertextSelectionTally{
     }
 }
 
-export class CiphertextSelection{
+
+export class CiphertextBallot {
+    ballot_id: string;
+    // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
+    contests: CiphertextBallotContest[];
+
+    public constructor(ballot_id: string, contests: CiphertextBallotContest[]) {
+        this.ballot_id = ballot_id;
+        this.contests = contests;
+    }
+}
+
+export class CiphertextBallotContest{
+
+    selections: CiphertextBallotSelection[];
+    // Encrypted selections. This will include a "placeholder" selection (with `selection_id` == "PLACEHOLDER"),
+    // such that the sum of the encrypted selections is exactly one.
+
+    valid_sum_proof: ConstantChaumPedersenProof;
+    // Proof that the sum of the selections (including the placeholder) is exactly one.
+
+    public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof){
+        this.selections = selections;
+        this.valid_sum_proof = valid_sum_proof;
+    }
+
+    public num_selections(): number{
+        return this.selections.length;
+    }
+}
+
+export class CiphertextBallotSelection{
     name: string;
     // Candidate name, or `PLACEHOLDER` for a placeholder selection.
 
@@ -79,36 +115,14 @@ export class CiphertextSelection{
     }
 }
 
-export class CiphertextBallot {
-    ballot_id: string;
-    // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
-
-    selections: CiphertextSelection[];
-    // Encrypted selections. This will include a "placeholder" selection (with `selection_id` == "PLACEHOLDER"),
-    // such that the sum of the encrypted selections is exactly one.
-
-    valid_sum_proof: ConstantChaumPedersenProof;
-    // Proof that the sum of the selections (including the placeholder) is exactly one.
-
-    public constructor(ballot_id: string, selections: CiphertextSelection[], valid_sum_proof: ConstantChaumPedersenProof){
-        this.ballot_id = ballot_id;
-        this.selections = selections;
-        this.valid_sum_proof = valid_sum_proof;
-    }
-
-    public num_selections(): number{
-        return this.selections.length;
-    }
-}
-
-export class PlaintextSelectionWithProof {
-    selection: PlaintextSelection;
+export class PlaintextBallotSelectionWithProof {
+    selection: PlaintextBallotSelection;
     // The decrypted version of a ciphertext
 
     decryption_proof: ChaumPedersenDecryptionProof;
     // Proof that the decrypted version is consistent with the ciphertext
 
-    public constructor(selection: PlaintextSelection, decryption_proof: ChaumPedersenDecryptionProof){
+    public constructor(selection: PlaintextBallotSelection, decryption_proof: ChaumPedersenDecryptionProof){
         this.selection = selection;
         this.decryption_proof = decryption_proof;
     }
@@ -118,10 +132,10 @@ export class PlaintextBallotWithProofs {
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
 
-    selections: PlaintextSelectionWithProof[];
+    selections: PlaintextBallotSelectionWithProof[];
     // Each selection along with its proof
 
-    public constructor(ballot_id: string, selections: PlaintextSelectionWithProof[]){
+    public constructor(ballot_id: string, selections: PlaintextBallotSelectionWithProof[]){
         this.ballot_id = ballot_id;
         this.selections = selections;
     }
