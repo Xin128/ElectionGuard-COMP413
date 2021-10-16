@@ -10,7 +10,7 @@ import {
     PlaintextBallotWithProofs,
     make_ciphertext_ballot_selection,
     CiphertextBallotContest,
-    make_ciphertext_ballot_contest,
+    _ciphertext_ballot_context_crypto_hash
 } from "./simple_election_data"
 import { ElGamalCiphertext } from "./elgamal"
 import { ElementModQ, TWO_MOD_Q, add_q } from "./group"
@@ -18,6 +18,7 @@ import {Nonces} from "./nonces"
 import * as el from "./elgamal"
 import * as cp from "./chaum_pedersen"
 import {get_optional} from "./utils";
+import { hash_elem, hash_elems } from "./hash"
 
 const PLACEHOLDER_NAME = "PLACEHOLDER"
 
@@ -45,17 +46,90 @@ export function encrypt_selection(context: AnyElectionContext,
 }
 
 
-// export function encrypt_ballot_contests(ballot:PlaintextBallot, context: AnyElectionContext, seed_nonce:ElementModQ,):CiphertextBallotContest[]|null {
-//     const encrypted_contests: CiphertextBallotContest[] = [];
-//     for (const contest of ballot.contests) {
-//         const encrypted_selections = [];
-//         for (const selection of contest.selections) {
-//             encrypted_selections.push( get_optional(encrypt_selection(context, selection,seed_nonce))[0]);
-//         }
-//         encrypted_contests.push(make_ciphertext_ballot_contest(encrypted_selections, ));
-//     }
-//     return encrypted_contests;
-// }
+export function encrypt_ballot_contests(ballot:PlaintextBallot, context: AnyElectionContext, seed_nonce:ElementModQ,):CiphertextBallotContest[]|null {
+    const encrypted_contests: CiphertextBallotContest[] = [];
+    for (const contest of ballot.contests) {
+        const nonces = [];
+        const num_selection = contest.selections.length;
+        const n = new Nonces(seed_nonce);
+        for (let i = 0; i < num_selection + 1; i++){
+            nonces.push(n.get(i));
+        }
+        const public_key = context.get_public_key();
+        const ciphered_selections: CiphertextBallotSelection[] = [];
+        let start = true;
+        let total_constant_int: number;
+        total_constant_int = 0;
+        let agg_seed: ElementModQ | null = null;
+        let overall_encryption: ElGamalCiphertext | null = null;
+        for(let selection_idx=0; selection_idx < num_selection; selection_idx++) {
+            const plain_selection = contest.selections[selection_idx];
+            const encrypted_tuple = encrypt_selection(
+                context, plain_selection, nonces[selection_idx]
+            );
+            if (encrypted_tuple == null) {
+                return null;
+            }
+            const encrypted_text = encrypted_tuple[0];
+            if (!(encrypted_text instanceof CiphertextBallotSelection)){
+                return null;
+            }
+            ciphered_selections.push(encrypted_text);
+            if(start) {
+                overall_encryption = encrypted_text.ciphertext;
+                agg_seed = nonces[selection_idx];
+                start = false;
+            } else {
+                if((overall_encryption instanceof ElGamalCiphertext) && (agg_seed instanceof ElementModQ)) {
+                    overall_encryption = el.elgamal_add(overall_encryption, encrypted_text.ciphertext);
+                    agg_seed = add_q(agg_seed, nonces[selection_idx]);
+                }
+            }
+            total_constant_int += plain_selection.choice;
+        }
+        let placeholder_choice: number;
+        if (total_constant_int === 0){
+            placeholder_choice = 1;
+        } else {
+            placeholder_choice = 0;
+        }
+        const placeHolderSelection = new PlaintextBallotSelection(PLACEHOLDER_NAME, placeholder_choice);
+        const placeholder_encrypt_selection: ([CiphertextBallotSelection, ElementModQ] | null) = encrypt_selection(context, placeHolderSelection, seed_nonce);
+        if (placeholder_encrypt_selection === null){
+            return null;
+        }
+        const placeholder_encrypt_text: CiphertextBallotSelection | null = placeholder_encrypt_selection[0]
+        if (!(placeholder_encrypt_text instanceof CiphertextBallotSelection)) {
+            return null;
+        }
+        ciphered_selections.push(placeholder_encrypt_text);
+        const overall_encryption_elgamal_encryption = placeholder_encrypt_text.ciphertext;
+        if (overall_encryption_elgamal_encryption == null) {
+            return null;
+        }
+        overall_encryption = el.elgamal_add(get_optional(overall_encryption), overall_encryption_elgamal_encryption);
+        if((seed_nonce instanceof ElementModQ) && (agg_seed instanceof ElementModQ)) {
+            agg_seed = add_q(agg_seed, seed_nonce);
+        } else {
+            return null;
+        }
+
+        total_constant_int = total_constant_int + placeholder_choice;
+        const chaum_proof: cp.ConstantChaumPedersenProof = cp.make_constant_chaum_pedersen(
+            overall_encryption,
+            BigInt(total_constant_int),
+            agg_seed,
+            public_key,
+            seed_nonce,
+            context.base_hash,
+        );
+        const crypto_hash = _ciphertext_ballot_context_crypto_hash(ciphered_selections, seed_nonce);
+        const cipher: CiphertextBallotContest = new CiphertextBallotContest(ciphered_selections, chaum_proof, crypto_hash);
+        encrypted_contests.push(cipher);
+    }
+
+    return encrypted_contests;
+}
 
 
 export function encrypt_ballot(context: AnyElectionContext,
@@ -64,87 +138,16 @@ export function encrypt_ballot(context: AnyElectionContext,
     (CiphertextBallot | null) {
     //Given a ballot and the necessary election context, encrypts the ballot and returns the
     //     ciphertext. If anything goes wrong, `None` is returned.
-    if (ballot.is_overvoted()){
-        return null;
-    }
-
-    const num_selection = ballot.selections.length;
-    const nonces = [];
-    const n = new Nonces(seed_nonce);
-    for (let i = 0; i < num_selection + 1; i++){
-        nonces.push(n.get(i));
-    }
-
-    const public_key = context.get_public_key();
-    const ciphered_selections: CiphertextBallotSelection[] = [];
-    let start = true;
-    let total_constant_int: number;
-    total_constant_int = 0;
-    let agg_seed: ElementModQ | null = null;
-    let overall_encryption: ElGamalCiphertext | null = null;
-    for(let selection_idx=0; selection_idx < num_selection; selection_idx++) {
-        const plain_selection = ballot.selections[selection_idx];
-        const encrypted_tuple = encrypt_selection(
-            context, plain_selection, nonces[selection_idx]
-        );
-        if (encrypted_tuple == null) {
+    for (const contest of ballot.contests) {
+        if (contest.is_overvoted()){
             return null;
         }
-        const encrypted_text = encrypted_tuple[0];
-        if (!(encrypted_text instanceof CiphertextBallotSelection)){
-            return null;
-        }
-        ciphered_selections.push(encrypted_text);
-        if(start) {
-            overall_encryption = encrypted_text.ciphertext;
-            agg_seed = nonces[selection_idx];
-            start = false;
-        } else {
-            if((overall_encryption instanceof ElGamalCiphertext) && (agg_seed instanceof ElementModQ)) {
-                overall_encryption = el.elgamal_add(overall_encryption, encrypted_text.ciphertext);
-                agg_seed = add_q(agg_seed, nonces[selection_idx]);
-            }
-        }
-        total_constant_int += plain_selection.choice;
     }
-    let placeholder_choice: number;
-    if (total_constant_int === 0){
-        placeholder_choice = 1;
-    } else {
-        placeholder_choice = 0;
-    }
-    const placeHolderSelection = new PlaintextBallotSelection(PLACEHOLDER_NAME, placeholder_choice);
-    const placeholder_encrypt_selection: ([CiphertextBallotSelection, ElementModQ] | null) = encrypt_selection(context, placeHolderSelection, seed_nonce);
-    if (placeholder_encrypt_selection === null){
-        return null;
-    }
-    const placeholder_encrypt_text: CiphertextBallotSelection | null = placeholder_encrypt_selection[0]
-    if (!(placeholder_encrypt_text instanceof CiphertextBallotSelection)) {
-        return null;
-    }
-    ciphered_selections.push(placeholder_encrypt_text);
-    const overall_encryption_elgamal_encryption = placeholder_encrypt_text.ciphertext;
-    if (overall_encryption_elgamal_encryption == null) {
-        return null;
-    }
-    overall_encryption = el.elgamal_add(get_optional(overall_encryption), overall_encryption_elgamal_encryption);
-    if((seed_nonce instanceof ElementModQ) && (agg_seed instanceof ElementModQ)) {
-        agg_seed = add_q(agg_seed, seed_nonce);
-    } else {
-        return null;
-    }
-
-    total_constant_int = total_constant_int + placeholder_choice;
-    const chaum_proof: cp.ConstantChaumPedersenProof = cp.make_constant_chaum_pedersen(
-        overall_encryption,
-        BigInt(total_constant_int),
-        agg_seed,
-        public_key,
-        seed_nonce,
-        context.base_hash,
-    );
-    const cipher: CiphertextBallot = new CiphertextBallot(ballot.ballot_id, ciphered_selections, chaum_proof);
-    return cipher;
+    const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,context,seed_nonce));
+    const encrypted_contests_hash = encrypted_contests.map(contest => contest.crypto_hash);
+    const crypto_hash = hash_elems([ballot.ballot_id, seed_nonce, encrypted_contests_hash]);
+    const encrypted_ballot = new CiphertextBallot(ballot.ballot_id, encrypted_contests, crypto_hash)
+    return encrypted_ballot;
 }
 
 export function encrypt_ballots(
@@ -179,10 +182,10 @@ export function validate_encrypted_selection(context: AnyElectionContext, select
     return selection.zero_or_one_proof.is_valid(message, public_key, base_hash);
 }
 
-export function validate_encrypted_ballot(context: AnyElectionContext, ballot: CiphertextBallot): boolean {
+export function validate_encrypted_contest(context: AnyElectionContext, contest: CiphertextBallotContest): boolean {
     //Validates all the proofs on the encrypted ballot. Returns true if everything is good.
     let message: ElGamalCiphertext | null = null;
-    for(const selection of ballot.selections) {
+    for(const selection of contest.selections) {
         if(!validate_encrypted_selection(context, selection)) {
             return false;
         } else {
@@ -194,11 +197,22 @@ export function validate_encrypted_ballot(context: AnyElectionContext, ballot: C
         }
     }
     if (message instanceof ElGamalCiphertext) {
-        return ballot.valid_sum_proof.is_valid(message, context.get_public_key(), context.base_hash);
+        return contest.valid_sum_proof.is_valid(message, context.get_public_key(), context.base_hash);
     } else {
         return false;
     }
 }
+
+export function validate_encrypted_ballot(context: AnyElectionContext, ballot: CiphertextBallot): boolean {
+    //Validates all the proofs on the encrypted ballot. Returns true if everything is good.
+    for(const contest of ballot.contests) {
+        if(!validate_encrypted_contest(context, contest)) {
+            return false;
+        } 
+    }
+    return true;
+}
+
 
 export function decrypt_selection(
     context: PrivateElectionContext,
@@ -209,9 +223,9 @@ export function decrypt_selection(
     //     ciphertext. The optional seed is used for computing the proof.
     const secret_key = context.keypair.secret_key;
     const choice = selection.ciphertext.decrypt(secret_key);
-    const PlaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
+    const plaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
-    return new PlaintextBallotSelectionWithProof(PlaintextBallotSelection, descryption_proof);
+    return new PlaintextBallotSelectionWithProof(plaintextBallotSelection, descryption_proof);
 }
 
 export function decrypt_ballot(
