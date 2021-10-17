@@ -13,7 +13,10 @@ import {
     validate_encrypted_selection,
     validate_decrypted_selection,
 } from "./simple_elections";
-import { elements_mod_q_no_zero, elements_mod_q } from "./groupUtils";
+import { 
+    elements_mod_q_no_zero, 
+    elements_mod_q 
+} from "./groupUtils";
 import { context_and_ballots } from "./simpleElectionsUtil";
 import { get_optional } from "./utils";
 
@@ -22,7 +25,7 @@ describe("TestPart1", () => {
         const [context, ballots] = context_and_ballots(1);
         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
 
-        const selections: PlaintextBallotSelection[] = ballots[0].selections;
+        const selections: PlaintextBallotSelection[] = ballots[0].contests[0].selections;
         const nonces = new Nonces(seed_nonce, "part1-ballot-nonces").slice(0 , selections.length);
         const decrypt_nonces = new Nonces(seed_nonce, "part1-ballot-decrypt-nonces").slice(0 , selections.length);
 
@@ -31,7 +34,6 @@ describe("TestPart1", () => {
             encryptions = [...encryptions, get_optional(encrypt_selection(context, selection, nonces[idx]))];
         });
         expect(encryptions).not.toEqual(null);
-
         let decryptions_with_nonce: number[] = [];
         encryptions.forEach((e) => {
             decryptions_with_nonce = [...decryptions_with_nonce, e[0].ciphertext.decrypt_known_nonce(context.keypair.public_key, e[1])];
@@ -48,16 +50,14 @@ describe("TestPart1", () => {
             const dk = decryptions_with_key[idx];
             expect(selection.choice).toEqual(dn);
             expect(selection).toEqual(dk.selection);
-
         });
-
     });
 
     test("test_part1_proof_validation", () => {
        const [context, ballots] = context_and_ballots(1);
        const seed_nonce: ElementModQ = elements_mod_q_no_zero();
 
-       const selections: PlaintextBallotSelection[] = ballots[0].selections;
+       const selections: PlaintextBallotSelection[] = ballots[0].contests[0].selections;
        const nonces = new Nonces(seed_nonce, "part1-ballot-nonces").slice(0 , selections.length);
        const decrypt_nonces = new Nonces(seed_nonce, "part1-ballot-decrypt-nonces").slice(0 , selections.length);
 
@@ -88,7 +88,7 @@ describe("TestPart1", () => {
         const original_seed_nonce: ElementModQ = elements_mod_q_no_zero();
         const substitute_seed_nonce: ElementModQ = elements_mod_q();
 
-        const selections: PlaintextBallotSelection[] = ballots[0].selections;
+        const selections: PlaintextBallotSelection[] = ballots[0].contests[0].selections;
         const original_decrypt_nonces = new Nonces(original_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
         const substitute_decrypt_nonces = new Nonces(substitute_seed_nonce, "part1-ballot-decrypt-nonces").slice(0, Math.floor(selections.length / 2));
         let original_encryptions: [CiphertextBallotSelection, ElementModQ][] = [];

@@ -1,4 +1,4 @@
-import { AnyElectionContext, PlaintextBallot, PlaintextBallotSelection, PrivateElectionContext } from "./simple_election_data";
+import { AnyElectionContext, PlaintextBallot, PlaintextBallotContest, PlaintextBallotSelection, PrivateElectionContext } from "./simple_election_data";
 import { ElGamalKeyPair, elgamal_keypair_from_secret } from "./elgamal";
 import { elements_mod_q, elements_mod_q_no_zero } from "./groupUtils";
 import { ONE_MOD_Q, TWO_MOD_Q } from "./group";
@@ -97,8 +97,8 @@ export function plaintext_arbitrary_ballot(context: AnyElectionContext, ballot_i
     for (let i = 0; i < num_names; i++) {
         selections = [...selections, new PlaintextBallotSelection(context.names[i], getRandomNumberInclusive(0, 1))];
     }
-
-    return new PlaintextBallot(ballot_id, selections);
+    const contest = [new PlaintextBallotContest(selections)];
+    return new PlaintextBallot(ballot_id, contest);
 }
 
 // Generates a `PrivateElectionContext` for an election with the
@@ -135,7 +135,8 @@ export function plaintext_ballot(context: AnyElectionContext, ballot_id: string)
         selections = [...selections, new PlaintextBallotSelection(context.names[i], choice === i ? 1 : 0)];
     }
     // console.log("selections in plaintext_ballot", selections);
-    return new PlaintextBallot(ballot_id, selections);
+    const contest = [new PlaintextBallotContest(selections)];
+    return new PlaintextBallot(ballot_id, contest);
 }
 
 // A string formatter for formatting ballot number,

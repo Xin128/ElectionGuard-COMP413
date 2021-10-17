@@ -1,12 +1,11 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
     ConstantChaumPedersenProof, 
-    make_constant_chaum_pedersen,
-    make_disjunctive_chaum_pedersen} from "./chaum_pedersen"
+    } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
-import { hash_elems, CryptoHashable, CryptoHashCheckable } from "./hash";
+import { hash_elems, CryptoHashCheckable } from "./hash";
 
 
 export class PlaintextBallot {
