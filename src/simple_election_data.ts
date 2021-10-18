@@ -295,17 +295,6 @@ export function make_ciphertext_ballot_selection(
     return new CiphertextBallotSelection(name, ciphertext, proof, crypto_hash);
 }
 
-// export function make_ciphertext_ballot_contest(
-//     ballot_selections: CiphertextBallotSelection[],
-//     proof: ConstantChaumPedersenProof,
-//     crypto_hash: ElementModQ|null, 
-//     encryption_seed:ElementModQ):CiphertextBallotContest {
-//     if (crypto_hash == null) {
-//         crypto_hash = _ciphertext_ballot_context_crypto_hash(ballot_selections, encryption_seed);
-//     }
-//     return new CiphertextBallotContest(ballot_selections,proof, crypto_hash)
-// }
-
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
 
