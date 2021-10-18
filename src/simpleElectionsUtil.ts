@@ -134,7 +134,6 @@ export function plaintext_ballot(context: AnyElectionContext, ballot_id: string)
     for (let i = 0; i < num_names; i++) {
         selections = [...selections, new PlaintextBallotSelection(context.names[i], choice === i ? 1 : 0)];
     }
-    // console.log("selections in plaintext_ballot", selections);
     const contest = [new PlaintextBallotContest(selections)];
     return new PlaintextBallot(ballot_id, contest);
 }
