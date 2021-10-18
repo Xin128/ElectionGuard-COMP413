@@ -13,9 +13,9 @@ import {
     validate_encrypted_selection,
     validate_decrypted_selection,
 } from "./simple_elections";
-import { 
-    elements_mod_q_no_zero, 
-    elements_mod_q 
+import {
+    elements_mod_q_no_zero,
+    elements_mod_q
 } from "./groupUtils";
 import { context_and_ballots } from "./simpleElectionsUtil";
 import { get_optional } from "./utils";
@@ -34,7 +34,7 @@ describe("TestPart1", () => {
             encryptions = [...encryptions, get_optional(encrypt_selection(context, selection, nonces[idx]))];
         });
         expect(encryptions).not.toEqual(null);
-        let decryptions_with_nonce: number[] = [];
+        let decryptions_with_nonce: bigint[] = [];
         encryptions.forEach((e) => {
             decryptions_with_nonce = [...decryptions_with_nonce, e[0].ciphertext.decrypt_known_nonce(context.keypair.public_key, e[1])];
         });
@@ -48,7 +48,7 @@ describe("TestPart1", () => {
         selections.forEach((selection, idx) => {
             const dn = decryptions_with_nonce[idx];
             const dk = decryptions_with_key[idx];
-            expect(selection.choice).toEqual(dn);
+            expect(selection.choice).toEqual(Number(dn));
             expect(selection).toEqual(dk.selection);
         });
     });
@@ -66,7 +66,7 @@ describe("TestPart1", () => {
            encryptions = [...encryptions, get_optional(encrypt_selection(context, selection, nonces[idx]))];
        });
        expect(encryptions).not.toEqual(null);
-       
+
        encryptions.forEach((e) => {
         expect(validate_encrypted_selection(context, e[0])).toBe(true);
        });

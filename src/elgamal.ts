@@ -2,10 +2,9 @@ import {discrete_log} from "./dlog"
 import {
   ElementModQ,
   ElementModP,
-  mult_inv_p,
   g_pow_p,
   mult_p,
-  // mult_inv_p,
+  mult_inv_p,
   pow_p,
   ZERO_MOD_Q,
   TWO_MOD_Q,
@@ -57,8 +56,8 @@ export class ElGamalCiphertext {
    * (the blinding factor used in the encryption).
    * @param product the blinding factor used in the encryption
    */
-  public decrypt_known_product(product: ElementModP): number {
-    return Number(discrete_log(mult_p(this.data, mult_inv_p(product))));
+  public decrypt_known_product(product: ElementModP): bigint {
+    return discrete_log(mult_p(this.data, mult_inv_p(product)));
   }
 
   /**
@@ -66,7 +65,7 @@ export class ElGamalCiphertext {
    * @param secret_key The corresponding ElGamal secret key.
    * Return A plaintext message.
    */
-  public decrypt(secret_key: ElementModQ): number {
+  public decrypt(secret_key: ElementModQ): bigint {
 
     return this.decrypt_known_product(pow_p(this.pad, secret_key));
   }
@@ -78,7 +77,7 @@ export class ElGamalCiphertext {
    * Return A plaintext message.
    */
   public decrypt_known_nonce(public_key: ElementModP,
-                             nonce: ElementModQ): number{
+                             nonce: ElementModQ): bigint{
     return this.decrypt_known_product(pow_p(public_key, nonce));
   }
 

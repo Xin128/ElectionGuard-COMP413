@@ -38,9 +38,9 @@ describe("TestElgamal", () => {
         expect(get_optional(ciphertext).pad.to_int() ** secret_key.to_int() % P).toBe(public_key.to_int() ** nonce.to_int() % P);
         expect(get_optional(ciphertext).data.to_int()).toBe(public_key.to_int() ** nonce.to_int() % P);
 
-      // const plaintext:number = ciphertext.decrypt(keypair.secret_key);
-        //
-        // expect(plaintext).toBe(0);
+        const plaintext:bigint = get_optional(ciphertext).decrypt(get_optional(keypair).secret_key);
+
+        expect(plaintext).toBe(0n);
     });
 
     test('test_elgamal_encrypt_requires_nonzero_nonce', () => {
@@ -65,11 +65,11 @@ describe("TestElgamal", () => {
         const nonce:ElementModQ|null = elements_mod_q_no_zero();
 
         // to avoid non-used issue
-        console.log(message,keypair,nonce);
+        // console.log(message,keypair,nonce);
 
-        // const plaintext:number = ciphertext.decrypt(keypair.secret_key);
-        // const ciphertext = elgamal_encrypt(message, nonce, keypair.public_key)
-        // expect(plaintext).toBe(message);
+        const ciphertext = elgamal_encrypt(message, nonce, get_optional(keypair).public_key)
+        const plaintext:bigint = get_optional(ciphertext).decrypt(get_optional(keypair).secret_key);
+        expect(plaintext).toBe(message);
     });
 
     test('test_elgamal_encryption_decryption_with_known_nonce_inverses', () => {
@@ -80,11 +80,11 @@ describe("TestElgamal", () => {
         const nonce:ElementModQ|null = elements_mod_q_no_zero();
 
         // to avoid non-used issue
-        console.log(message,keypair,nonce);
+        // console.log(message,keypair,nonce);
 
-        // const ciphertext = elgamal_encrypt(message, nonce, keypair!.public_key)
-        // const plaintext:number = ciphertext.decrypt_known_nonce(keypair!.secret_key);
-        // expect(plaintext).toBe(message);
+        const ciphertext = elgamal_encrypt(message, nonce, get_optional(keypair).public_key)
+        const plaintext:bigint = get_optional(ciphertext).decrypt_known_nonce(get_optional(keypair).public_key, nonce);
+        expect(plaintext).toBe(message);
     });
 
     test('test_elgamal_generated_keypairs_are_within_range', () => {
@@ -94,25 +94,24 @@ describe("TestElgamal", () => {
         expect(g_pow_p(get_optional(keypair).secret_key).equals(get_optional(keypair).public_key)).toBe(true);
     });
 
-    // test('test_elgamal_add_homomorphic_accumulation_decrypts_successfully', () => {
-    //     const r1 = elements_mod_q_no_zero();
-    //     const r2 = elements_mod_q_no_zero();
-    //     const max = 100;
-    //     const min = 0;
-    //     const m1 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-    //     const m2 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
-    //     const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
+    test('test_elgamal_add_homomorphic_accumulation_decrypts_successfully', () => {
+        const r1 = elements_mod_q_no_zero();
+        const r2 = elements_mod_q_no_zero();
+        const max = 100;
+        const min = 0;
+        const m1 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+        const m2 = BigInt(Math.floor(Math.random() * (max - min + 1) + min));
+        const keypair:ElGamalKeyPair|null = elgamal_keypair_from_secret(elements_mod_q_no_zero());
 
-    //     const c1 =  elgamal_encrypt(m1, r1, keypair!.public_key)
-    //     const c2 =  elgamal_encrypt(m2, r2, keypair!.public_key)
-    //     const c_sum = elgamal_add(c1!, c2!);
-    //     console.log("c_sum", c_sum);
-    //       // to avoid non-used issue
-    //     // const total = c_sum.decrypt(keypair.secret_key)
-    //     // total + 1;
-    //     // expect(total).toBe(m1 + m2);
-    // });
+        const c1 =  elgamal_encrypt(m1, r1, get_optional(keypair).public_key);
+        const c2 =  elgamal_encrypt(m2, r2, get_optional(keypair).public_key);
+        const c_sum = elgamal_add(get_optional(c1), get_optional(c2));
 
+          // to avoid non-used issue
+          // console.log(c_sum);
+        const total = c_sum.decrypt(get_optional(keypair).secret_key);
+        expect(total).toBe(m1 + m2);
+    });
 
     test('test_elgamal_add_requires_args', () => {
         //console.assert does not throw an AssertionError (except in Node.js), meaning that this method is incompatible with most testing frameworks and that code execution will not break on a failed assertion.

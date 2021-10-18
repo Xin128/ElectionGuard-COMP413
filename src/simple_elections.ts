@@ -15,14 +15,14 @@ import {
     PlaintextBallotContest
 } from "./simple_election_data"
 import { ElGamalCiphertext } from "./elgamal"
-import { ElementModQ, 
-    TWO_MOD_Q, 
+import { ElementModQ,
+    TWO_MOD_Q,
     add_q } from "./group"
 import {Nonces} from "./nonces"
 import * as el from "./elgamal"
 import * as cp from "./chaum_pedersen"
 import {get_optional} from "./utils";
-import { 
+import {
     hash_elems } from "./hash"
 
 const PLACEHOLDER_NAME = "PLACEHOLDER"
@@ -213,7 +213,7 @@ export function validate_encrypted_ballot(context: AnyElectionContext, ballot: C
     for(const contest of ballot.contests) {
         if(!validate_encrypted_contest(context, contest)) {
             return false;
-        } 
+        }
     }
     return true;
 }
@@ -227,7 +227,7 @@ export function decrypt_selection(
     //     the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
     //     ciphertext. The optional seed is used for computing the proof.
     const secret_key = context.keypair.secret_key;
-    const choice = selection.ciphertext.decrypt(secret_key);
+    const choice = Number(selection.ciphertext.decrypt(secret_key));
     const plaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
     return new PlaintextBallotSelectionWithProof(plaintextBallotSelection, descryption_proof);
@@ -329,7 +329,7 @@ export function tally_encrypted_ballots(
                     const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext);
                     total_votes.set(s.name, new_val);
                     // console.log("the updated value for ballot length ", ballots.length + " with name " + s.name + " is ", new_val);
-                    
+
                 }
             }
         }
@@ -351,7 +351,7 @@ export function   decrypt_tally(
     //     ciphertext. The optional seed is used for computing the proof.
 
     const secret_key = context.keypair.secret_key;
-    const plain_selections = new PlaintextBallotSelection(selection.name, selection.total.decrypt(secret_key));
+    const plain_selections = new PlaintextBallotSelection(selection.name, Number(selection.total.decrypt(secret_key)));
     const decryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.total, secret_key, seed, context.base_hash);
     return new PlaintextBallotSelectionWithProof(plain_selections, decryption_proof);
 }
