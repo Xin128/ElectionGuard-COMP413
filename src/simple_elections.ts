@@ -7,7 +7,8 @@ import {
     // CiphertextSelectionTally,
     AnyElectionContext,
     PlaintextBallotSelectionWithProof,
-    // PlaintextBallotWithProofs,
+    PlaintextContestWithProofs,
+    PlaintextBallotWithProofs,
     make_ciphertext_ballot_selection,
     CiphertextBallotContest,
     _ciphertext_ballot_context_crypto_hash
@@ -230,26 +231,45 @@ export function decrypt_selection(
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
     return new PlaintextBallotSelectionWithProof(plaintextBallotSelection, descryption_proof);
 }
+export function decrypt_contest(
+    context: PrivateElectionContext,
+    contest: CiphertextBallotContest,
+    seed: ElementModQ): PlaintextContestWithProofs {
+    //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
+    //     decryption includes the necessary Chaum-Pedersen decryption proofs as well.
+    const num_selection = contest.selections.length;
+    const n = new Nonces(seed);
+    const nonces:ElementModQ[] = [];
+    for (let i = 0; i < num_selection; i++) {
+        const value:ElementModQ = n.get(i);
+        nonces.push(value);
+    }
+    const contest_decrypted_lst: PlaintextBallotSelectionWithProof[] = [];
+    for(let selection_idx = 0; selection_idx < num_selection - 1; selection_idx++) {
+        contest_decrypted_lst.push(decrypt_selection(context, contest.selections[selection_idx], nonces[selection_idx]));
+    }
+    return new PlaintextContestWithProofs(contest_decrypted_lst);
+}
 
-// export function decrypt_ballot(
-//     context: PrivateElectionContext,
-//     ballot: CiphertextBallot,
-//     seed: ElementModQ): PlaintextBallotWithProofs {
-//     //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
-//     //     decryption includes the necessary Chaum-Pedersen decryption proofs as well.
-//     const num_selection = ballot.selections.length;
-//     const n = new Nonces(seed);
-//     const nonces:ElementModQ[] = [];
-//     for (let i = 0; i < num_selection; i++) {
-//         const value:ElementModQ = n.get(i);
-//         nonces.push(value);
-//     }
-//     const ballot_decrypted_lst: PlaintextBallotSelectionWithProof[] = [];
-//     for(let selection_idx = 0; selection_idx < num_selection - 1; selection_idx++) {
-//         ballot_decrypted_lst.push(decrypt_selection(context, ballot.selections[selection_idx], nonces[selection_idx]));
-//     }
-//     return new PlaintextBallotWithProofs(ballot.ballot_id, ballot_decrypted_lst);
-// }
+export function decrypt_ballot(
+    context: PrivateElectionContext,
+    ballot: CiphertextBallot,
+    seed: ElementModQ): PlaintextBallotWithProofs {
+    //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
+    //     decryption includes the necessary Chaum-Pedersen decryption proofs as well.
+    const num_contest = ballot.contests.length;
+    const n = new Nonces(seed);
+    const nonces:ElementModQ[] = [];
+    for (let i = 0; i < num_contest; i++) {
+        const value:ElementModQ = n.get(i);
+        nonces.push(value);
+    }
+    const ballot_decrypted_lst: PlaintextContestWithProofs[] = [];
+    for(let selection_idx = 0; selection_idx < num_contest - 1; selection_idx++) {
+        ballot_decrypted_lst.push(decrypt_contest(context, ballot.contests[selection_idx], nonces[selection_idx]));
+    }
+    return new PlaintextBallotWithProofs(ballot.ballot_id, ballot_decrypted_lst);
+}
 
 export function validate_decrypted_selection(
     context: AnyElectionContext,

@@ -163,22 +163,37 @@ export class PlaintextBallotSelectionWithProof {
     }
 }
 
-export class PlaintextBallotWithProofs {
-    ballot_id: string;
-    // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
+export class PlaintextContestWithProofs {
 
     selections: PlaintextBallotSelectionWithProof[];
     // Each selection along with its proof
 
-    public constructor(ballot_id: string, selections: PlaintextBallotSelectionWithProof[]){
-        this.ballot_id = ballot_id;
+    public constructor(selections: PlaintextBallotSelectionWithProof[]){
         this.selections = selections;
     }
 
-    public  num_selections(): number {
+    public num_selections(): number {
         return this.selections.length;
     }
 }
+
+export class PlaintextBallotWithProofs {
+    ballot_id: string;
+    // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
+
+    contests: PlaintextContestWithProofs[];
+    // Each selection along with its proof
+
+    public constructor(ballot_id: string, contests: PlaintextContestWithProofs[]){
+        this.ballot_id = ballot_id;
+        this.contests = contests;
+    }
+
+    public  num_contests(): number {
+        return this.contests.length;
+    }
+}
+
 
 export class PublicElectionContext {
     // Election context that would be available to any observer of the election.

@@ -1,52 +1,54 @@
-// /*eslint prefer-const: "warn"*/
-// import { elgamal_encrypt } from "./elgamal";
-// import { ElementModQ, ElementModP } from "./group";
-// import { Nonces } from "./nonces";
-// import {
-//     PrivateElectionContext,
-//     PlaintextBallot,
-//     CiphertextBallotSelection,
-//     CiphertextBallot,
-//     PlaintextBallotWithProofs,
-// } from "./simple_election_data";
-// import {
-//     encrypt_ballot,
-//     decrypt_ballot,
-//     validate_encrypted_ballot,
-//     validate_decrypted_ballot,
-//     encrypt_ballots,
-//     tally_encrypted_ballots,
-//     validate_tallies,
-//     decrypt_tallies,
-//     tally_plaintext_ballots,
-// } from "./simple_elections";
-// import { elements_mod_q_no_zero } from "./groupUtils";
-// import {
-//     context_and_ballots,
-//     context_and_arbitrary_ballots,
-//     getRandomNumberInclusive,
-// } from "./simpleElectionsUtil"
-// import { get_optional } from "./utils";
+/*eslint prefer-const: "warn"*/
+import { elgamal_encrypt } from "./elgamal";
+import { ElementModQ, ElementModP } from "./group";
+import { Nonces } from "./nonces";
+import {
+    PrivateElectionContext,
+    PlaintextBallot,
+    CiphertextBallotSelection,
+    CiphertextBallot,
+    PlaintextBallotWithProofs,
+} from "./simple_election_data";
+import {
+    encrypt_ballot,
+    decrypt_ballot,
+    // validate_encrypted_ballot,
+    // validate_decrypted_ballot,
+    // encrypt_ballots,
+    // tally_encrypted_ballots,
+    // validate_tallies,
+    // decrypt_tallies,
+    // tally_plaintext_ballots,
+} from "./simple_elections";
+import { elements_mod_q_no_zero } from "./groupUtils";
+import {
+    context_and_ballots,
+    // context_and_arbitrary_ballots,
+    // getRandomNumberInclusive,
+} from "./simpleElectionsUtil"
+import { get_optional } from "./utils";
 
-// describe("TestPart2", () => {
+describe("TestPart2", () => {
 
-//     test("test_encryption_decryption_inverses", () => {
-//         let context: PrivateElectionContext;
-//         let ballots: PlaintextBallot[];
-//         // eslint-disable-next-line prefer-const
-//         [context, ballots] = context_and_ballots(1);
-//         const seed_nonce: ElementModQ = elements_mod_q_no_zero();
-//         ballots.forEach((ballot) => {
-//             // eslint-disable prefer-const
-//             const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
-//             // eslint-disable-next-line prefer-const
-//             let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
-//             for (let i = 0; i < ballot.num_selections(); i++) {
-//                 expect(ballot.selections[i]).toEqual(decrypted_ballot.selections[i].selection);
-//             }
-//             expect(validate_decrypted_ballot(context, decrypted_ballot, encrypted_ballot)).toBe(true);
-//         });
-//     });
+    test("test_encryption_decryption_inverses", () => {
+        let context: PrivateElectionContext;
+        let ballots: PlaintextBallot[];
+        // eslint-disable-next-line prefer-const
+        [context, ballots] = context_and_ballots(1);
+        const seed_nonce: ElementModQ = elements_mod_q_no_zero();
+        ballots.forEach((ballot) => {
+            // eslint-disable prefer-const
+            const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+            // eslint-disable-next-line prefer-const
+            let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
+            // const contest = ballot.contests[0];
+            // for (let i = 0; i < contest.num_selections(); i++) {
+            //     expect(contest[0].selections[i]).toEqual(decrypted_ballot.selections[i].selection);
+            // }
+            console.log("decrypted ballot", decrypted_ballot);
+            // expect(validate_decrypted_ballot(context, decrypted_ballot, encrypted_ballot)).toBe(true);
+        });
+    });
 
 //     test("test_unique_ballot_ids", () => {
 //         let context: PrivateElectionContext;
@@ -247,4 +249,4 @@
 //         expect(same_totals.every(Boolean)).toBe(true);
 
 //     });
-// });
+});
