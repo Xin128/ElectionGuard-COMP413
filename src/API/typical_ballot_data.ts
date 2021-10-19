@@ -12,12 +12,14 @@ export enum BallotMarkerType {
 export class Ballot {
     id: string;
     electionName: LanguageText[];
+    /// These are fields that we probably won't need ///
     title: LanguageText[];
     subTitle: LanguageText[];
     text1: LanguageText[];
     text2: LanguageText[];
     markingInstructions: LanguageText[];
     printableInstructions: LanguageText[];
+    ///////////////////////////////////////////////////
     partyId: string;
     partyName: LanguageText[];
     precinctName: string;
@@ -28,6 +30,14 @@ export class Ballot {
 
     //List and grid types
     ballotPages: BallotPage[];
+
+    constructor(id: string, electionName: string, ballotItems: BallotItem[]) {
+        this.id = id;
+        this.ballotItems = ballotItems;
+        let eName = new LanguageText();
+        eName.text = electionName;
+        this.electionName = [eName];
+    }
 
 }
 export class BallotPage {
@@ -64,6 +74,10 @@ export class BallotItem {
     // behavior
     undervoteWarningEnabled: boolean;
     overvoteWarningEnabled: boolean;
+
+    constructor(ballotOptions: BallotOption[]) {
+        this.ballotOptions = ballotOptions;
+    }
 }
 
 export enum BallotItemType {
@@ -75,9 +89,9 @@ export enum BallotItemType {
 export class BallotOption {
 
     id: string;
-    order: number;
+    order: number; // the order of the selection
     type: BallotOptionType;
-    title: LanguageText[];
+    title: LanguageText[]; // candidate name
     subTitle: LanguageText[];
     text1: LanguageText[];
     text2: LanguageText[];
@@ -86,7 +100,15 @@ export class BallotOption {
     selected: boolean = false;
     writeInSelection: string;
     rank: number;
+
+    constructor(candidateName: string, selected: boolean) {
+        let name = new LanguageText();
+        name.text = candidateName;
+        this.title = [name];
+        this.selected = selected;
+    }
 }
+
 export enum BallotOptionType {
     Typical = 1,
     WriteIn = 2,
@@ -96,4 +118,14 @@ export enum BallotOptionType {
     GroupHeader = 50,
     NoCandidate = 99,
     Empty = 100
+}
+
+export class EncryptBallotOutput {
+    seed: string = "-1";
+    hash: string = "-1";
+
+    constructor(seed: string, hash: string) {
+        this.seed = seed;
+        this.hash = hash;
+    }
 }
