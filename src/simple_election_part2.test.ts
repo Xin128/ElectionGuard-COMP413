@@ -1,13 +1,18 @@
 /*eslint prefer-const: "warn"*/
 import { elgamal_encrypt } from "./elgamal";
-import { ElementModQ, ElementModP } from "./group";
+import { ElementModQ, 
+    ElementModP 
+} from "./group";
 import { Nonces } from "./nonces";
 import {
     PrivateElectionContext,
     PlaintextBallot,
-    CiphertextSelection,
+    // CiphertextBallotSelection,
     CiphertextBallot,
     PlaintextBallotWithProofs,
+    make_ciphertext_ballot_selection,
+    _ciphertext_ballot_context_crypto_hash,
+    CiphertextBallotContest,
 } from "./simple_election_data";
 import {
     encrypt_ballot,
@@ -27,6 +32,7 @@ import {
     getRandomNumberInclusive,
 } from "./simpleElectionsUtil"
 import { get_optional } from "./utils";
+import { hash_elems } from "./hash";
 
 describe("TestPart2", () => {
 
@@ -41,8 +47,14 @@ describe("TestPart2", () => {
             const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
             // eslint-disable-next-line prefer-const
             let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
-            for (let i = 0; i < ballot.num_selections(); i++) {
-                expect(ballot.selections[i]).toEqual(decrypted_ballot.selections[i].selection);
+            for (let i = 0 ; i < decrypted_ballot.num_contests(); i++){
+                // Question from Xin: why did we do -1 here? 
+                for (let j = 0; j < decrypted_ballot.contests[i].num_selections(); j++) {
+                    // console.log("compare");
+                    // console.log(ballot.contests[i].selections[j]);
+                    // console.log(decrypted_ballot.contests[i].selections[j].selection);
+                    expect(ballot.contests[i].selections[j]).toEqual(decrypted_ballot.contests[i].selections[j].selection);
+                }
             }
             expect(validate_decrypted_ballot(context, decrypted_ballot, encrypted_ballot)).toBe(true);
         });
@@ -87,13 +99,15 @@ describe("TestPart2", () => {
         let sum_challenges: ElementModQ[] = [];
         let all_proof_a_vals: ElementModP[] = [];
         const all_proof_c_vals: ElementModQ[] = [];
-        cballots.forEach((c) => {
-            sum_pads = [...sum_pads, c.valid_sum_proof.pad];
-            sum_challenges = [...sum_challenges, c.valid_sum_proof.challenge];
-            c.selections.forEach((s) => {
-                all_pads = [...all_pads, s.ciphertext.pad];
-                all_proof_a_vals = [...all_proof_a_vals, s.zero_or_one_proof.proof_one_pad]
-                all_proof_a_vals = [...all_proof_a_vals, s.zero_or_one_proof.proof_zero_pad]
+        cballots.forEach((cb) => {
+            cb.contests.forEach((c) => {
+                sum_pads = [...sum_pads, c.valid_sum_proof.pad];
+                sum_challenges = [...sum_challenges, c.valid_sum_proof.challenge];
+                c.selections.forEach((s) => {
+                    all_pads = [...all_pads, s.ciphertext.pad];
+                    all_proof_a_vals = [...all_proof_a_vals, s.zero_or_one_proof.proof_one_pad]
+                    all_proof_a_vals = [...all_proof_a_vals, s.zero_or_one_proof.proof_zero_pad]
+                });
             });
         });
         expect(all_pads.length).toEqual(new Set(all_pads).size);
@@ -114,9 +128,11 @@ describe("TestPart2", () => {
         let dec_proof_a_vals: ElementModP[] = [];
         let dec_proof_c_vals: ElementModQ[] = [];
         decrypt_ballots.forEach((db) => {
-            db.selections.forEach((ds) => {
-                dec_proof_a_vals = [...dec_proof_a_vals, ds.decryption_proof.proof.a];
-                dec_proof_c_vals = [...dec_proof_c_vals, ds.decryption_proof.proof.c];
+            db.contests.forEach((dc) => {
+                dc.selections.forEach((ds) => {
+                    dec_proof_a_vals = [...dec_proof_a_vals, ds.decryption_proof.proof.a];
+                    dec_proof_c_vals = [...dec_proof_c_vals, ds.decryption_proof.proof.c];
+                });
             });
         });
 
@@ -174,15 +190,15 @@ describe("TestPart2", () => {
 
         const alt_nonce = new Nonces(seed_nonce, "testing is fun").slice(0, 1)[0];
         const bid = cballot_good.ballot_id;
-        const selections = cballot_good.selections;
-        const valid_sum_proof = cballot_good.valid_sum_proof;
+        const selections = cballot_good.contests[0].selections;
+        const valid_sum_proof = cballot_good.contests[0].valid_sum_proof;
         const name = selections[0].name;
         const ciphertext = selections[0].ciphertext;
         ciphertext; // prevent value unused lint error
         const zero_or_one_proof = selections[0].zero_or_one_proof;
         expect(
             zero_or_one_proof.is_valid(
-                cballot_good.selections[0].ciphertext,
+                cballot_good.contests[0].selections[0].ciphertext,
                 context.get_public_key(),
                 context.base_hash,
             )
@@ -194,11 +210,16 @@ describe("TestPart2", () => {
                 ciphertext_bad, context.get_public_key(), context.base_hash
             )
         ).toBe(false);
-
-        const selection0_bad = new CiphertextSelection(name, ciphertext_bad, zero_or_one_proof);
+        const selection0_bad = [make_ciphertext_ballot_selection(name, alt_nonce, ciphertext_bad, null,  zero_or_one_proof)];
+        const contest_crypto_hash = _ciphertext_ballot_context_crypto_hash(selection0_bad, seed_nonce);
+        const ballot_crypto_hash = hash_elems([bid, alt_nonce, [contest_crypto_hash]]);
+        const ccontest_bad: CiphertextBallotContest = new CiphertextBallotContest(selection0_bad, valid_sum_proof, contest_crypto_hash);
+        
         const cballot_bad = new CiphertextBallot(
-            bid, [selection0_bad, ...selections.slice(1)], valid_sum_proof
+            bid, [ccontest_bad], ballot_crypto_hash
         )
+
+
         expect(validate_encrypted_ballot(context, cballot_bad)).toBe(false);
 
     });
@@ -209,7 +230,7 @@ describe("TestPart2", () => {
         const context: PrivateElectionContext = context_n_ballots[0];
         const ballots: PlaintextBallot[] = context_n_ballots[1];
         const cballot: CiphertextBallot | null = encrypt_ballot(context, ballots[0], seed_nonce);
-        if (ballots[0].is_overvoted()) {
+        if (ballots[0].contests[0].is_overvoted()) {
             expect(cballot).toEqual(null);
         } else {
             expect(cballot).not.toEqual(null);
@@ -241,7 +262,7 @@ describe("TestPart2", () => {
 
         const plain_tally = tally_plaintext_ballots(context, ballots);
         let same_totals: boolean[] = [];
-        plain_tally.selections.forEach((tally, idx) => {
+        plain_tally.contests[0].selections.forEach((tally, idx) => {
             same_totals = [...same_totals, tally.equals(pballots[idx].selection)];
         });
         expect(same_totals.every(Boolean)).toBe(true);
