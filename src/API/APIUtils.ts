@@ -32,7 +32,7 @@ export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
 }
 
 export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): PlaintextBallotContest {
-    let selections: PlaintextBallotSelection[] = ballotItem2Selection(ballotItem);
+    const selections: PlaintextBallotSelection[] = ballotItem2Selection(ballotItem);
     return new PlaintextBallotContest(selections);
 }
 
@@ -49,17 +49,19 @@ export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSel
 export function ballot2Context(ballot: Ballot): PrivateElectionContext {
 
     // construct the names list for candidates from ballot
-    let names: Set<string> = new Set();
+    const names: Set<string> = new Set();
     ballot.ballotItems.forEach((ballotItem) => {
         ballotItem.ballotOptions.forEach((ballotOption) => names.add(ballotOption.title[0].text));
     });
-    let namesArr = [...names.values()];
+    const namesArr = [...names.values()];
     const e:ElementModQ = elements_mod_q_no_zero();
     const keypair:ElGamalKeyPair = get_optional(elgamal_keypair_from_secret(e.notEqual(ONE_MOD_Q) ? e : TWO_MOD_Q));
     const base_hash:ElementModQ = elements_mod_q();
 
     return new PrivateElectionContext(ballot.electionName[0].text, namesArr, keypair, base_hash);
 }
+
+
 
 export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElectionContext) : any {
 
@@ -83,23 +85,23 @@ export function buildFakeBallot(): Ballot {
     let ballotOptions2: BallotOption[] = [];
     names.forEach((name, idx) => {
         if (idx < names.length / 2) {
-            let ballotOption = new BallotOption(name, false);
+            const ballotOption = new BallotOption(name, false);
             // console.log("ballot1 ballotoptions ", ballotOptions1);
             ballotOptions1 = [...ballotOptions1, ballotOption];
         } else {
-            let ballotOption = new BallotOption(name, false);
+            const ballotOption = new BallotOption(name, false);
             ballotOptions2 = [...ballotOptions2, ballotOption];
         }
     });
-    let contest1 = new BallotItem(ballotOptions1);
-    let contest2 = new BallotItem(ballotOptions2);
+    const contest1 = new BallotItem(ballotOptions1);
+    const contest2 = new BallotItem(ballotOptions2);
     // hard code the selected options, the second contest doesn't select anything
     contest1.ballotOptions[0].selected = true;
     
 
     // add ballotItem to electionBallot
     // build a ballot
-    let electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
+    const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
     console.log("the current ballot is ", electionBallot);
     return electionBallot;
 }
