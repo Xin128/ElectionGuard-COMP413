@@ -1,7 +1,8 @@
 import {CryptoHashable, hash_elems} from "./hash";
-import {OrderedObjectBase} from "./election_object_base";
+import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {ElementModQ} from "./group";
 import {_list_eq} from "./simple_election_data";
+import {get_optional} from "./utils";
 
 // /**
 //  * Enumeration for the type of geopolitical unit
@@ -224,8 +225,27 @@ class ContestDescription extends CryptoHashable implements OrderedObjectBase {
   // Subtitle of the contest as it appears on the ballot.
   ballot_subtitle?: InternationalizedText = undefined;
 
-  constructor() {
+  constructor(object_id: string,
+              sequence_order: number,
+              electoral_district_id: string,
+              vote_variation: VoteVariationType,
+              number_elected: number,
+              votes_allowed:number,
+              name:string,
+              ballot_selections:SelectionDescription[],
+              ballot_title: InternationalizedText,
+              ballot_subtitle: InternationalizedText) {
     super();
+    this.object_id = object_id;
+    this.sequence_order = sequence_order;
+    this.electoral_district_id = electoral_district_id;
+    this.vote_variation = vote_variation;
+    this.number_elected = number_elected;
+    this.votes_allowed = votes_allowed;
+    this.name = name;
+    this.ballot_selections = ballot_selections;
+    this.ballot_title = ballot_title;
+    this.ballot_subtitle = ballot_subtitle;
   }
 
   //!!! This operation changes the order of this and other's ballot_selections object order
@@ -336,15 +356,154 @@ class ContestDescription extends CryptoHashable implements OrderedObjectBase {
 
 }
 
+/**
+ * ContestDescriptionWithPlaceholders is a `ContestDescription` with ElectionGuard `placeholder_selections`.
+ * (The ElectionGuard spec requires for n-of-m elections that there be *exactly* n counters that are one
+ * with the rest zero, so if a voter deliberately undervotes, one or more of the placeholder counters will
+ * become one. This allows the `ConstantChaumPedersenProof` to verify correctly for undervoted contests.)
+ */
 class ContestDescriptionWithPlaceholders extends ContestDescription {
+  placeholder_selections: SelectionDescription[] = [];
+
+  constructor(object_id: string,
+              sequence_order: number,
+              electoral_district_id: string,
+              vote_variation: VoteVariationType,
+              number_elected: number,
+              votes_allowed:number,
+              name:string,
+              ballot_selections:SelectionDescription[],
+              ballot_title: InternationalizedText,
+              ballot_subtitle: InternationalizedText,
+              placeholder_selections: SelectionDescription[]) {
+    super(object_id,
+      sequence_order,
+      electoral_district_id,
+      vote_variation,
+      number_elected,
+      votes_allowed,
+      name,
+      ballot_selections,
+      ballot_title,
+      ballot_subtitle,
+      );
+    this.placeholder_selections = placeholder_selections;
+  }
+
+  //Checks is contest description is valid
+  is_valid(): boolean {
+    const contest_description_validates = super.is_valid();
+    return (
+      contest_description_validates
+      && this.placeholder_selections.length == this.number_elected
+    );
+  }
+
+  //Checks is contest description is placeholder
+  is_placeholder(selection: SelectionDescription): boolean {
+    return this.placeholder_selections.includes(selection);
+  }
+
+  //Gets the description for a particular id
+  selection_for(selection_id: string): SelectionDescription | null {
+    const matching_selections: SelectionDescription[]
+      = this.ballot_selections.filter(selection => selection.object_id == selection_id);
+    if (matching_selections.length > 0) {
+      return matching_selections[0];
+    }
+
+    const matching_placeholders: SelectionDescription[]
+      = this.placeholder_selections.filter(selection => selection.object_id == selection_id);
+
+    if (matching_placeholders.length > 0) {
+      return matching_placeholders[0];
+    }
+
+    return null;
+  }
+
+}
+
+//A BallotStyle works as a key to uniquely specify a set of contests. See also `ContestDescription`.
+class BallotStyle extends CryptoHashable implements ElectionObjectBase {
+  object_id: string;
+
+  geopolitical_unit_ids?: string[] = undefined;
+  party_ids?: string[] = undefined;
+  image_uri?: string = undefined;
+
+  constructor(object_id: string) {
+    super();
+    this.object_id = object_id;
+  }
+
+  //A hash representation of the object
+  crypto_hash(): ElementModQ {
+    return hash_elems([this.object_id, this.geopolitical_unit_ids, this.party_ids, this.image_uri]);
+  }
 
 }
 
 /**
+ * This is just the minimal implemented internal manifest that encryption required.
+ * more fields are supported in the electionguard python.
+ *
  * `InternalManifest` is a subset of the `Manifest` structure that specifies
  * the components that ElectionGuard uses for conducting an election.  The key component is the
  * `contests` collection, which applies placeholder selections to the `Manifest` contests
  */
 export class InternalManifest{
   contests: ContestDescriptionWithPlaceholders[]
+  ballot_styles: BallotStyle[];
+
+  constructor(contest: ContestDescriptionWithPlaceholders[], ballot_styles: BallotStyle[]) {
+    this.contests = contest;
+    this.ballot_styles = ballot_styles;
+    //TODO: With implementaiton of Manifest class, we can do more initialization here. see: https://github.com/microsoft/electionguard-python/blob/3a56cee6ba9cb722ab02d7bf885c87f8d788b0ee/src/electionguard/manifest.py#L180
+  }
+
+  /**
+   * Get contest by id
+   * @param contest_id contest id
+   */
+  contest_for(contest_id: string): ContestDescriptionWithPlaceholders | null {
+    const matching_contests:ContestDescriptionWithPlaceholders[]
+      = this.contests.filter(contest => contest.object_id == contest_id);
+
+    if (matching_contests.length > 0) {
+      return matching_contests[0];
+    }
+    return null;
+  }
+
+  /**
+   * Get a ballot style for a specified ballot_style_id
+   * @param ballot_style_id the ballot style id
+   */
+  get_ballot_style(ballot_style_id: string): BallotStyle | null {
+    const style: BallotStyle[]
+      = this.ballot_styles.filter(ballot_style => ballot_style.object_id == ballot_style_id);
+
+    if (style.length > 0) {
+      return style[0];
+    }
+
+    return null;
+  }
+
+  /**
+   * Get contests for a ballot style
+   * @param ballot_style_id ballot style id
+   */
+  get_contests_for(ballot_style_id: string): ContestDescriptionWithPlaceholders[] {
+    const style = get_optional(this.get_ballot_style(ballot_style_id));
+    if (style.geopolitical_unit_ids == null) {
+      return [];
+    }
+    const gp_unit_ids = style.geopolitical_unit_ids;
+    return this.contests.filter(contest => gp_unit_ids.includes(contest.electoral_district_id));
+  }
+
+  //TODO: With full implementation of Manifest class, we can do generate contests with placeholders, see https://github.com/microsoft/electionguard-python/blob/3a56cee6ba9cb722ab02d7bf885c87f8d788b0ee/src/electionguard/manifest.py#L180
+  //_generate_contests_with_placeholders
 }
