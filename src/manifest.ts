@@ -244,8 +244,25 @@ class ContestDescription extends CryptoHashable implements OrderedObjectBase {
     );
   }
 
+  /**
+   * Given a ContestDescription, deterministically derives a "hash" of that contest,
+   * suitable for use in ElectionGuard's "base hash" values, and for validating that
+   * either a plaintext or encrypted voted context and its corresponding contest
+   * description match up.
+   */
   crypto_hash(): ElementModQ {
-    return undefined;
+    return hash_elems([
+      this.object_id,
+      this.sequence_order,
+      this.electoral_district_id,
+      VoteVariationType[this.vote_variation],
+      this.ballot_title,
+      this.ballot_subtitle,
+      this.name,
+      this.number_elected,
+      this.votes_allowed,
+      this.ballot_selections,
+    ]);
   }
 
 }
