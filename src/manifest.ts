@@ -265,6 +265,75 @@ class ContestDescription extends CryptoHashable implements OrderedObjectBase {
     ]);
   }
 
+  //Check the validity of the contest object by verifying its data
+  is_valid(): boolean {
+    const contest_has_valid_number_elected = this.number_elected <=
+      this.ballot_selections.length;
+    const contest_has_valid_votes_allowed = (
+      this.votes_allowed == null || this.number_elected <= this.votes_allowed
+    );
+
+    // verify the candidate_ids, selection object_ids, and sequence_ids are unique
+    const candidate_ids = new Set<string>();
+    const selection_ids = new Set<string>();
+    const sequence_ids = new Set<number>();
+    // let selection_count = 0;
+    const expected_selection_count = this.ballot_selections.length;
+
+    for (const selection of this.ballot_selections) {
+      // selection_count += 1;
+      // validate the object_id
+      if (!selection_ids.has(selection.object_id)) {
+        selection_ids.add(selection.object_id);
+      }
+      // validate the sequence_order
+      if (!sequence_ids.has(selection.sequence_order)) {
+        sequence_ids.add(selection.sequence_order);
+      }
+      // validate the candidate id
+      if (!candidate_ids.has(selection.candidate_id)){
+        candidate_ids.add(selection.candidate_id);
+      }
+    }
+
+    const selections_have_valid_candidate_ids = (
+      candidate_ids.size == expected_selection_count
+    );
+    const selections_have_valid_selection_ids = (
+      selection_ids.size == expected_selection_count
+    );
+    const selections_have_valid_sequence_ids = (
+      sequence_ids.size == expected_selection_count
+    );
+
+    const success = (
+      contest_has_valid_number_elected
+    && contest_has_valid_votes_allowed
+    && selections_have_valid_candidate_ids
+    && selections_have_valid_selection_ids
+    && selections_have_valid_sequence_ids
+  );
+
+    //Python library do logging here
+    // if (!success):
+      // log_warning(
+      //   "Contest %s failed validation check: %s",
+      //   self.object_id,
+      //   str(
+      //     {
+      //       "contest_has_valid_number_elected": contest_has_valid_number_elected,
+      //       "contest_has_valid_votes_allowed": contest_has_valid_votes_allowed,
+      //       "selections_have_valid_candidate_ids": selections_have_valid_candidate_ids,
+      //       "selections_have_valid_selection_ids": selections_have_valid_selection_ids,
+      //       "selections_have_valid_sequence_ids": selections_have_valid_sequence_ids,
+      //     }
+      //   ),
+      // )
+
+    return success
+
+  }
+
 }
 
 class ContestDescriptionWithPlaceholders extends ContestDescription {
