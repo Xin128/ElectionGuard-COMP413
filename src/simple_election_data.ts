@@ -1,13 +1,34 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
-    ConstantChaumPedersenProof, 
+    ConstantChaumPedersenProof,
     } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
+import {ElectionObjectBase} from "./election_object_base";
 
 
+//!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
+/**
+ * We want to compare lists of election objects as if they're sets. We fake this by first
+ * sorting them on their object ids, then using regular list comparison.
+ * @param list1 list of election objects that need to be compared with
+ * @param list2 list of election objects that need to be compared with
+ */
+export function _list_eq(list1: ElectionObjectBase[], list2: ElectionObjectBase[]): boolean{
+  list1.sort((a, b) => (a.object_id < b.object_id) ? -1:1);
+  list2.sort((a, b) => (a.object_id < b.object_id) ? -1:1);
+  if (list1 === list2) return true;
+  if (list1 == null || list2 == null) return false;
+  if (list1.length !== list2.length) return false;
+  for (let i = 0; i < list1.length; i++) {
+    if (list1[i] !== list2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
 export class PlaintextBallot {
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
