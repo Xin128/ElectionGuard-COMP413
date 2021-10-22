@@ -18,7 +18,8 @@ import {
 import { ElGamalCiphertext } from "./elgamal"
 import { ElementModQ, 
     TWO_MOD_Q, 
-    add_q } from "./group"
+    add_q, 
+    R} from "./group"
 import {Nonces} from "./nonces"
 import * as el from "./elgamal"
 import * as cp from "./chaum_pedersen"
@@ -227,22 +228,75 @@ export function validate_encrypted_ballot(context: AnyElectionContext, ballot: C
     return true;
 }
 
+export function decrypt_selection_with_nonce(
+    context: CiphertextElectionContext,
+    selection: CiphertextBallotSelection,
+    seed: ElementModQ):PlaintextBallotSelection {
+    //Given an encrypted selection and the necessary crypto context, decrypts it, returning
+    //     the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
+    //     ciphertext. The optional seed is used for computing the proof.
+    // const secret_key = context.keypair.secret_key;
+    const choice = selection.ciphertext.decrypt_known_nonce(context.elgamal_public_key, seed);
+    const plaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
+    return plaintextBallotSelection;
+}
+
+export function decrypt_contest_with_nonce(
+    context: CiphertextElectionContext,
+    contest: CiphertextBallotContest,
+    seed: ElementModQ): PlaintextBallotContest {
+    //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
+    //     decryption includes the necessary Chaum-Pedersen decryption proofs as well.
+    const num_selection = contest.selections.length;
+    const n = new Nonces(seed);
+    const nonces:ElementModQ[] = [];
+    for (let i = 0; i < num_selection; i++) {
+        const value:ElementModQ = n.get(i);
+        nonces.push(value);
+    }
+    const contest_decrypted_lst: PlaintextBallotSelection[] = [];
+    for(let selection_idx = 0; selection_idx < num_selection - 1; selection_idx++) {
+        contest_decrypted_lst.push(decrypt_selection_with_nonce(context, contest.selections[selection_idx], nonces[selection_idx]));
+    }
+    return new PlaintextBallotContest(contest_decrypted_lst);
+}
+
+
+export function decrypt_ballot_with_nonce(
+    context: CiphertextElectionContext,
+    ballot: CiphertextBallot,
+    seed: ElementModQ): PlaintextBallot{
+    //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
+    //     decryption includes the necessary Chaum-Pedersen decryption proofs as well.
+    const num_contest = ballot.contests.length;
+    const n = new Nonces(seed);
+    const nonces:ElementModQ[] = [];
+    for (let i = 0; i < num_contest; i++) {
+        const value:ElementModQ = n.get(i);
+        nonces.push(value);
+    }
+    const ballot_decrypted_lst: PlaintextBallotContest[] = [];
+    for(let selection_idx = 0; selection_idx < num_contest ; selection_idx++) {
+        ballot_decrypted_lst.push(decrypt_contest_with_nonce(context, ballot.contests[selection_idx], nonces[selection_idx]));
+    }
+    return new PlaintextBallot(ballot.ballot_id, ballot_decrypted_lst);
+}
 
 export function decrypt_selection(
-    context: PrivateElectionContext,
+    context: CiphertextElectionContext,
     selection: CiphertextBallotSelection,
     seed: ElementModQ):PlaintextBallotSelectionWithProof {
     //Given an encrypted selection and the necessary crypto context, decrypts it, returning
     //     the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
     //     ciphertext. The optional seed is used for computing the proof.
-    const secret_key = context.keypair.secret_key;
-    const choice = selection.ciphertext.decrypt(secret_key);
+    // const secret_key = context.keypair.secret_key;
+    const choice = selection.ciphertext.decrypt_known_nonce(context.elgamal_public_key, seed);
     const plaintextBallotSelection = new PlaintextBallotSelection(selection.name, choice);
     const descryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.ciphertext, secret_key, seed, context.base_hash);
     return new PlaintextBallotSelectionWithProof(plaintextBallotSelection, descryption_proof);
 }
 export function decrypt_contest(
-    context: PrivateElectionContext,
+    context: CiphertextElectionContext,
     contest: CiphertextBallotContest,
     seed: ElementModQ): PlaintextContestWithProofs {
     //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
@@ -262,7 +316,7 @@ export function decrypt_contest(
 }
 
 export function decrypt_ballot(
-    context: PrivateElectionContext,
+    context: CiphertextElectionContext,
     ballot: CiphertextBallot,
     seed: ElementModQ): PlaintextBallotWithProofs {
     //Given an encrypted ballot and the necessary crypto context, decrypts it. Each
@@ -439,5 +493,5 @@ export function tally_plaintext_ballots(
         lst_selections.push(new PlaintextBallotSelection(name, get_optional(totals.get(name))));
     }
     const total_contest = new PlaintextBallotContest(lst_selections);
-    return new PlaintextBallot("TOTALS_object_id", "TOTALS", [total_contest]);
+    return new PlaintextBallot("TOTALS_object_id",  [total_contest]);
 }

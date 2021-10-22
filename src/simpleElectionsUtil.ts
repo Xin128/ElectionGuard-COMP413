@@ -101,7 +101,8 @@ export function plaintext_arbitrary_ballot(context: CiphertextElectionContext, b
         selections = [...selections, new PlaintextBallotSelection("aritrary-candidate-" + i, getRandomNumberInclusive(0, 1))];
     }
     const contest = [new PlaintextBallotContest(selections)];
-    return new PlaintextBallot('some-unique-ballot-id-123', ballot_id, contest);
+    //to use: 'some-unique-ballot-id-123',
+    return new PlaintextBallot( ballot_id, contest);
 }
 
 // Generates a `PrivateElectionContext` for an election with the
@@ -142,7 +143,8 @@ export function plaintext_ballot(context: CiphertextElectionContext, ballot_id: 
         selections = [...selections, new PlaintextBallotSelection("aritrary-candidate-" + i, choice === i ? 1 : 0)];
     }
     const contest = [new PlaintextBallotContest(selections)];
-    return new PlaintextBallot('some-unique-ballot-id-123', ballot_id, contest);
+    // to use 'some-unique-ballot-id-123', 
+    return new PlaintextBallot(ballot_id, contest);
 }
 
 // A string formatter for formatting ballot number,

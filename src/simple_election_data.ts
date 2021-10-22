@@ -31,13 +31,11 @@ export function _list_eq(list1: ElectionObjectBase[], list2: ElectionObjectBase[
 }
 
 export class PlaintextBallot {
-    object_id: string;
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
-    public constructor(object_id: string, ballot_id: string, contests: PlaintextBallotContest[]){
-        this.object_id = object_id;
+    public constructor(ballot_id: string, contests: PlaintextBallotContest[]){
         this.ballot_id = ballot_id;
         this.contests = contests;
     }
