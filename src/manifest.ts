@@ -73,26 +73,26 @@ import {get_optional} from "./utils";
 //
 // }
 
-/**
- * Use this as a type for character strings
- * See: https://developers.google.com/elections-data/reference/annotated-string
- */
-class AnnotatedString extends CryptoHashable {
-  annotation = "";
-  value = "";
-
-  constructor(annotation:string, value:string) {
-    super();
-    this.annotation = annotation;
-    this.value = value;
-  }
-
-  //Hash representation of the object.
-  crypto_hash(): ElementModQ {
-    return hash_elems([this.annotation, this.value]);
-  }
-
-}
+// /**
+//  * Use this as a type for character strings
+//  * See: https://developers.google.com/elections-data/reference/annotated-string
+//  */
+// class AnnotatedString extends CryptoHashable {
+//   annotation = "";
+//   value = "";
+//
+//   constructor(annotation:string, value:string) {
+//     super();
+//     this.annotation = annotation;
+//     this.value = value;
+//   }
+//
+//   //Hash representation of the object.
+//   crypto_hash(): ElementModQ {
+//     return hash_elems([this.annotation, this.value]);
+//   }
+//
+// }
 
 /**
  * Enumeration for contest algorithm or rules in the `Contest` entity
