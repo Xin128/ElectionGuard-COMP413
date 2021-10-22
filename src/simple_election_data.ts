@@ -6,7 +6,7 @@ import { DisjunctiveChaumPedersenProof,
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
-import {ElectionObjectBase} from "./election_object_base";
+import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
@@ -29,12 +29,15 @@ export function _list_eq(list1: ElectionObjectBase[], list2: ElectionObjectBase[
   }
   return true;
 }
+
 export class PlaintextBallot {
+    object_id: string;
     ballot_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
-    public constructor(ballot_id: string, contests: PlaintextBallotContest[]){
+    public constructor(object_id: string, ballot_id: string, contests: PlaintextBallotContest[]){
+        this.object_id = object_id;
         this.ballot_id = ballot_id;
         this.contests = contests;
     }
@@ -116,9 +119,10 @@ export class CiphertextBallot extends CryptoHashCheckable{
         return hash_elems([this.ballot_id, encryption_seed, contest_hashes]);
     }
 
+
 }
 
-export class CiphertextBallotContest extends CryptoHashCheckable{
+export class CiphertextBallotContest extends CryptoHashCheckable {
 
 
     selections: CiphertextBallotSelection[];
@@ -130,12 +134,14 @@ export class CiphertextBallotContest extends CryptoHashCheckable{
 
     crypto_hash:ElementModQ;
     //Hash of the encrypted values.
+   
     public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof, crypto_hash:ElementModQ){
         super();
         this.selections = selections;
         this.valid_sum_proof = valid_sum_proof;
         this.crypto_hash = crypto_hash;
     }
+    
 
     public num_selections(): number{
         return this.selections.length;
@@ -285,7 +291,7 @@ export class PrivateElectionContext {
 
 }
 
-export class CiphertextElectionContext {
+export class CiphertextElectionContext  {
     //    """`CiphertextElectionContext` is the ElectionGuard representation of a specific election.
     number_of_guardians: number;
     //    The number of guardians necessary to generate the public key
