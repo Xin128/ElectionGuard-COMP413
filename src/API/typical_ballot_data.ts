@@ -124,9 +124,13 @@ export enum BallotOptionType {
 export class EncryptBallotOutput {
     seed: string = "-1";
     hash: string = "-1";
+    seedImg: any;
+    hashImg: any;
 
-    constructor(seed: string, hash: string) {
+    constructor(seed: string, hash: string, seedImg: any, hashImg:any) {
         this.seed = seed;
         this.hash = hash;
+        this.seedImg = seedImg;
+        this.hashImg = hashImg;
     }
 }

@@ -29,7 +29,7 @@
       padding: 0;
       margin: 0;
       outline: none;
-      font-family: Roboto, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 14px;
       color: #666;
       line-height: 22px;
@@ -138,15 +138,42 @@
         word-break: keep-all;
       }
     }
+    .pageheaderdiv1{
+      background: #0666a3;
+      height: 60px;
+      padding: 10px;
+    }
+    .title{
+      color: white;
+      margin-left: 10px;
+      font-size: 26px;
+      display:inline;
+      vertical-align: middle;
+    }
+    .logo {
+      width: 50px;
+      width: 50px;
+      display:inline;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
+<div class="headerwrapperdiv">
+  <div class="pageheaderdiv1">
+    <img class = "logo" src="https://pbs.twimg.com/profile_images/293749148/dapperdan_400x400.png">
+    <h1 class="title">
+      City of New County - County of Kings
+    </h1>
+  </div>
+  <div class="pageheaderdiv2">
+    <h2>
+      2021 PRIMARY AND CONSTITUTIONAL AMENDMENT ELECTION
+    </h2>
+  </div>
+</div>
 <div class="main-block">
   <form action="/">
-    <h1>Official Ballot for the General Election</h1>
-    <p>
-      City of New County - County of Kings
-    </p>
     <h3>Instruction:</h3>
     <p>Mark the oval to the bottom of the name of your choice</p>
     <hr />
@@ -223,19 +250,16 @@
         <textarea rows="5" id="seed_nonce"></textarea>
       </div>
     </div>
-    <!-- <div class="radio-block">
-      <p class="question">May We Use Your Quotes / Comments?</p>
-      <div class="question-answer">
-        <div>
-          <input type="radio" value="none" id="radioYes" name="comments" />
-          <label for="radioYes" class="radio">Yes</label>
-        </div>
-        <div>
-          <input type="radio" value="none" id="radioNo" name="comments" />
-          <label for="radioNo" class="radio">No</label>
-        </div>
+    <div class="comments-block">
+      <h4 class="comments">
+        Encryption Code<small
+      >This is a QR code of the encryption output.</small
+      >
+      </h4>
+      <div class="answer">
+        <area id="qrcode"></area>
       </div>
-    </div> -->
+    </div>
     <div class="btn-block">
       <button type="button" href="/" id="myBtn">Print & Encrypt</button>
     </div>
@@ -243,14 +267,5 @@
 </div>
 <script>var exports = {};</script>
 <script src="./dist/esbuild/out.js"></script>
-<!--<script type="module" src="dist/tsc/utils.js"></script>-->
-<!--<script type="module" src="dist/tsc/index.js"></script>-->
-<!--<script type="module" src="dist/tsc/groupUtils.js"></script>-->
-<!--<script type="module" src="dist/tsc/simple_elections.js"></script>-->
-<!--<script type="module" src="dist/tsc/nonces.js"></script>-->
-<!--<script type="module" src="dist/tsc/chaum_pedersen.js"></script>-->
-
-
-
 </body>
 </html>

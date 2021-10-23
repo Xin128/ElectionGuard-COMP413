@@ -5,6 +5,7 @@ import { encrypt_ballot, encrypt_ballots } from "../simple_elections";
 import { CiphertextBallot, PlaintextBallot, PlaintextBallotContest, PlaintextBallotSelection, PrivateElectionContext } from "../simple_election_data";
 import { get_optional } from "../utils";
 import { Ballot, BallotItem, BallotOption, EncryptBallotOutput} from "./typical_ballot_data";
+import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
 /**
  * Ballot ==> Whole Election 
@@ -19,7 +20,22 @@ export function encryptBallot(inputBallot: Ballot): EncryptBallotOutput {
     const context = ballot2Context(inputBallot); 
     const seed_nonce:ElementModQ = elements_mod_q_no_zero();
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce)); 
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    const seed:string = seed_nonce.elem.toString();
+    const hash:string = encrypted_ballot.crypto_hash_with(seed_nonce).toString();
+    return new EncryptBallotOutput(seed, hash, getQRCode(seed), getQRCode(hash));
+}
+
+export function getQRCode(str:string):any {
+    let qr = new QRCode();
+    qr.setTypeNumber(5);
+    qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
+    qr.addData(str);
+    qr.make();
+
+    let img = document.createElement('img');
+    img.setAttribute('src', qr.toDataURL() );
+
+    return img;
 }
 
 export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
