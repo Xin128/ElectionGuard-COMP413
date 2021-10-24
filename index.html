@@ -106,8 +106,8 @@
       text-align: right;
     }
     .btn-prev {
-      text-align: right;
-      margin-bottom: 10px;
+      text-align: left;
+      /* margin-bottom: 10px; */
     }
     button {
       width: 150px;
@@ -288,7 +288,7 @@
       <div class="step current" id="step_1"> <span> Step 1: Introduction</span> </div>
       <div class="step" id="step_2"> <span>Step 2: Ballot Marking</span> </div>
       <div class="step" id="step_3"> <span> Step 3: Ballot Review</span> </div>
-      <div class="step" id="step_4"> <span>Step 4: Ballot Return</span> </div>
+      <div class="step" id="step_4"> <span>Step 4: Ballot Result</span> </div>
     </div>
   </div>
 </div>
@@ -373,18 +373,24 @@
           </table>
         </div>
         <hr>
-        <div class="btn-prev" id="previous2">
-          <button type="button" id="prev2">PREVIOUS</button>
+        <div style="display: flex; justify-content: space-between;">
+          <div class="btn-prev" id="previous2">
+            <button type="button" id="prev2">PREVIOUS</button>
+          </div>
+          <div style="display:none" class="btn-next" id="review-btn">
+            <button type="button" id="next2">REVIEW</button>
+          </div>
         </div>
-        <div style="display:none" class="btn-next" id="review-btn">
-          <button type="button" id="next2">REVIEW</button>
-        </div>
-        <div style="display:none" class="btn-prev" id="previous3">
+        
+        <div style="display: flex; justify-content: space-between;">
+          <div style="display:none" class="btn-prev" id="previous3">
           <button type="button" id="prev3">PREVIOUS</button>
+          </div>
+          <div style="display:none" class="btn-next" id="submit-btn">
+            <button type="button" id="next3">SUBMIT</button>
+          </div>
         </div>
-        <div style="display:none" class="btn-next" id="submit-btn">
-          <button type="button" id="next3">SUBMIT</button>
-        </div>
+        
     </div>
 
     <div style="display:none" id="screen_4">
