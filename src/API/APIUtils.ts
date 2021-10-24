@@ -63,6 +63,7 @@ export function ballot2Context(ballot: Ballot): PrivateElectionContext {
 
 
 
+
 export function ballot2JSON(ballots: PlaintextBallot[], context: PrivateElectionContext) : any {
 
     // Is type any safe
@@ -103,5 +104,29 @@ export function buildFakeBallot(): Ballot {
     // build a ballot
     const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
     console.log("the current ballot is ", electionBallot);
+    return electionBallot;
+}
+
+export function buildLargeFakeBallot(count: number): Ballot {
+
+    const names = ['James Miller', 'Liam Garcia','Olivia Brown','Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
+    const contests: BallotItem[] = [];
+    for(let i = 0; i < count; i++) {
+        let ballotOptions1: BallotOption[] = [];
+        names.forEach((name) => {
+            const ballotOption = new BallotOption(name, false);
+            // console.log("ballot1 ballotoptions ", ballotOptions1);
+            ballotOptions1 = [...ballotOptions1, ballotOption];
+        });
+        const contest1 = new BallotItem(ballotOptions1);
+        contests.push(contest1);
+    }
+
+    // add ballotItem to electionBallot
+    // build a ballot
+    const electionBallot = new Ballot("001", "firstTest", contests);
+
+    console.log("the current ballot is ", electionBallot);
+
     return electionBallot;
 }
