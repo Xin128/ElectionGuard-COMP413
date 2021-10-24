@@ -23,11 +23,12 @@ export function encryptBallot(inputBallot: Ballot): EncryptBallotOutput {
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
 
-export function getQRCode(str:string):any {
+export function getQRCode(strs:string[]):any {
     let qr = new QRCode();
-    qr.setTypeNumber(5);
+    // size difference found over here: https://snyk.io/advisor/npm-package/qr-code-typescript
+    qr.setTypeNumber(8);
     qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
-    qr.addData(str);
+    strs.forEach((str) => qr.addData(str));
     qr.make();
 
     let img = document.createElement('img');

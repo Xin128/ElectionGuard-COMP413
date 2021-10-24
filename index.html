@@ -394,6 +394,17 @@
     </div>
 
     <div style="display:none" id="screen_4">
+
+      <div class="comments-block">
+        <h4 class="comments">
+          Ballot QR Code<small
+        >This is the QR code for your ballot, it contains the encryption output and seed.</small
+        >
+        </h4>
+        <div class="answer">
+          <area id="qrcodeOutput"></area>
+        </div>
+      </div>
       <div class="comments-block">
         <h4 class="comments">
           Encryption Output<small
@@ -402,7 +413,6 @@
         >
         </h4>
         <div class="answer">
-          <area id="qrcodeOutput"></area>
           <textarea rows="5" id="output"></textarea>
         </div>
       </div>
@@ -413,7 +423,6 @@
         >
         </h4>
         <div class="answer">
-          <area id="qrcodeSeed"></area>
           <textarea rows="5" id="seed_nonce"></textarea>
         </div>
       </div>

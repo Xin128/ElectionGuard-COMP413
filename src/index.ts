@@ -66,8 +66,8 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   const result = encryptBallot(fakeBallot);
   get_optional(document.getElementById("output")).innerHTML = result.hash;
   get_optional(document.getElementById("seed_nonce")).innerHTML = result.seed;
-  get_optional(document.getElementById("qrcodeOutput")).replaceChildren(getQRCode(result.hash));
-  get_optional(document.getElementById("qrcodeSeed")).replaceChildren(getQRCode(result.seed));
+  get_optional(document.getElementById("qrcodeOutput")).replaceChildren(getQRCode([result.hash , result.seed]));
+  // get_optional(document.getElementById("qrcodeSeed")).replaceChildren(getQRCode(result.seed));
   get_optional(document.getElementById("step_3")).className = "step done";
   get_optional(document.getElementById("step_4")).className = "step current";
   get_optional(document.getElementById("screen_2")).style.display = "none";
