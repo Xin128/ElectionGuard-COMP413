@@ -7,6 +7,7 @@ import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
+import {isNullOrUndefined} from "util";
 
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
@@ -93,30 +94,113 @@ export class CiphertextSelectionTally{
 }
 
 
-export class CiphertextBallot extends CryptoHashCheckable{
-    ballot_id: string;
-    // The object id of this specific ballot. Will also appear in any corresponding plaintext of this ballot.
+export class CiphertextBallot extends CryptoHashCheckable implements ElectionObjectBase{
+    // The object id of this specific ballot.
+    // Will also appear in any corresponding plaintext of this ballot.
+    object_id: string;
+
+    //The `object_id` of the `BallotStyle` in the `Election` Manifest
+    style_id: string;
+
+    //Hash of the election manifest
+    manifest_hash: ElementModQ;
+
+    //Seed for ballot code
+    code_seed: ElementModQ;
+
+    //List of contests for this ballot
     contests: CiphertextBallotContest[];
 
+    //Unique ballot code for this ballo
+    code: ElementModQ;
+
+    //Timestamp at which the ballot encryption is generated in tick
+    timestamp: number;
+
+    //The hash of the encrypted ballot representation
     crypto_hash: ElementModQ;
 
-    public constructor(ballot_id: string, contests: CiphertextBallotContest[], crypto_hash:ElementModQ) {
+    //The nonce used to encrypt this ballot. Sensitive & should be treated as a secret
+    nonce: ElementModQ | null | undefined;
+
+    public constructor(ballot_id: string,
+                       style_id: string,
+                       manifest_hash: ElementModQ,
+                       code_seed: ElementModQ,
+                       contests: CiphertextBallotContest[],
+                       code: ElementModQ,
+                       timestamp: number,
+                       crypto_hash:ElementModQ,
+                       nonce?: ElementModQ) {
         super();
-        this.ballot_id = ballot_id;
+        this.object_id = ballot_id;
+        this.style_id = style_id;
+        this.manifest_hash = manifest_hash;
+        this.code_seed = code_seed;
         this.contests = contests;
+        this.code = code;
+        this.timestamp = timestamp;
         this.crypto_hash = crypto_hash;
+        this.nonce = nonce;
     }
+
+    //return: a representation of the election and the external Id in the nonce's used
+    //       to derive other nonce values on the ballot
+    public nonce_seed(
+      manifest_hash: ElementModQ,
+      object_id: string,
+      nonce: ElementModQ): ElementModQ{
+
+      return hash_elems([manifest_hash, object_id, nonce])
+    }
+
+    //return: a hash value derived from the description hash, the object id, and the nonce value
+    //                 suitable for deriving other nonce values on the ballot
+    public hashed_ballot_nonce(): ElementModQ | null | undefined{
+        if (this.nonce == null) {
+            return null;
+        }
+        return this.nonce_seed(this.manifest_hash, this.object_id, this.nonce);
+    }
+
+    //Given an encrypted Ballot, generates a hash, suitable for rolling up
+    //         into a hash for an entire ballot / ballot code. Of note, this particular hash examines
+    //         the `manifest_hash` and `ballot_selections`, but not the proof.
+    //         This is deliberate, allowing for the possibility of ElectionGuard variants running on
+    //         much more limited hardware, wherein the Disjunctive Chaum-Pedersen proofs might be computed
+    //         later on.
     public crypto_hash_with(encryption_seed: ElementModQ):ElementModQ{
         if (this.contests == null) {
-            return ZERO_MOD_Q;
+          return ZERO_MOD_Q;
         }
         const contest_hashes = []
         for ( let i = 0; i < this.contests.length; i ++) {
-            contest_hashes.push(this.contests[i].crypto_hash);
+          contest_hashes.push(this.contests[i].crypto_hash);
         }
-        return hash_elems([this.ballot_id, encryption_seed, contest_hashes]);
+        return hash_elems([this.object_id, encryption_seed, ...contest_hashes]);
     }
 
+    //Given an encrypted Ballot, validates the encryption state against a specific seed and public key
+    //         by verifying the states of this ballot's children (BallotContest's and BallotSelection's).
+    //         Calling this function expects that the object is in a well-formed encrypted state
+    //         with the `contests` populated with valid encrypted ballot selections,
+    //         and the ElementModQ `manifest_hash` also populated.
+    //         Specifically, the seed in this context is the hash of the Election Manifest,
+    //         or whatever `ElementModQ` was used to populate the `manifest_hash` field.
+    //
+    public  is_valid_encryption(
+      encryption_seed: ElementModQ,
+      elgamal_public_key: ElementModP,
+      crypto_extended_base_hash: ElementModQ,
+    ): boolean{
+        if (encryption_seed != this.manifest_hash) {
+            return false;
+        }
+        const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+       if (this.crypto_hash != recalculated_crypto_hash) {
+            return false;
+       }
+    }
 
 }
 
@@ -132,14 +216,14 @@ export class CiphertextBallotContest extends CryptoHashCheckable {
 
     crypto_hash:ElementModQ;
     //Hash of the encrypted values.
-   
+
     public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof, crypto_hash:ElementModQ){
         super();
         this.selections = selections;
         this.valid_sum_proof = valid_sum_proof;
         this.crypto_hash = crypto_hash;
     }
-    
+
 
     public num_selections(): number{
         return this.selections.length;
