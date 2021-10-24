@@ -19,10 +19,8 @@ export function encryptBallot(inputBallot: Ballot): EncryptBallotOutput {
     const ballot = ballot2PlainTextBallot(inputBallot);
     const context = ballot2Context(inputBallot); 
     const seed_nonce:ElementModQ = elements_mod_q_no_zero();
-    const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce)); 
-    const seed:string = seed_nonce.elem.toString();
-    const hash:string = encrypted_ballot.crypto_hash_with(seed_nonce).toString();
-    return new EncryptBallotOutput(seed, hash, getQRCode(seed), getQRCode(hash));
+    const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(context, ballot, seed_nonce));
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
 
 export function getQRCode(str:string):any {

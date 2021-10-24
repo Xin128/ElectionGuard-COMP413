@@ -51,6 +51,7 @@
       justify-content: center;
       align-items: center;
       padding: 3px;
+      border:3px solid #ccc;
     }
     form {
       width: 100%;
@@ -101,8 +102,11 @@
       display: inline-block;
       margin-left: 30px;
     }
-    .btn-block {
-      text-align: center;
+    .btn-next {
+      text-align: right;
+    }
+    .btn-prev {
+      text-align: left;
     }
     button {
       width: 150px;
@@ -156,6 +160,113 @@
       display:inline;
       vertical-align: middle;
     }
+
+    .clearfix:after {
+        clear: both;
+        content: "";
+        display: block;
+        height: 0;
+    }
+
+    .container {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .nav {
+      margin-top: 40px;
+    }
+
+    .pull-right {
+      float: right;
+    }
+
+    a, a:active {
+      color: #333;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #999;
+    }
+
+    .arrow-steps .step {
+      font-size: 14px;
+      text-align: center;
+      color: #666;
+      cursor: default;
+      margin: 0 3px;
+      padding: 10px 10px 10px 30px;
+      min-width: 180px;
+      float: left;
+      position: relative;
+      background-color: #ABD5AB;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none; 
+      transition: background-color 0.2s ease;
+    }
+
+    .arrow-steps .step:after,
+    .arrow-steps .step:before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      right: -17px;
+      width: 0;
+      height: 0;
+      border-top: 19px solid transparent;
+      border-bottom: 17px solid transparent;
+      border-left: 17px solid #ABD5AB;	
+      z-index: 2;
+      transition: border-color 0.2s ease;
+    }
+
+    .arrow-steps .step:before {
+      right: auto;
+      left: 0;
+      border-left: 17px solid #fff;	
+      z-index: 0;
+    }
+
+    .arrow-steps .step:first-child:before {
+      border: none;
+    }
+
+    .arrow-steps .step:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .arrow-steps .step span {
+      position: relative;
+    }
+
+    .arrow-steps .step span:before {
+      opacity: 0;
+      content: "✔";
+      position: absolute;
+      top: -2px;
+      left: -20px;
+    }
+
+    .arrow-steps .step.done span:before {
+      opacity: 1;
+      -webkit-transition: opacity 0.3s ease 0.5s;
+      -moz-transition: opacity 0.3s ease 0.5s;
+      -ms-transition: opacity 0.3s ease 0.5s;
+      transition: opacity 0.3s ease 0.5s;
+    }
+
+    .arrow-steps .step.current {
+      color: #fff;
+      background-color: #249225;
+    }
+
+    .arrow-steps .step.current:after {
+      border-left: 17px solid #249225;	
+    }
   </style>
 </head>
 <body>
@@ -171,97 +282,134 @@
       2021 PRIMARY AND CONSTITUTIONAL AMENDMENT ELECTION
     </h2>
   </div>
+  <div class="container">
+    <div class="arrow-steps clearfix">
+      <div class="step current" id="step_1"> <span> Step 1: Introduction</span> </div>
+      <div class="step" id="step_2"> <span>Step 2: Ballot Marking</span> </div>
+      <div class="step" id="step_3"> <span> Step 3: Ballot Review</span> </div>
+      <div class="step" id="step_4"> <span>Step 4: Ballot Return</span> </div>
+    </div>
+  </div>
 </div>
 <div class="main-block">
   <form action="/">
-    <h3>Instruction:</h3>
-    <p>Mark the oval to the bottom of the name of your choice</p>
-    <hr />
-    <div>
-      <h4>Mayor of New County<span class="required">*</span></h4>
-      <table>
-        <tr>
-          <th class="first-col"></th>
-          <th>
-            Mizu Sawa
-          </th>
-          <th>
-            Park Shu
-          </th>
-          <th>
-            Van Darkholme
-          </th>
-          <th>
-            Wang Jo Jo
-          </th>
-          <th>
-            Ted Budd
-          </th>
-        </tr>
-        <tr>
-          <td class="first-col">You may vote for ONE</td>
-          <td><input type="radio" value="none" name="needs" required /></td>
-          <td><input type="radio" value="none" name="needs" required /></td>
-          <td><input type="radio" value="none" name="needs" required /></td>
-          <td><input type="radio" value="none" name="needs" required /></td>
-          <td><input type="radio" value="none" name="needs" required /></td>
-        </tr>
-      </table>
-    </div>
-    <div>
-      <h4>Treasurer of New County</h4>
-      <table>
-        <tr>
-          <th class="first-col"></th>
-          <th>James Miller</th>
-          <th>Liam Garcia</th>
-          <th>Olivia Brown</th>
-          <th>Charlotte Li</th>
-          <th>Ava Nguyen</th>
-        </tr>
-        <tr>
-          <td class="first-col">You may vote for ONE</td>
-          <td><input type="radio" value="none" name="knowledge" /></td>
-          <td><input type="radio" value="none" name="knowledge" /></td>
-          <td><input type="radio" value="none" name="knowledge" /></td>
-          <td><input type="radio" value="none" name="knowledge" /></td>
-          <td><input type="radio" value="none" name="knowledge" /></td>
-        </tr>
-      </table>
-    </div>
-    <div class="comments-block">
-      <h4 class="comments">
-        Encryption Output<small
-      >This is a security code that make sure your ballot is
-        encrypted.</small
-      >
-      </h4>
-      <div class="answer">
-        <textarea rows="5" id="output"></textarea>
+    <div id="screen_1">
+      <h3>Introduction</h3>
+      <p>
+        The election of the mayor and the treasurer of the City of New County is an on-line election in 
+        which citizens of the city who are registered to vote can cast ballots to the candidates. For a 
+        valid voting, you will have to select one mayor, while the selection of the treasurer is optional.
+      </p>
+      <hr>
+      <h3>Instruction</h3>
+      <p>
+        Mark the oval to the bottom of the name of your choice. Review before you submit. In the end, you
+        will receive two QR codes and tracking numbers of your vote.
+      </p>
+      <div class="btn-next">
+        <button type="button" id="next1">NEXT</button>
       </div>
     </div>
-    <div class="comments-block">
-      <h4 class="comments">
-        Encryption Seed<small
-      >This is a seed nonce that is used for decryption.</small
-      >
-      </h4>
-      <div class="answer">
-        <textarea rows="5" id="seed_nonce"></textarea>
-      </div>
+
+    <div style="display:none" id="screen_2">
+      <h2>ABSENTEE OFFICIAL BALLOT</h2>
+      <h3>PRIMARY AND CONSTITUTIONAL AMENDMENT ELECTION</h3>
+      <h3>OCTOBER 25, 2021</h3>
+      <b>Please read the following before marking your ballot:</b>
+      <p>To vote, completely darken the OVAL beside your choice. 
+        To vote for a person whose name is not on the ballot, write candidates name on the write-in line 
+        and darken the OVAL beside the name.</p>
+        <div>
+          <h4>Mayor of New County<span class="required">*</span></h4>
+          <table>
+            <tr>
+              <th class="first-col"></th>
+              <th>
+                Mizu Sawa
+              </th>
+              <th>
+                Park Shu
+              </th>
+              <th>
+                Van Darkholme
+              </th>
+              <th>
+                Wang Jo Jo
+              </th>
+              <th>
+                Ted Budd
+              </th>
+            </tr>
+            <tr>
+              <td class="first-col">You may vote for ONE</td>
+              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <h4>Treasurer of New County</h4>
+          <table>
+            <tr>
+              <th class="first-col"></th>
+              <th>James Miller</th>
+              <th>Liam Garcia</th>
+              <th>Olivia Brown</th>
+              <th>Charlotte Li</th>
+              <th>Ava Nguyen</th>
+            </tr>
+            <tr>
+              <td class="first-col">You may vote for ONE</td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+            </tr>
+          </table>
+        </div>
+        <hr>
+        <div class="btn-prev" id="previous2">
+          <button type="button" id="prev2">PREVIOUS</button>
+        </div>
+        <div style="display:none" class="btn-next" id="review-btn">
+          <button type="button" id="next2">REVIEW</button>
+        </div>
+        <div style="display:none" class="btn-prev" id="previous3">
+          <button type="button" id="prev3">PREVIOUS</button>
+        </div>
+        <div style="display:none" class="btn-next" id="submit-btn">
+          <button type="button" id="next3">SUBMIT</button>
+        </div>
     </div>
-    <div class="comments-block">
-      <h4 class="comments">
-        Encryption Code<small
-      >This is a QR code of the encryption output.</small
-      >
-      </h4>
-      <div class="answer">
-        <area id="qrcode"></area>
+
+    <div style="display:none" id="screen_4">
+      <div class="comments-block">
+        <h4 class="comments">
+          Encryption Output<small
+        >This is a security code that make sure your ballot is
+          encrypted.</small
+        >
+        </h4>
+        <div class="answer">
+          <area id="qrcodeOutput"></area>
+          <textarea rows="5" id="output"></textarea>
+        </div>
       </div>
-    </div>
-    <div class="btn-block">
-      <button type="button" href="/" id="myBtn">Print & Encrypt</button>
+      <div class="comments-block">
+        <h4 class="comments">
+          Encryption Seed<small
+        >This is a seed nonce that is used for decryption.</small
+        >
+        </h4>
+        <div class="answer">
+          <area id="qrcodeSeed"></area>
+          <textarea rows="5" id="seed_nonce"></textarea>
+        </div>
+      </div>
     </div>
   </form>
 </div>
