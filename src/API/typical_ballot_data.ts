@@ -24,6 +24,7 @@ export class Ballot {
     partyId: string;
     partyName: LanguageText[];
     precinctName: string;
+    precinctId: string;
     ballotMarkerLayoutType: BallotMarkerType;
 
     //wizard types
@@ -92,6 +93,7 @@ export class BallotOption {
     id: string;
     order: number; // the order of the selection
     type: BallotOptionType;
+    candidateId: string;
     title: LanguageText[]; // candidate name
     subTitle: LanguageText[];
     text1: LanguageText[];
@@ -128,5 +130,23 @@ export class EncryptBallotOutput {
     constructor(seed: string, hash: string) {
         this.seed = seed;
         this.hash = hash;
+    }
+}
+
+// This is a class that represent error ballot input 
+export class EorrorBallotInput {
+    errorType: number;
+    errorMsg: string;
+    constructor(errorType: number, errorMsg: string) {
+        this.errorType = errorType;
+        this.errorMsg = errorMsg;
+    }
+
+    getErrorType() {
+        return this.errorType;
+    }
+
+    getErrorMsg() {
+        return this.errorMsg;
     }
 }
