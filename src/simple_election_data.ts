@@ -188,20 +188,44 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     //         Specifically, the seed in this context is the hash of the Election Manifest,
     //         or whatever `ElementModQ` was used to populate the `manifest_hash` field.
     //
-    public  is_valid_encryption(
-      encryption_seed: ElementModQ,
-      elgamal_public_key: ElementModP,
-      crypto_extended_base_hash: ElementModQ,
-    ): boolean{
-        if (encryption_seed != this.manifest_hash) {
-            return false;
-        }
-        const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
-       if (this.crypto_hash != recalculated_crypto_hash) {
-            return false;
-       }
-    }
 
+    // //done, but need supports in contest
+    // public  is_valid_encryption(
+    //   encryption_seed: ElementModQ,
+    //   elgamal_public_key: ElementModP,
+    //   crypto_extended_base_hash: ElementModQ,
+    // ): boolean{
+    //     if (encryption_seed != this.manifest_hash) {
+    //         return false;
+    //     }
+    //     const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+    //    if (this.crypto_hash != recalculated_crypto_hash) {
+    //         return false;
+    //    }
+    //
+    //    //Check the proofs on the ballot
+    //   const valid_proofs: boolean[] = [];
+    //    for (const contest of this.contests) {
+    //      for (const selection in contest.ballot_selections) {
+    //        valid_proofs.push(
+    //          selection.is_valid_encryption(
+    //            selection.description_hash,
+    //            elgamal_public_key,
+    //            crypto_extended_base_hash
+    //          )
+    //        );
+    //        valid_proofs.push(
+    //          contest.is_valid_encryption(
+    //            contest.description_hash,
+    //            elgamal_public_key,
+    //            crypto_extended_base_hash
+    //          )
+    //        );
+    //      }
+    //    }
+    //   return valid_proofs.every((elem)=>elem);
+    // }
+  
 }
 
 export class CiphertextBallotContest extends CryptoHashCheckable {
