@@ -186,7 +186,7 @@ const json_string = "{\n" +
   "    \"nonce\": 28676\n" +
   "}";
 
-export function from_file_to_class(): void{
+export function from_file_to_class(): CiphertextBallot{
   const result = JSON.parse(json_string, (key, value) => {
     if (key === "pad") {
       return BigInt(value);
@@ -200,6 +200,9 @@ export function from_file_to_class(): void{
       return BigInt(value);
     } else if (key === "proof_one_data") {
       return BigInt(value);
+    } else if (typeof value === 'number') {
+      console.log(key);
+      return value;
     }
     else {
       return value;
@@ -210,6 +213,9 @@ export function from_file_to_class(): void{
   const newEncryptedBallot= plainToClass(CiphertextBallot, result as CiphertextBallot);
   console.log(newEncryptedBallot);
   console.log(get_optional(newEncryptedBallot.contests[0].proof).pad);
+  return newEncryptedBallot;
+
+
 }
 
 // export function encrypt_compatible_testing_demo(): CiphertextBallot{

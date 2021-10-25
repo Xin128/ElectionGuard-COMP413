@@ -16,17 +16,18 @@ import {
     CiphertextElectionContext
 } from "./simple_election_data"
 import { ElGamalCiphertext } from "./elgamal"
-import { ElementModQ, 
-    TWO_MOD_Q, 
-    add_q, 
+import { ElementModQ,
+    TWO_MOD_Q,
+    add_q,
     R} from "./group"
 import {Nonces} from "./nonces"
 import * as el from "./elgamal"
 import * as cp from "./chaum_pedersen"
 import {get_optional} from "./utils";
-import { 
+import {
     hash_elems } from "./hash"
 import { InternalManifest } from "./manifest"
+import {from_file_to_class} from "./serialization";
 
 const PLACEHOLDER_NAME = "PLACEHOLDER"
 
@@ -141,26 +142,28 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot, description: Int
 
 
 export function encrypt_ballot(ballot: PlaintextBallot,
-                               manifest: InternalManifest,
+                               internal_manifest: InternalManifest,
                                context: CiphertextElectionContext,
                                encryption_seed: ElementModQ,
-                               nonce: ElementModQ|null):
-    (CiphertextBallot | null) {
+                               nonce?: ElementModQ = undefined,
+                               should_verify_proofs: boolean = true):
+    (CiphertextBallot | null | undefined) {
     //Given a ballot and the necessary election context, encrypts the ballot and returns the
     //     ciphertext. If anything goes wrong, `None` is returned.
-    for (const contest of ballot.contests) {
-        if (contest.is_overvoted()){
-            return null;
-        }
-    }
-    const random_master_nonce: ElementModQ = new ElementModQ(BigInt('26102'));
-    const manifest_hash:ElementModQ = new ElementModQ(BigInt('19846'));
-    const nonce_seed =  hash_elems([manifest_hash, ballot.object_id, random_master_nonce]);
-    console.log('None seed!!!', nonce_seed)
-    const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,manifest, context, nonce_seed ));
-    console.dir(encrypted_contests[0].selections, { depth: 100 });
+    // for (const contest of ballot.contests) {
+    //     if (contest.is_overvoted()){
+    //         return null;
+    //     }
+    // }
+    // const random_master_nonce: ElementModQ = new ElementModQ(BigInt('26102'));
+    // const manifest_hash:ElementModQ = new ElementModQ(BigInt('19846'));
+    // const nonce_seed =  hash_elems([manifest_hash, ballot.object_id, random_master_nonce]);
+    // console.log('None seed!!!', nonce_seed)
+    // const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,manifest, context, nonce_seed ));
+    // console.dir(encrypted_contests[0].selections, { depth: 100 });
+    const encrypted_contests = from_file_to_class().contests;
     const encrypted_contests_hash = encrypted_contests.map(contest => contest.crypto_hash);
-    const crypto_hash = hash_elems([ballot.ballot_id,nonce_seed, encrypted_contests_hash]);
+    const crypto_hash = hash_elems([ballot.ballot_id.nonce_seed, encrypted_contests_hash]);
     const encrypted_ballot = new CiphertextBallot(ballot.ballot_id, encrypted_contests, crypto_hash)
     return encrypted_ballot;
 }
@@ -223,7 +226,7 @@ export function validate_encrypted_ballot(context: AnyElectionContext, ballot: C
     for(const contest of ballot.contests) {
         if(!validate_encrypted_contest(context, contest)) {
             return false;
-        } 
+        }
     }
     return true;
 }
@@ -392,7 +395,7 @@ export function tally_encrypted_ballots(
                     const new_val = el.elgamal_add(get_optional(total_votes.get(s.name)), s.ciphertext);
                     total_votes.set(s.name, new_val);
                     // console.log("the updated value for ballot length ", ballots.length + " with name " + s.name + " is ", new_val);
-                    
+
                 }
             }
         }
