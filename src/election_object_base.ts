@@ -17,3 +17,8 @@ export interface OrderedObjectBase extends ElectionObjectBase{
    */
   sequence_order: number;
 }
+
+//Sort by sequence order.
+export function sequence_order_sort<T extends OrderedObjectBase>(unsorted: T[]): T[] {
+  return unsorted.sort((a, b) => a.sequence_order - b.sequence_order);
+}

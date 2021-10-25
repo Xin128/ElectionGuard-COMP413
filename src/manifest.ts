@@ -362,7 +362,7 @@ class ContestDescription extends CryptoHashable implements OrderedObjectBase {
  * with the rest zero, so if a voter deliberately undervotes, one or more of the placeholder counters will
  * become one. This allows the `ConstantChaumPedersenProof` to verify correctly for undervoted contests.)
  */
-class ContestDescriptionWithPlaceholders extends ContestDescription {
+export class ContestDescriptionWithPlaceholders extends ContestDescription {
   placeholder_selections: SelectionDescription[] = [];
 
   constructor(object_id: string,

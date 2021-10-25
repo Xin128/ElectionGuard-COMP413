@@ -120,7 +120,7 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     crypto_hash: ElementModQ;
 
     //The nonce used to encrypt this ballot. Sensitive & should be treated as a secret
-    nonce: ElementModQ | null | undefined;
+    nonce: ElementModQ | undefined;
 
     public constructor(ballot_id: string,
                        style_id: string,

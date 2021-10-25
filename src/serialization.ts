@@ -218,8 +218,17 @@ export function from_file_to_class(): CiphertextBallot{
 
 }
 
-// export function encrypt_compatible_testing_demo(): CiphertextBallot{
-//
-// }
+export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBallot): string{
+  return JSON.stringify(encrypted_ballot, (key, value) => {
+    key;
+    if (typeof value === "bigint") {
+      return value.toString();
+    }
+    else if (typeof value === "number") {
+      return 
+    }
+    return value;
+  }, '\t');
+}
 
 
