@@ -225,7 +225,7 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
       return value.toString();
     }
     else if (typeof value === "number") {
-      return 
+      return value.toString(16);
     }
     return value;
   }, '\t');
