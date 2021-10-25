@@ -4,7 +4,7 @@ import { elements_mod_q, elements_mod_q_no_zero } from "../groupUtils";
 import { encrypt_ballot, encrypt_ballots } from "../simple_elections";
 import { CiphertextBallot, PlaintextBallot, PlaintextBallotContest, PlaintextBallotSelection, PrivateElectionContext } from "../simple_election_data";
 import { get_optional } from "../utils";
-import { Ballot, BallotItem, BallotOption, EncryptBallotOutput} from "./typical_ballot_data";
+import { Ballot, BallotItem, BallotOption, EncryptBallotOutput, ErrorBallotInput, ErrorType} from "./typical_ballot_data";
 import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
 /**
@@ -14,8 +14,11 @@ import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
  */
 
 // Entry point of the API, give a Ballot item, return the seed and the hash
-export function encryptBallot(inputBallot: Ballot): EncryptBallotOutput {
-    // const electionBallot = buildFakeBallot();
+// Return an ErrorBallotInput in case some fields that are required in encryption in Ballot is missing
+export function encryptBallot(inputBallot: Ballot): EncryptBallotOutput | ErrorBallotInput {
+    // TODO: First check if the ballot has all the fields we need
+    // let validatedBallot = validateBallot(inputBallot);
+    // if (validatedBallot instanceof ErrorBallotInput) return validatedBallot;
     const ballot = ballot2PlainTextBallot(inputBallot);
     const context = ballot2Context(inputBallot); 
     const seed_nonce:ElementModQ = elements_mod_q_no_zero();
@@ -56,7 +59,7 @@ export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSel
     ballotItem.ballotOptions.forEach((ballotOption) => {
         // MISSING: Candidate name from ballotOption
         // what would be the correct field for the selection? Ours assume a candidate name
-        plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.writeInSelection, ballotOption.selected === true? 1 : 0)]
+        plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.title[0].text, ballotOption.selected === true? 1 : 0)]
     });
     return plainTextSelections;
 }
@@ -119,4 +122,26 @@ export function buildFakeBallot(): Ballot {
     const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
     console.log("the current ballot is ", electionBallot);
     return electionBallot;
+}
+
+export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
+    if (ballot.electionName === undefined || ballot.electionName.length === 0) return new ErrorBallotInput(ErrorType.MissingElectionName, "Missing Election Name");
+    if (ballot.partyId === undefined) return new ErrorBallotInput(ErrorType.MissingBallotPartyId, "Missing Ballot Party ID");
+    if (ballot.partyName === undefined || ballot.partyName.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotPartyName, "Missing Ballot Party Name");
+    if (ballot.precinctName === undefined || ballot.partyName.length === 0) return new ErrorBallotInput(ErrorType.MissingPrecinctName, "Missing Precinct Name");
+    if (ballot.precinctId === undefined) return new ErrorBallotInput(ErrorType.MissingPrecintId, "Missing Precint ID");
+    if (ballot.id === undefined) return new ErrorBallotInput(ErrorType.MissingBallotId, "Missing Ballot ID");
+    if (ballot.ballotItems === undefined || ballot.ballotItems.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotItems, "Missing BallotItems");
+    
+    ballot.ballotItems.forEach((ballotItem) => {
+        if (ballotItem.ballotOptions === undefined || ballotItem.ballotOptions.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotOptions, "Missing BallotOptions");
+        ballotItem.ballotOptions.forEach((ballotOption) => {
+            if (ballotOption.candidateId === undefined) return new ErrorBallotInput(ErrorType.MissingCandidateId, "Missing Candidate Id");
+            if (ballotOption.title === undefined || ballotOption.title.length === 0) return new ErrorBallotInput(ErrorType.MissingCandidateName, "Missing Candidate Name");
+            if (ballotOption.partyId === undefined) return new ErrorBallotInput(ErrorType.MissingCandidatePartyId, "Missing Candidate Party ID");
+            if (ballotOption.partyName === undefined || ballotOption.partyName.length === 0) return new ErrorBallotInput(ErrorType.MissingCandidatePartyName, "Missing Candidate Party Name");
+        });
+    });
+
+    return null;
 }

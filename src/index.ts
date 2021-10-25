@@ -1,5 +1,6 @@
 import {get_optional} from "./utils";
 import { buildFakeBallot, encryptBallot, getQRCode } from "./API/APIUtils";
+import { ErrorBallotInput } from "./API/typical_ballot_data";
 
 get_optional(document.getElementById("prev2")).addEventListener("click", function () {
   get_optional(document.getElementById("step_1")).className = "step current";
@@ -64,6 +65,10 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   console.log('click');
   const fakeBallot = buildFakeBallot();
   const result = encryptBallot(fakeBallot);
+  if (result instanceof ErrorBallotInput) {
+    console.log("error input!")
+    return;
+  } 
   get_optional(document.getElementById("output")).innerHTML = result.hash;
   get_optional(document.getElementById("seed_nonce")).innerHTML = result.seed;
   get_optional(document.getElementById("qrcodeOutput")).replaceChildren(getQRCode(["Encryption Output: "+result.hash , "Encryption Seed: "+result.seed]));
