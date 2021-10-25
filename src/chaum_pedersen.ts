@@ -25,6 +25,13 @@ import { hash_elems } from "./hash"
 
 import { Nonces } from "./nonces"
 
+//Usage case for proof
+enum ProofUsage {
+  Unknown = "Unknown",
+  SecretValue = "Prove knowledge of secret value",
+  SelectionLimit = "Prove value within selection's limit",
+  SelectionValue = "Prove selection's value (0 or 1)",
+}
 
 export class DisjunctiveChaumPedersenProof {
     // Representation of disjunctive Chaum Pederson proof
@@ -46,8 +53,18 @@ export class DisjunctiveChaumPedersenProof {
     // proof_zero_response in the spec
     proof_one_response: ElementModQ;
     // proof_one_response in the spec
+    usage: ProofUsage = ProofUsage.SelectionValue;
 
-    public constructor(a0: ElementModP, b0: ElementModP, a1: ElementModP, b1: ElementModP, c0: ElementModQ, c1: ElementModQ, c: ElementModQ, v0: ElementModQ, v1: ElementModQ) {
+    public constructor(a0: ElementModP,
+                       b0: ElementModP,
+                       a1: ElementModP,
+                       b1: ElementModP,
+                       c0: ElementModQ,
+                       c1: ElementModQ,
+                       c: ElementModQ,
+                       v0: ElementModQ,
+                       v1: ElementModQ,
+                       usage: ProofUsage) {
         this.proof_zero_pad = a0;
         this.proof_zero_data = b0;
         this.proof_one_pad = a1;
@@ -57,6 +74,7 @@ export class DisjunctiveChaumPedersenProof {
         this.challenge = c;
         this.proof_zero_response = v0;
         this.proof_one_response = v1;
+        this.usage = usage;
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
@@ -118,25 +136,40 @@ export class DisjunctiveChaumPedersenProof {
 
 }
 
+// Representation of constant Chaum Pederson proof.
 export class ConstantChaumPedersenProof {
-    // Representation of constant Chaum Pederson proof.
-    pad: ElementModP;
     // a in the spec
-    data: ElementModP;
-    // b in the spec
-    challenge: ElementModQ;
-    // c in the spec
-    response: ElementModQ;
-    // v in the spec
-    constant: bigint;
-    // constant value
+    pad: ElementModP;
 
-    public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: bigint) {
+    // b in the spec
+    data: ElementModP;
+
+    // c in the spec
+    challenge: ElementModQ;
+
+    // v in the spec
+    response: ElementModQ;
+
+    // constant value
+    constant: bigint;
+
+    //a description of how to use this proof
+    usage: ProofUsage = ProofUsage.SelectionLimit
+
+
+
+    public constructor(pad: ElementModP,
+                       data: ElementModP,
+                       challenge: ElementModQ,
+                       response: ElementModQ,
+                       constant: bigint,
+                       usage: ProofUsage) {
         this.pad = pad;
         this.data = data;
         this.challenge = challenge;
         this.response = response;
         this.constant = constant;
+        this.usage = usage;
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {

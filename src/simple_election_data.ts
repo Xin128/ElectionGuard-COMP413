@@ -7,7 +7,6 @@ import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
-import {isNullOrUndefined} from "util";
 
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
@@ -225,61 +224,136 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     //    }
     //   return valid_proofs.every((elem)=>elem);
     // }
-  
+
 }
 
-export class CiphertextBallotContest extends CryptoHashCheckable {
+export class CiphertextBallotContest extends CryptoHashCheckable implements OrderedObjectBase{
 
+  object_id: string;
 
-    selections: CiphertextBallotSelection[];
-    // Encrypted selections. This will include a "placeholder" selection (with `selection_id` == "PLACEHOLDER"),
-    // such that the sum of the encrypted selections is exactly one.
+  sequence_order: number;
 
-    valid_sum_proof: ConstantChaumPedersenProof;
-    // Proof that the sum of the selections (including the placeholder) is exactly one.
+  //Hash from contestDescription
+  description_hash: ElementModQ;
 
-    crypto_hash:ElementModQ;
-    //Hash of the encrypted values.
+  //Collection of ballot selections
+  ballot_selections: CiphertextBallotSelection[];
 
-    public constructor(selections: CiphertextBallotSelection[], valid_sum_proof: ConstantChaumPedersenProof, crypto_hash:ElementModQ){
+  //The encrypted representation of all of the vote fields (the contest total)
+  ciphertext_accumulation: ElGamalCiphertext;
+
+  //Hash of the encrypted values
+  crypto_hash: ElementModQ;
+
+  //The nonce used to generate the encryption. Sensitive & should be treated as a secret
+  nonce?: ElementModQ = undefined;
+
+  //The proof demonstrates the sum of the selections does not exceed the maximum
+  //     available selections for the contest, and that the proof was generated with the nonce
+  proof?: ConstantChaumPedersenProof = undefined;
+
+    public constructor(
+      object_id: string,
+      sequence_order: number,
+      description_hash: ElementModQ,
+      ballot_selections: CiphertextBallotSelection[],
+      ciphertext_accumulation: ElGamalCiphertext,
+      crypto_hash: ElementModQ,
+      nonce?: ElementModQ,
+      proof?: ConstantChaumPedersenProof
+      ){
         super();
-        this.selections = selections;
-        this.valid_sum_proof = valid_sum_proof;
+        this.object_id = object_id;
+        this.sequence_order = sequence_order;
+        this.description_hash = description_hash;
+        this.ballot_selections = ballot_selections;
+        this.ciphertext_accumulation = ciphertext_accumulation;
         this.crypto_hash = crypto_hash;
+        this.nonce = nonce;
+        this.proof = proof;
     }
 
 
-    public num_selections(): number{
-        return this.selections.length;
+
+    // public num_selections(): number{
+    //     return this.selections.length;
+    // }
+    //
+    public crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
+        return _ciphertext_ballot_context_crypto_hash(this.object_id,
+          this.ballot_selections,
+          encryption_seed);
     }
+
+}
+
+//A CiphertextBallotSelection represents an individual encrypted selection on a ballot.
+//     This class accepts a `description_hash` and a `ciphertext` as required parameters
+//     in its constructor.
+//     When a selection is encrypted, the `description_hash` and `ciphertext` required fields must
+//     be populated at construction however the `nonce` is also usually provided by convention.
+//     After construction, the `crypto_hash` field is populated automatically in the `__post_init__` cycle
+//     A consumer of this object has the option to discard the `nonce` and/or discard the `proof`,
+//     or keep both values.
+//     By discarding the `nonce`, the encrypted representation and `proof`
+//     can only be regenerated if the nonce was derived from the ballot's master nonce.  If the nonce
+//     used for this selection is truly random, and it is discarded, then the proofs cannot be regenerated.
+//     By keeping the `nonce`, or deriving the selection nonce from the ballot nonce, an external system can
+//     regenerate the proofs on demand.  This is useful for storage or memory constrained systems.
+//     By keeping the `proof` the nonce is not required fotor verify the encrypted selection.
+//
+export class CiphertextBallotSelection extends CryptoHashCheckable implements OrderedObjectBase{
+
+  object_id: string;
+
+  sequence_order: number;
+
+  //The SelectionDescription hash
+  description_hash: ElementModQ;
+
+  //The encrypted representation of the vote field
+  ciphertext: ElGamalCiphertext;
+
+  //The hash of the encrypted values
+  crypto_hash: ElementModQ;
+
+  //Determines if this is a placeholder selection
+  is_placeholder_selection = false;
+
+  //The nonce used to generate the encryption. Sensitive & should be treated as a secret
+  nonce?: ElementModQ = undefined;
+
+  //The proof that demonstrates the selection is an encryption of 0 or 1, and was encrypted using the `nonce`
+  proof?: DisjunctiveChaumPedersenProof = undefined;
+
+  //encrypted representation of the extended_data field
+  extended_data?: ElGamalCiphertext = undefined;
+
+    public constructor(
+      object_id: string,
+      sequence_order: number,
+      description_hash: ElementModQ,
+      ciphertext: ElGamalCiphertext,
+      crypto_hash: ElementModQ,
+      is_placeholder_selection: boolean,
+      nonce?: ElementModQ,
+      proof?: DisjunctiveChaumPedersenProof
+                       ){
+        super();
+        this.object_id = object_id;
+        this.sequence_order = sequence_order;
+        this.description_hash = description_hash;
+        this.ciphertext = ciphertext;
+        this.crypto_hash = crypto_hash;
+        this.is_placeholder_selection = is_placeholder_selection;
+        this.nonce = nonce;
+        this.proof = proof;
+    }
+
+
 
     public crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
-        return _ciphertext_ballot_context_crypto_hash(this.selections, encryption_seed)
-    }
-
-}
-
-export class CiphertextBallotSelection extends CryptoHashCheckable{
-    name: string;
-    // Candidate name, or `PLACEHOLDER` for a placeholder selection.
-
-    ciphertext: ElGamalCiphertext;
-    // Encrypted selection.
-
-    zero_or_one_proof: DisjunctiveChaumPedersenProof;
-    // Proof that the encrypted selection is either zero or one.
-
-    crypto_hash: ElementModQ;
-    public constructor(name: string, ciphertext: ElGamalCiphertext, zero_or_one_proof: DisjunctiveChaumPedersenProof, crypto_hash:ElementModQ){
-        super();
-        this.name = name;
-        this.ciphertext = ciphertext;
-        this.zero_or_one_proof = zero_or_one_proof;
-        this.crypto_hash = crypto_hash;
-    }
-
-    crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
-        return _ciphertext_ballot_selection_crypto_hash_with(encryption_seed, this.ciphertext)
+        return _ciphertext_ballot_selection_crypto_hash_with(this.object_id, encryption_seed, this.ciphertext)
     }
 }
 
@@ -463,7 +537,9 @@ export function make_ciphertext_election_context(
 
 // Notes for Arthur: I deleted all object-id for now for simplicity. Let me know if it is required and I can add it later.
 export function _ciphertext_ballot_context_crypto_hash(
-    ballot_selections: CiphertextBallotSelection[], encryption_seed: ElementModQ):ElementModQ{
+    object_id:string,
+    ballot_selections: CiphertextBallotSelection[],
+    encryption_seed: ElementModQ):ElementModQ{
     if (ballot_selections.length == 0){
         console.log(
             "mismatching ballot_selections state: {object_id} expected(some), actual(none)");
@@ -473,24 +549,28 @@ export function _ciphertext_ballot_context_crypto_hash(
     for ( let i = 0; i < ballot_selections.length; i ++) {
         selection_hashes.push(ballot_selections[i].crypto_hash);
     }
-    return hash_elems([encryption_seed, selection_hashes])
+    return hash_elems([object_id, encryption_seed, selection_hashes])
 }
-export function _ciphertext_ballot_selection_crypto_hash_with(encryption_seed: ElementModQ, ciphertext: ElGamalCiphertext): ElementModQ{
-    return hash_elems([encryption_seed, ciphertext.crypto_hash()]);
+export function _ciphertext_ballot_selection_crypto_hash_with(
+  object_id: string,
+  encryption_seed: ElementModQ,
+  ciphertext: ElGamalCiphertext): ElementModQ{
+    return hash_elems([object_id, encryption_seed, ciphertext.crypto_hash()]);
 }
 
 
-export function make_ciphertext_ballot_selection(
-    name: string,
-    seed_nonce: ElementModQ,
-    ciphertext: ElGamalCiphertext,
-    crypto_hash: ElementModQ|null,
-    proof: DisjunctiveChaumPedersenProof):CiphertextBallotSelection{
-    if (crypto_hash == null) {
-        crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(seed_nonce, ciphertext);
-    }
-    return new CiphertextBallotSelection(name, ciphertext, proof, crypto_hash);
-}
+// export function make_ciphertext_ballot_selection(
+//     object_id: string,
+//     name: string,
+//     seed_nonce: ElementModQ,
+//     ciphertext: ElGamalCiphertext,
+//     crypto_hash: ElementModQ|null,
+//     proof: DisjunctiveChaumPedersenProof):CiphertextBallotSelection{
+//     if (crypto_hash == null) {
+//         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, seed_nonce, ciphertext);
+//     }
+//     return new CiphertextBallotSelection(name, ciphertext, proof, crypto_hash);
+// }
 
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
