@@ -1,6 +1,18 @@
 import {get_optional} from "./utils";
 import { buildFakeBallot, encryptBallot, getQRCode } from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
+import encryptedBallot from "./encrypted_result_hex.json";
+
+function downloadJson(exportName: string){
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
+    JSON.stringify(encryptedBallot, null, '\t'));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
 
 get_optional(document.getElementById("prev2")).addEventListener("click", function () {
   get_optional(document.getElementById("step_1")).className = "step current";
@@ -68,7 +80,7 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   if (result instanceof ErrorBallotInput) {
     console.log("error input!")
     return;
-  } 
+  }
   get_optional(document.getElementById("output")).innerHTML = result.hash;
   get_optional(document.getElementById("seed_nonce")).innerHTML = result.seed;
   get_optional(document.getElementById("qrcodeOutput")).replaceChildren(getQRCode(["Encryption Output: "+result.hash , "Encryption Seed: "+result.seed]));
@@ -76,4 +88,9 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   get_optional(document.getElementById("step_4")).className = "step current";
   get_optional(document.getElementById("screen_2")).style.display = "none";
   get_optional(document.getElementById("screen_4")).style.display = "contents";
+  alert("Downloading Encrypted Ballot! qwq");
+  //Download an encrypted ballot json file.
+  downloadJson("encrpted_ballot");
+
+
 });
