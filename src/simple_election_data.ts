@@ -225,6 +225,8 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     //   return valid_proofs.every((elem)=>elem);
     // }
 
+
+
 }
 
 export class CiphertextBallotContest extends CryptoHashCheckable implements OrderedObjectBase{

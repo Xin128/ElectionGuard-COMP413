@@ -191,6 +191,7 @@ export function create_ballot_hash(ballot_id: string,
                                    description_hash: ElementModQ,
                                    contests: CiphertextBallotContest[]): ElementModQ {
   const contests_hash = sequence_order_sort(contests).map(contest => contest.crypto_hash);
+  console.log(hash_elems(["some-external-id-string-123", new ElementModQ(9973n), new ElementModQ(20389n)]))
   return hash_elems([ballot_id, description_hash, ...contests_hash]);
 }
 
