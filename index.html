@@ -69,7 +69,7 @@
       word-break: break-all;
     }
     .first-col {
-      width: 38%;
+      /* width: 38%; */
       text-align: left;
     }
     textarea:hover {
@@ -321,33 +321,35 @@
         To vote for a person whose name is not on the ballot, write candidates name on the write-in line 
         and darken the OVAL beside the name.</p>
         <div>
-          <h4>Mayor of New County<span class="required">*</span></h4>
+          <h4>Justice of the Supreme Court<span class="required">*</span></h4>
           <table>
             <tr>
               <th class="first-col"></th>
               <th>
-                Mizu Sawa
+                John Adams
               </th>
               <th>
-                Park Shu
+                Benjamin Franklin
               </th>
               <th>
-                Van Darkholme
+                John Hancock
               </th>
               <th>
-                Wang Jo Jo
+                Write In
               </th>
-              <th>
+              <!-- <th>
                 Ted Budd
-              </th>
+              </th> -->
             </tr>
             <tr>
               <td class="first-col">You may vote for ONE</td>
               <td><input name="choice" type="radio" value="none" name="needs" required /></td>
               <td><input name="choice" type="radio" value="none" name="needs" required /></td>
               <td><input name="choice" type="radio" value="none" name="needs" required /></td>
-              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
-              <td><input name="choice" type="radio" value="none" name="needs" required /></td>
+              <td><input name="choice" type="radio" value="none" name="needs" required />
+                <input name="choice" type="text" placeHolder="Write In Your Selection" name="needs"></input>
+              </td>
+              <!-- <td><input name="choice" type="radio" value="none" name="needs" required /></td> -->
             </tr>
           </table>
         </div>
@@ -359,16 +361,20 @@
               <th>James Miller</th>
               <th>Liam Garcia</th>
               <th>Olivia Brown</th>
-              <th>Charlotte Li</th>
-              <th>Ava Nguyen</th>
+              <th>
+                Write In
+              </th>
+              <!-- <th>Charlotte Li</th> -->
+              <!-- <th>Ava Nguyen</th> -->
             </tr>
             <tr>
               <td class="first-col">You may vote for ONE</td>
               <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
               <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
               <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
-              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
-              <td><input name="secondary" type="radio" value="none" name="knowledge" /></td>
+              <td><input name="secondary" type="radio" value="none" name="knowledge" />
+                <input name="choice" type="text" placeHolder="Write In Your Selection" name="needs"></td>
+              <!-- <td><input name="secondary" type="radio" value="none" name="knowledge" /></td> -->
             </tr>
           </table>
         </div>
