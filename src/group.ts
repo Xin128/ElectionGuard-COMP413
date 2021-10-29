@@ -1,7 +1,8 @@
 
 import { bnToHex, getRandomIntExclusive, } from "./groupUtils"
 import * as bigintModArith from 'bigint-mod-arith'
-
+import {Type} from "class-transformer";
+import "reflect-metadata";
 // Constants used by ElectionGuard
 // const Q = 32633n;
 // const P = 65267n;
@@ -28,10 +29,15 @@ const mod: (a: bigint, b: bigint) => bigint = (a, b) => {
 
 class ElementModQ {
     // An element of the smaller `mod q` space, i.e., in [0, Q), where Q is a 256-bit prime.
+    @Type(() => BigInt)
     public elem: bigint;
 
-    constructor(elem: bigint) {
+    constructor(elem: bigint | number) {
+      if (typeof elem === "bigint") {
         this.elem = elem;
+      } else {
+        this.elem = BigInt(elem);
+      }
     }
 
     // TODO: Probably don't need this function since it's not used anywhere else in the code base
@@ -84,8 +90,8 @@ class ElementModQ {
         return createStrHashCode(this.elem.toString());
     }
 
-    toJSON():bigint {
-        return this.elem;
+    toJSON():string {
+        return this.elem.toString(16).toUpperCase();
     }
 
     // TODO: Not sure if this is needed in TypeScript version
@@ -150,6 +156,10 @@ class ElementModP {
         return createStrHashCode(this.elem.toString());
     }
 
+
+    toJSON():string {
+      return this.elem.toString(16).toUpperCase();
+    }
     // def __getstate__(self) -> dict:
     //     return {"elem": int(self.elem)}
 

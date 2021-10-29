@@ -19,6 +19,7 @@ import {
   flatmap_optional,
   get_optional
 } from "./utils"
+import {Transform} from "class-transformer";
 
 type ElGamalPublicKey = ElementModP;
 type ElGamalSecretKey = ElementModQ;
@@ -44,8 +45,10 @@ export class ElGamalKeyPair {
  */
 export class ElGamalCiphertext {
   //Pad or alpha
+  @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
   pad: ElementModP;
   //encrypted data or beta
+  @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
   data: ElementModP;
 
   constructor(pad: ElementModP, data: ElementModP) {

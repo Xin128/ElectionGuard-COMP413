@@ -7,7 +7,8 @@ import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
 import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
-
+import {Transform, Type} from "class-transformer";
+import "reflect-metadata";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
 /**
@@ -102,24 +103,30 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     style_id: string;
 
     //Hash of the election manifest
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     manifest_hash: ElementModQ;
 
     //Seed for ballot code
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     code_seed: ElementModQ;
 
     //List of contests for this ballot
+    @Type(() => CiphertextBallotContest)
     contests: CiphertextBallotContest[];
 
     //Unique ballot code for this ballo
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     code: ElementModQ;
 
     //Timestamp at which the ballot encryption is generated in tick
     timestamp: number;
 
     //The hash of the encrypted ballot representation
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     crypto_hash: ElementModQ;
 
     //The nonce used to encrypt this ballot. Sensitive & should be treated as a secret
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     nonce: ElementModQ | undefined;
 
     public constructor(ballot_id: string,
@@ -236,22 +243,28 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
   sequence_order: number;
 
   //Hash from contestDescription
+  @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
   description_hash: ElementModQ;
 
   //Collection of ballot selections
+  @Type(() => CiphertextBallotSelection)
   ballot_selections: CiphertextBallotSelection[];
 
   //The encrypted representation of all of the vote fields (the contest total)
+  @Type(() => ElGamalCiphertext)
   ciphertext_accumulation: ElGamalCiphertext;
 
   //Hash of the encrypted values
+  @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
   crypto_hash: ElementModQ;
 
   //The nonce used to generate the encryption. Sensitive & should be treated as a secret
+  @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
   nonce?: ElementModQ = undefined;
 
   //The proof demonstrates the sum of the selections does not exceed the maximum
   //     available selections for the contest, and that the proof was generated with the nonce
+  @Type(() => ConstantChaumPedersenProof)
   proof?: ConstantChaumPedersenProof = undefined;
 
     public constructor(
@@ -308,27 +321,34 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
 
   object_id: string;
 
+  @Transform(({value}) => parseInt(value, 16))
   sequence_order: number;
 
   //The SelectionDescription hash
+  @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
   description_hash: ElementModQ;
 
   //The encrypted representation of the vote field
+  @Type(() => ElGamalCiphertext)
   ciphertext: ElGamalCiphertext;
 
   //The hash of the encrypted values
+  @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
   crypto_hash: ElementModQ;
 
   //Determines if this is a placeholder selection
   is_placeholder_selection = false;
 
   //The nonce used to generate the encryption. Sensitive & should be treated as a secret
+  @Transform(({value}) => value == null ? value : new ElementModQ(BigInt("0x"+value)))
   nonce?: ElementModQ = undefined;
 
   //The proof that demonstrates the selection is an encryption of 0 or 1, and was encrypted using the `nonce`
+  @Type(() => DisjunctiveChaumPedersenProof)
   proof?: DisjunctiveChaumPedersenProof = undefined;
 
   //encrypted representation of the extended_data field
+  @Type(() => ElGamalCiphertext)
   extended_data?: ElGamalCiphertext = undefined;
 
     public constructor(

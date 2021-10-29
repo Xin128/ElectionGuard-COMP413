@@ -24,9 +24,10 @@ import { hash_elems } from "./hash"
 // import loggings
 
 import { Nonces } from "./nonces"
+import {Transform} from "class-transformer";
 
 //Usage case for proof
-enum ProofUsage {
+export enum ProofUsage {
   Unknown = "Unknown",
   SecretValue = "Prove knowledge of secret value",
   SelectionLimit = "Prove value within selection's limit",
@@ -35,24 +36,34 @@ enum ProofUsage {
 
 export class DisjunctiveChaumPedersenProof {
     // Representation of disjunctive Chaum Pederson proof
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_zero_pad: ElementModP;
     // a0 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_zero_data: ElementModP;
     // b0 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_one_pad: ElementModP;
     // a1 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_one_data: ElementModP;
     // b1 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_zero_challenge: ElementModQ;
     // c0 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_one_challenge: ElementModQ;
     // c1 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     challenge: ElementModQ;
     // c in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_zero_response: ElementModQ;
     // proof_zero_response in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_one_response: ElementModQ;
     // proof_one_response in the spec
+    @Transform(({value}) => value as ProofUsage)
     usage: ProofUsage = ProofUsage.SelectionValue;
 
     public constructor(a0: ElementModP,
@@ -139,21 +150,27 @@ export class DisjunctiveChaumPedersenProof {
 // Representation of constant Chaum Pederson proof.
 export class ConstantChaumPedersenProof {
     // a in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     pad: ElementModP;
 
     // b in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     data: ElementModP;
 
     // c in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     challenge: ElementModQ;
 
     // v in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     response: ElementModQ;
 
     // constant value
+    @Transform(({value}) => BigInt("0x" + value))
     constant: bigint;
 
     //a description of how to use this proof
+    @Transform(({value}) => value as ProofUsage)
     usage: ProofUsage = ProofUsage.SelectionLimit
 
 
