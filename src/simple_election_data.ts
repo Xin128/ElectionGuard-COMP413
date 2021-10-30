@@ -1,6 +1,9 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
     ConstantChaumPedersenProof,
+    make_chaum_pedersen_generic,
+    make_disjunctive_chaum_pedersen_one,
+    make_disjunctive_chaum_pedersen,
     } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
@@ -9,6 +12,7 @@ import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {Transform, Type} from "class-transformer";
 import "reflect-metadata";
+import { get_optional } from "./utils";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
 /**
@@ -359,7 +363,8 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
       crypto_hash: ElementModQ,
       is_placeholder_selection: boolean,
       nonce?: ElementModQ,
-      proof?: DisjunctiveChaumPedersenProof
+      proof?: DisjunctiveChaumPedersenProof,
+      extended_data?: ElGamalCiphertext,
                        ){
         super();
         this.object_id = object_id;
@@ -581,18 +586,38 @@ export function _ciphertext_ballot_selection_crypto_hash_with(
 }
 
 
-// export function make_ciphertext_ballot_selection(
-//     object_id: string,
-//     name: string,
-//     seed_nonce: ElementModQ,
-//     ciphertext: ElGamalCiphertext,
-//     crypto_hash: ElementModQ|null,
-//     proof: DisjunctiveChaumPedersenProof):CiphertextBallotSelection{
-//     if (crypto_hash == null) {
-//         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, seed_nonce, ciphertext);
-//     }
-//     return new CiphertextBallotSelection(name, ciphertext, proof, crypto_hash);
-// }
+export function make_ciphertext_ballot_selection(
+    object_id: string,
+    sequence_order: number,
+    description_hash:ElementModQ,
+    ciphertext: ElGamalCiphertext,
+    elgamal_public_key: ElementModP,
+    crypto_extended_base_hash: ElementModQ,
+    proof_seed: ElementModQ,
+    selection_representation: number,
+    is_placeholder_selection: boolean,
+    nonce: ElementModQ | null,
+    crypto_hash: ElementModQ|null,
+    proof: DisjunctiveChaumPedersenProof|null,
+    extended_data: ElGamalCiphertext|null):CiphertextBallotSelection{
+    if (crypto_hash == null) {
+        crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, description_hash, ciphertext);
+    }
+    if (proof == null) {
+        proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
+    }
+    return new CiphertextBallotSelection(
+        object_id,
+        sequence_order,
+        description_hash,
+        ciphertext,
+        crypto_hash,
+        is_placeholder_selection,
+        nonce,
+        proof,
+        extended_data,
+    );
+}
 
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
