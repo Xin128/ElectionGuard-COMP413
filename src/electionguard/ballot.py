@@ -390,7 +390,7 @@ class CiphertextContest(OrderedObjectBase):
 
 
 @dataclass(unsafe_hash=True)
-class CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
+class  CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
     """
     A CiphertextBallotContest represents the selections made by a voter for a specific ContestDescription
 
@@ -515,9 +515,10 @@ class CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
         computed_ciphertext_accumulation = self.elgamal_accumulate()
 
         # Verify that the contest ciphertext matches the elgamal accumulation of all selections
-        if self.ciphertext_accumulation != computed_ciphertext_accumulation:
+        if self.ciphertext_accumulation.pad != computed_ciphertext_accumulation.pad and self.ciphertext_accumulation.data != computed_ciphertext_accumulation.data:
             log_warning(
-                f"ciphertext does not equal elgamal accumulation for : {self.object_id}"
+                f"ciphertext does not equal elgamal accumulation for : {self.object_id}\n"
+                f"expected{self.ciphertext_accumulation} actual {computed_ciphertext_accumulation}"
             )
             return False
 
@@ -777,6 +778,8 @@ class CiphertextBallot(ElectionObjectBase, CryptoHashCheckable):
                 (
                     f"mismatching ballot hash: {self.object_id} expected({str(encryption_seed)}), "
                     f"actual({str(self.manifest_hash)})"
+                    f"expected type({type(encryption_seed)})"
+                    f"actual type({type(self.manifest_hash)})"
                 )
             )
             return False
@@ -885,7 +888,6 @@ def make_ciphertext_ballot(
         log_warning("ciphertext ballot with no contests")
 
     contest_hash = create_ballot_hash(object_id, manifest_hash, contests)
-
     timestamp = to_ticks(datetime.now()) if timestamp is None else timestamp
     if code_seed is None:
         code_seed = manifest_hash

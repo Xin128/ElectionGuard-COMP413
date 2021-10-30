@@ -34,6 +34,17 @@ from electionguard.encrypt import (
     selection_from,
     EncryptionMediator,
 )
+from electionguard.ballot import (
+    CiphertextBallot,
+    CiphertextBallotContest,
+    CiphertextBallotSelection,
+    PlaintextBallot,
+    PlaintextBallotContest,
+    PlaintextBallotSelection,
+    make_ciphertext_ballot_contest,
+    make_ciphertext_ballot_selection,
+    make_ciphertext_ballot,
+)
 from electionguard.group import (
     ElementModQ,
     ONE_MOD_Q,
@@ -62,9 +73,7 @@ SEED = election_factory.get_encryption_device().get_hash()
 
 class TestEncrypt(BaseTestCase):
     """Encryption tests"""
-
     def test_encrypt_simple_selection_succeeds(self):
-
         # Arrange
         keypair = elgamal_keypair_from_secret(int_to_q(2))
         nonce = randbelow(get_small_prime())
@@ -80,6 +89,8 @@ class TestEncrypt(BaseTestCase):
         result = encrypt_selection(
             subject, metadata, keypair.public_key, ONE_MOD_Q, nonce
         )
+        print(result)
+        print("result!!!!!!!!!!!!!!!!!!!!!")
 
         # Assert
         self.assertIsNotNone(result)
@@ -533,18 +544,40 @@ class TestEncrypt(BaseTestCase):
 
         # Arrange
         keypair = elgamal_keypair_from_secret(int_to_q(2))
+        print("=====================================================")
+        print("keypair:", keypair)
+        print("=====================================================")
         manifest = election_factory.get_fake_manifest()
+        print("=====================================================")
+        print("manifest:", manifest)
+        print("=====================================================")
         internal_manifest, context = election_factory.get_fake_ciphertext_election(
             manifest, keypair.public_key
         )
+        print("=====================================================")
+        print("internal keypair", internal_manifest)
+        print("=====================================================")
         nonce_seed = TWO_MOD_Q
 
         # TODO: Ballot Factory
         subject = election_factory.get_fake_ballot(internal_manifest)
         self.assertTrue(subject.is_valid(internal_manifest.ballot_styles[0].object_id))
-
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print('SUBJECT:', subject)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print('INTERNAL MANIFEST', internal_manifest)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print('context', context)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print('SEED', SEED)
         # Act
+        subject = PlaintextBallot('xin001', 'some-ballot-style-id',[])
+        print("???????????????")
+        print('new subject:', subject)
         result = encrypt_ballot(subject, internal_manifest, context, SEED)
+        print("=====================================================")
+        print("result:", result)
+        print("=====================================================")
         result_from_seed = encrypt_ballot(
             subject, internal_manifest, context, SEED, nonce_seed
         )
@@ -599,11 +632,13 @@ class TestEncrypt(BaseTestCase):
         # Arrange
         keypair = elgamal_keypair_from_secret(int_to_q(2))
         manifest = election_factory.get_simple_manifest_from_file()
+
         internal_manifest, context = election_factory.get_fake_ciphertext_election(
             manifest, keypair.public_key
         )
 
         data = ballot_factory.get_simple_ballot_from_file()
+
         self.assertTrue(data.is_valid(internal_manifest.ballot_styles[0].object_id))
 
         device = EncryptionDevice(12345, 23456, 34567, "Location")

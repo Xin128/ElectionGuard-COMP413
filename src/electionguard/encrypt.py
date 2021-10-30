@@ -441,6 +441,7 @@ def encrypt_ballot(
 
     # Include a representation of the election and the external Id in the nonce's used
     # to derive other nonce values on the ballot
+
     nonce_seed = CiphertextBallot.nonce_seed(
         internal_manifest.manifest_hash,
         ballot.object_id,
@@ -453,6 +454,7 @@ def encrypt_ballot(
     encrypted_contests = encrypt_ballot_contests(
         ballot, internal_manifest, context, nonce_seed
     )
+
     if encrypted_contests is None:
         return None
 

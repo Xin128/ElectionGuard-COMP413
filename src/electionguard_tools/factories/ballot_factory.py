@@ -13,6 +13,7 @@ from hypothesis.strategies import (
 )
 
 from electionguard.ballot import (
+    CiphertextBallot,
     PlaintextBallot,
     PlaintextBallotContest,
     PlaintextBallotSelection,
@@ -26,6 +27,8 @@ from electionguard.manifest import (
 from electionguard_tools.helpers.serialize import (
     from_file_to_dataclass,
     from_list_in_file_to_dataclass,
+    to_file,
+    from_file_to_dataclass_ciphertext
 )
 
 
@@ -153,7 +156,13 @@ class BallotFactory:
         return from_list_in_file_to_dataclass(
             PlaintextBallot, os.path.join(data, filename)
         )
+    @staticmethod
+    def export_ballot_to_file(data, filename):
+        return to_file(data, filename, "/Users/xinhao/Downloads/Fall_2022/COMP_413/codebase/election-gurad/electionguard-python/tests/property")
 
+    @staticmethod
+    def get_ciphertext_ballot_from_file(filename: str) -> PlaintextBallot:
+        return from_file_to_dataclass_ciphertext(CiphertextBallot, "/Users/xinhao/Downloads/Fall_2022/COMP_413/codebase/election-gurad/electionguard-python/tests/property/"+filename)
 
 @composite
 def get_selection_well_formed(

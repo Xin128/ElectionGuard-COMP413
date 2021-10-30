@@ -29,6 +29,8 @@ from electionguard.group import (
     TWO_MOD_P,
     ONE_MOD_Q,
     mult_p,
+    g_pow_p,
+
 )
 from electionguard.manifest import (
     ContestDescription,
@@ -41,7 +43,6 @@ import electionguard_tools.factories.ballot_factory as BallotFactory
 import electionguard_tools.factories.election_factory as ElectionFactory
 from electionguard_tools.strategies.elgamal import elgamal_keypairs
 from electionguard_tools.strategies.group import elements_mod_q_no_zero
-
 
 election_factory = ElectionFactory.ElectionFactory()
 ballot_factory = BallotFactory.BallotFactory()
@@ -484,15 +485,15 @@ class TestDecryptWithSecrets(BaseTestCase):
         self.assertIsNone(result_from_nonce_tampered)
         self.assertIsNone(result_from_nonce_seed_tampered)
 
-    @settings(
-        deadline=timedelta(milliseconds=5000),
-        suppress_health_check=[HealthCheck.too_slow],
-        max_examples=1,
-        # disabling the "shrink" phase, because it runs very slowly
-        phases=[Phase.explicit, Phase.reuse, Phase.generate, Phase.target],
-    )
-    @given(elgamal_keypairs())
-    def test_decrypt_ballot_valid_input_succeeds(self, keypair: ElGamalKeyPair):
+    # @settings(
+    #     deadline=timedelta(milliseconds=5000),
+    #     suppress_health_check=[HealthCheck.too_slow],
+    #     max_examples=1,
+    #     # disabling the "shrink" phase, because it runs very slowly
+    #     phases=[Phase.explicit, Phase.reuse, Phase.generate, Phase.target],
+    # )
+    # @given(elgamal_keypairs())
+    def test_decrypt_ballot_valid_input_succeeds(self):
         """
         Check that decryption works as expected by encrypting a ballot using the stateful `EncryptionMediator`
         and then calling the various decrypt functions.
@@ -501,19 +502,23 @@ class TestDecryptWithSecrets(BaseTestCase):
         # TODO: Hypothesis test instead
 
         # Arrange
+        keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
         election = election_factory.get_simple_manifest_from_file()
         internal_manifest, context = election_factory.get_fake_ciphertext_election(
             election, keypair.public_key
         )
 
         data = ballot_factory.get_simple_ballot_from_file()
+
         device = election_factory.get_encryption_device()
         operator = EncryptionMediator(internal_manifest, context, device)
-
-        # Act
+        # # Act
         subject = operator.encrypt(data)
-        self.assertIsNotNone(subject)
+        encrypted_subject_to_export =  ballot_factory.export_ballot_to_file(subject, 'input/encrypted_ballot_5')
+        # EXPORT FILE TO JSON
+        # subject = ballot_factory.get_ciphertext_ballot_from_file('tsout.json')
 
+        self.assertIsNotNone(subject)
         result_from_key = decrypt_ballot_with_secret(
             subject,
             internal_manifest,
@@ -522,6 +527,12 @@ class TestDecryptWithSecrets(BaseTestCase):
             keypair.secret_key,
             remove_placeholders=False,
         )
+        decrypted_subject_to_export = ballot_factory.export_ballot_to_file(result_from_key, 'output/decrypted_ballot_5')
+        print('----------------------------------------------------------------------------')
+        print("DECRPTED_RESULT BELOW:")
+        print(result_from_key)
+        print('----------------------------------------------------------------------------')
+
         result_from_nonce = decrypt_ballot_with_nonce(
             subject,
             internal_manifest,
@@ -537,6 +548,7 @@ class TestDecryptWithSecrets(BaseTestCase):
             subject.nonce,
             remove_placeholders=False,
         )
+
 
         # Assert
         self.assertIsNotNone(result_from_key)

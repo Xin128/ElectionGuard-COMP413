@@ -72,8 +72,8 @@ def get_constants() -> ElectionConstants:
         PrimeOption.Standard: STANDARD_CONSTANTS,
         PrimeOption.TestOnly: LARGE_TEST_CONSTANTS,
     }
-    return option_map.get(option) or STANDARD_CONSTANTS
-
+    # return option_map.get(option) or STANDARD_CONSTANTS
+    return STANDARD_CONSTANTS
 
 get_large_prime = lambda: get_constants().large_prime
 get_small_prime = lambda: get_constants().small_prime
