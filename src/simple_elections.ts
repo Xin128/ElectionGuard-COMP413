@@ -113,8 +113,8 @@ export function encrypt_contest(contest: PlaintextBallotContest,
                                 
                             ): CiphertextBallotContest | null {
         const contest_description_hash = contest_description.crypto_hash();
-        const nonce_sequence = Nonces(contest_description_hash, nonce_seed);
-        const contest_nonce = nonce_sequence[contest_description.sequence_order];
+        const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
+        const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
         const chaum_pedersen_nonce = next(iter(nonce_sequence));
         const encrypted_selections: CiphertextBallotSelection[] = [];
         let encrypted_selection = null;
@@ -158,7 +158,7 @@ export function encrypt_contest(contest: PlaintextBallotContest,
             contest_nonce,
         )
         return  encrypted_contest
-                       }
+    }
 
 export function encrypt_ballot_contests(ballot:CiphertextBallot, 
                                         description: InternalManifest | undefined, 
@@ -525,7 +525,7 @@ export function validate_decrypted_selection(
     plaintext: PlaintextBallotSelectionWithProof,
     ciphertext: CiphertextBallotSelection): boolean {
     //Validates that the plaintext is provably generated from the ciphertext. Returns true if everything is good.
-    const plaintext_msg = plaintext.selection.choice;
+    const plaintext_msg = plaintext.selection.vote;
     const public_key = context.get_public_key();
     const base_hash = context.base_hash;
     const is_valid = plaintext.decryption_proof.is_valid(BigInt(plaintext_msg), ciphertext.ciphertext, public_key, base_hash);
@@ -590,93 +590,93 @@ export function validate_decrypted_selection(
 //     return return_list;
 // }
 
-export function   decrypt_tally(
-    context: PrivateElectionContext,
-    selection: CiphertextSelectionTally,
-    seed: ElementModQ): PlaintextBallotSelectionWithProof {
-    //Given an encrypted, tallied selection, and the necessary crypto context, decrypts it,
-    //     returning the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
-    //     ciphertext. The optional seed is used for computing the proof.
+// export function   decrypt_tally(
+//     context: PrivateElectionContext,
+//     selection: CiphertextSelectionTally,
+//     seed: ElementModQ): PlaintextBallotSelectionWithProof {
+//     //Given an encrypted, tallied selection, and the necessary crypto context, decrypts it,
+//     //     returning the plaintext selection along with a Chaum-Pedersen proof of its correspondence to the
+//     //     ciphertext. The optional seed is used for computing the proof.
 
-    const secret_key = context.keypair.secret_key;
-    const plain_selections = new PlaintextBallotSelection(selection.name, selection.total.decrypt(secret_key));
-    const decryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.total, secret_key, seed, context.base_hash);
-    return new PlaintextBallotSelectionWithProof(plain_selections, decryption_proof);
-}
+//     const secret_key = context.keypair.secret_key;
+//     const plain_selections = new PlaintextBallotSelection(selection.name, selection.total.decrypt(secret_key));
+//     const decryption_proof = cp.make_chaum_pedersen_decryption_proof(selection.total, secret_key, seed, context.base_hash);
+//     return new PlaintextBallotSelectionWithProof(plain_selections, decryption_proof);
+// }
 
-export function decrypt_tallies(
-    context: PrivateElectionContext,
-    tally: CiphertextSelectionTally[],
-    seed: ElementModQ):PlaintextBallotSelectionWithProof[] {
-    //"Given a list of encrypted tallies and the necessary crypto context, does the
-    //     decryption on the entire list. The optional seed is used for computing the proofs.
-    const lst = [];
-    for (const t of tally) {
-        lst.push(decrypt_tally(context, t, seed));
-    }
-    return lst;
-}
+// export function decrypt_tallies(
+//     context: PrivateElectionContext,
+//     tally: CiphertextSelectionTally[],
+//     seed: ElementModQ):PlaintextBallotSelectionWithProof[] {
+//     //"Given a list of encrypted tallies and the necessary crypto context, does the
+//     //     decryption on the entire list. The optional seed is used for computing the proofs.
+//     const lst = [];
+//     for (const t of tally) {
+//         lst.push(decrypt_tally(context, t, seed));
+//     }
+//     return lst;
+// }
 
-export function validate_tally(
-    context: AnyElectionContext,
-    tally_plaintext: PlaintextBallotSelectionWithProof,
-    tally_ciphertext: CiphertextSelectionTally): boolean {
-    //Validates that the plaintext is provably generated from the ciphertext. Returns true if everything is good.
+// export function validate_tally(
+//     context: AnyElectionContext,
+//     tally_plaintext: PlaintextBallotSelectionWithProof,
+//     tally_ciphertext: CiphertextSelectionTally): boolean {
+//     //Validates that the plaintext is provably generated from the ciphertext. Returns true if everything is good.
 
-    const seed_nonce = TWO_MOD_Q;
-    const ciphertext = tally_ciphertext.total;
-    let secret_key: ElementModQ;
-    if (context instanceof PrivateElectionContext) {
-        secret_key = context.keypair.secret_key;
-    } else {
-        return false;
-    }
-    const pad = cp.make_chaum_pedersen_decryption_proof(ciphertext, secret_key, seed_nonce, context.base_hash);
-    return pad.is_valid(
-        BigInt(tally_plaintext.selection.choice),
-        ciphertext,
-        context.keypair.public_key,
-        context.base_hash);
-}
+//     const seed_nonce = TWO_MOD_Q;
+//     const ciphertext = tally_ciphertext.total;
+//     let secret_key: ElementModQ;
+//     if (context instanceof PrivateElectionContext) {
+//         secret_key = context.keypair.secret_key;
+//     } else {
+//         return false;
+//     }
+//     const pad = cp.make_chaum_pedersen_decryption_proof(ciphertext, secret_key, seed_nonce, context.base_hash);
+//     return pad.is_valid(
+//         BigInt(tally_plaintext.selection.choice),
+//         ciphertext,
+//         context.keypair.public_key,
+//         context.base_hash);
+// }
 
-export function validate_tallies(
-    context: AnyElectionContext,
-    tally_plaintext: PlaintextBallotSelectionWithProof[],
-    tally_ciphertext: CiphertextSelectionTally[]): boolean {
-    //Validates that the plaintext is provably generated from the ciphertext for every tally. Returns true if
-    //     everything is good.
+// export function validate_tallies(
+//     context: AnyElectionContext,
+//     tally_plaintext: PlaintextBallotSelectionWithProof[],
+//     tally_ciphertext: CiphertextSelectionTally[]): boolean {
+//     //Validates that the plaintext is provably generated from the ciphertext for every tally. Returns true if
+//     //     everything is good.
 
-    for (let i = 0; i < tally_plaintext.length; i++) {
-        if (!validate_tally(context, tally_plaintext[i], tally_ciphertext[i])) {
-            // console.log("current context is ", context, "tally plaintext ", tally_plaintext[i], "tally ciphertext ", tally_ciphertext[i]);
-            return false;
-        }
-    }
-    return true;
-}
+//     for (let i = 0; i < tally_plaintext.length; i++) {
+//         if (!validate_tally(context, tally_plaintext[i], tally_ciphertext[i])) {
+//             // console.log("current context is ", context, "tally plaintext ", tally_plaintext[i], "tally ciphertext ", tally_ciphertext[i]);
+//             return false;
+//         }
+//     }
+//     return true;
+// }
 
-export function tally_plaintext_ballots(
-    context: AnyElectionContext,
-    ballots: PlaintextBallot[]): PlaintextBallot {
-    //Given a list of ballots, adds their counters and returns a ballot representing the totals of the contest.
+// export function tally_plaintext_ballots(
+//     context: AnyElectionContext,
+//     ballots: PlaintextBallot[]): PlaintextBallot {
+//     //Given a list of ballots, adds their counters and returns a ballot representing the totals of the contest.
 
-    const totals: Map<string, number> = new Map();
-    for (const b of ballots) {
-        for (const c of b.contests) {
-            for (const s of c.selections) {
-                if (!totals.has(s.name)) {
-                    totals.set(s.name, s.choice);
-                } else {
-                    const new_val = get_optional(totals.get(s.name)) + s.choice;
-                    totals.set(s.name, new_val);
-                }
-            }
-        }
-    }
-    const lst_selections = [];
-    for (const name of context.names) {
-        lst_selections.push(new PlaintextBallotSelection(name, get_optional(totals.get(name))));
-    }
-    const total_contest = new PlaintextBallotContest(lst_selections);
-    return new PlaintextBallot("TOTALS_object_id",  [total_contest]);
-}
+//     const totals: Map<string, number> = new Map();
+//     for (const b of ballots) {
+//         for (const c of b.contests) {
+//             for (const s of c.selections) {
+//                 if (!totals.has(s.name)) {
+//                     totals.set(s.name, s.choice);
+//                 } else {
+//                     const new_val = get_optional(totals.get(s.name)) + s.choice;
+//                     totals.set(s.name, new_val);
+//                 }
+//             }
+//         }
+//     }
+//     const lst_selections = [];
+//     for (const name of context.names) {
+//         lst_selections.push(new PlaintextBallotSelection(name, get_optional(totals.get(name))));
+//     }
+//     const total_contest = new PlaintextBallotContest(lst_selections);
+//     return new PlaintextBallot("TOTALS_object_id",  [total_contest]);
+// }
