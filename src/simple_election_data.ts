@@ -50,26 +50,54 @@ export class ExtendedData {
     }
 }
 
-export class PlaintextBallot {
+export class PlaintextBallot implements ElectionObjectBase {
     // """
     // A PlaintextBallot represents a voters selections for a given ballot and ballot style
     // :field object_id: A unique Ballot ID that is relevant to the external system
     // """
-
+    object_id: string;
     style_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
     
-    // ballot_id: string;
     @Type(() => PlaintextBallotContest)
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
-    public constructor(ballot_id: string, contests: PlaintextBallotContest[]){
+    public constructor(object_id: string, ballot_id: string, contests: PlaintextBallotContest[]){
+        this.object_id = object_id;
         this.style_id = ballot_id;
         this.contests = contests;
     }
+
+    public is_valid(expected_ballot_style_id: string): boolean {
+        // """
+        // Check if expected ballot style is valid
+        // :param expected_ballot_style_id: Expected ballot style id
+        // :return: True if valid
+        // """
+        if (this.style_id !== expected_ballot_style_id) {
+            console.log(`invalid ballot_style: for: ${this.object_id} expected(${expected_ballot_style_id}) actual(${this.style_id})`);
+            return false;
+        }
+        return true;
+    }
+        
+
+    public equals(other: any): boolean {
+        return (
+            other instanceof PlaintextBallot
+            && this.style_id === other.style_id
+            && _list_eq(this.contests, other.contests)
+        )
+    }
+        
+
+    public notEquals(other: any): boolean {
+        return !this.equals(other);
+    }
+    
 }
 
-export class PlaintextBallotContest{
+export class PlaintextBallotContest implements OrderedObjectBase {
     // """
     // A PlaintextBallotContest represents the selections made by a voter for a specific ContestDescription
     // this class can be either a partial or a complete representation of a contest dataset.  Specifically,
@@ -80,12 +108,76 @@ export class PlaintextBallotContest{
     // Typically partial contests are passed into Electionguard for memory constrained systems,
     // while complete contests are passed into ElectionGuard when running encryption on an existing dataset.
     // """
+
+    sequence_order: number;
+    
+    object_id: string;
+
     @Type(() => PlaintextBallotSelection)
     ballot_selections: PlaintextBallotSelection[];
     // The voter's selections. 1 implies a vote for. 0 implies no vote.
 
-    public constructor(selections: PlaintextBallotSelection[]){
+    public constructor(sequence_order: number, object_id: string, selections: PlaintextBallotSelection[]){
+        this.sequence_order = sequence_order;
+        this.object_id = object_id;
         this.ballot_selections = selections;
+    }
+    
+    public is_valid(
+        expected_object_id: string,
+        expected_number_selections: number,
+        expected_number_elected: number,
+        votes_allowed?: number
+    ): boolean {
+        // """
+        // Given a PlaintextBallotContest returns true if the state is representative of the expected values.
+        // Note: because this class supports partial representations, undervotes are considered a valid state.
+        // """
+
+        if (this.object_id !== expected_object_id) {
+            console.log(`invalid object_id: expected(${expected_object_id}) actual(${this.object_id})`);
+            return false;
+        }
+            
+
+        if (this.ballot_selections.length > expected_number_selections) {
+            console.log(`invalid number_selections: expected(${expected_number_selections}) actual(${this.ballot_selections.length})`)
+            return false;
+        }
+
+        let number_elected = 0;
+        let votes = 0;
+
+        // Verify the selections are well-formed
+        for (let selection of this.ballot_selections) {
+            votes += selection.vote;
+            if (selection.vote >= 1) {
+                number_elected += 1;
+            }
+        }
+            
+
+        if (number_elected > expected_number_elected) {
+            console.log(`invalid number_elected: expected(${expected_number_elected}) actual(${number_elected})`);
+            return false;
+        }
+
+        if (votes_allowed !== undefined && votes > votes_allowed) {
+            console.log(`invalid votes: expected(${votes_allowed}) actual(${votes})`);
+            return false;
+        }
+
+        return true;
+    }
+        
+    public equals(other: any): boolean {
+        return other instanceof PlaintextBallotContest && this.object_id === other.object_id && _list_eq(
+            this.ballot_selections, other.ballot_selections
+        );
+    }
+
+    public notEquals(other: any): boolean {
+        return !this.equals(other);
     }
 
     public num_selections(): number{
@@ -102,7 +194,7 @@ export class PlaintextBallotContest{
 }
 
 
-export class PlaintextBallotSelection implements OrderedObjectBase{
+export class PlaintextBallotSelection implements OrderedObjectBase {
     // """
     // A BallotSelection represents an individual selection on a ballot.
     // This class accepts a `vote` integer field which has no constraints
@@ -149,8 +241,38 @@ export class PlaintextBallotSelection implements OrderedObjectBase{
         this.extended_data = extened_data;
     }
 
-    public equals(any: PlaintextBallotSelection): boolean {
-        return this.name === any.name && this.vote === any.vote;
+    public is_valid(expected_object_id: string): boolean {
+        // """
+        // Given a PlaintextBallotSelection validates that the object matches an expected object
+        // and that the plaintext string can resolve to a valid representation
+        // """
+
+        if (this.object_id !== expected_object_id) {
+            console.log(`invalid object_id: expected(${expected_object_id}) actual(${this.object_id})`);
+            return false;
+        }
+
+        let vote = this.vote;
+        if (vote < 0 || vote > 1) {
+            console.log(`Currently only supporting choices of 0 or 1: ${this.toString()}`);
+            return false;
+        }
+
+        return true;
+    }
+        
+    public equals(other: any): boolean {
+        return (
+            other instanceof PlaintextBallotSelection
+            && this.object_id === other.object_id
+            && this.vote === other.vote
+            && this.is_placeholder_selection === other.is_placeholder_selection
+            && this.extended_data === other.extended_data
+        )
+    }
+        
+    public notEquals(other: any): boolean {
+        return !this.equals(other);
     }
 }
 
