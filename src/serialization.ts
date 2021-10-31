@@ -233,8 +233,8 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
 }
 
 
-export function object_log(encrypted_ballot: any): string{
-  return JSON.stringify(encrypted_ballot, (key, value) => {
+export function object_log(object_to_log: any): string{
+  return JSON.stringify(object_to_log, (key, value) => {
     if (typeof value === "bigint") {
       return value.toString();
     }

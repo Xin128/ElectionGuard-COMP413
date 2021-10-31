@@ -137,20 +137,18 @@ export class PlaintextBallotSelection implements OrderedObjectBase{
     // """
     // an optional field of arbitrary data, such as the value of a write-in candidate
     // """
-    name: string;
 
     // 1 implies a vote for. 0 implies no vote.
-    public constructor(object_id: string, sequence_order: number, name: string, vote: number, is_placeholder_selection: boolean, extened_data?: ExtendedData){
+    public constructor(object_id: string, sequence_order: number, vote: number, is_placeholder_selection: boolean, extened_data?: ExtendedData){
         this.object_id = object_id;
         this.sequence_order = sequence_order;
-        this.name = name;
         this.vote = vote;
         this.is_placeholder_selection = is_placeholder_selection;
         this.extended_data = extened_data;
     }
 
     public equals(any: PlaintextBallotSelection): boolean {
-        return this.name === any.name && this.vote === any.vote;
+        return this.vote === any.vote;
     }
 }
 
