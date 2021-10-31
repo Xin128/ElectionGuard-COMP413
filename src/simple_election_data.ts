@@ -35,34 +35,67 @@ export function _list_eq(list1: ElectionObjectBase[], list2: ElectionObjectBase[
   return true;
 }
 
+export class ExtendedData {
+    // """
+    // ExtendedData represents any arbitrary data expressible as a string with a length.
+    // This class is used primarily as a field on a selection to indicate a write-in candidate text value
+    // """
+
+    value: string
+    length: number
+
+    constructor(value: string, length: number) {
+        this.value = value;
+        this.length = length;
+    }
+}
+
 export class PlaintextBallot {
-    ballot_id: string;
+    // """
+    // A PlaintextBallot represents a voters selections for a given ballot and ballot style
+    // :field object_id: A unique Ballot ID that is relevant to the external system
+    // """
+
+    style_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
+    
+    // ballot_id: string;
+    @Type(() => PlaintextBallotContest)
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
     public constructor(ballot_id: string, contests: PlaintextBallotContest[]){
-        this.ballot_id = ballot_id;
+        this.style_id = ballot_id;
         this.contests = contests;
     }
 }
 
 export class PlaintextBallotContest{
-
-    selections: PlaintextBallotSelection[];
+    // """
+    // A PlaintextBallotContest represents the selections made by a voter for a specific ContestDescription
+    // this class can be either a partial or a complete representation of a contest dataset.  Specifically,
+    // a partial representation must include at a minimum the "affirmative" selections of a contest.
+    // A complete representation of a ballot must include both affirmative and negative selections of
+    // the contest, AND the placeholder selections necessary to satisfy the ConstantChaumPedersen proof
+    // in the CiphertextBallotContest.
+    // Typically partial contests are passed into Electionguard for memory constrained systems,
+    // while complete contests are passed into ElectionGuard when running encryption on an existing dataset.
+    // """
+    @Type(() => PlaintextBallotSelection)
+    ballot_selections: PlaintextBallotSelection[];
     // The voter's selections. 1 implies a vote for. 0 implies no vote.
 
     public constructor(selections: PlaintextBallotSelection[]){
-        this.selections = selections;
+        this.ballot_selections = selections;
     }
 
     public num_selections(): number{
-        return this.selections.length;
+        return this.ballot_selections.length;
     }
 
     public is_overvoted(): boolean{
         let votes_cast = 0;
-        for(const selection of this.selections){
-            votes_cast += selection.choice;
+        for(const selection of this.ballot_selections){
+            votes_cast += selection.vote;
         }
         return votes_cast > 1 ;
     }
@@ -70,20 +103,54 @@ export class PlaintextBallotContest{
 
 
 export class PlaintextBallotSelection implements OrderedObjectBase{
-    name: string;
-    // Candidate name
+    // """
+    // A BallotSelection represents an individual selection on a ballot.
+    // This class accepts a `vote` integer field which has no constraints
+    // in the ElectionGuard Data Specification, but is constrained logically
+    // in the application to resolve to `False` or `True` aka only 0 and 1 is
+    // supported for now.
+    // This class can also be designated as `is_placeholder_selection` which has no
+    // context to the data specification but is useful for running validity checks internally
+    // an `extended_data` field exists to support any arbitrary data to be associated
+    // with the selection.  In practice, this field is the cleartext representation
+    // of a write-in candidate value.  In the current implementation these values are
+    // discarded when encrypting.
+    // """
 
-    public choice: number;
-    // 1 implies a vote for. 0 implies no vote.
-    public constructor(name: string, choice: number){
-        this.name = name;
-        this.choice = choice;
-    }
-    sequence_order: number;
+    // The object id of this specific ballot.
+    // Will also appear in any corresponding plaintext of this ballot.
     object_id: string;
 
+    sequence_order: number;
+
+
+    //Hash of the election
+
+    vote: number;
+
+    is_placeholder_selection = false;
+    // """Determines if this is a placeholder selection"""
+
+    // # TODO: ISSUE #35: encrypt/decrypt
+    @Type(() => ExtendedData)
+    extended_data?: ExtendedData = undefined;
+    // """
+    // an optional field of arbitrary data, such as the value of a write-in candidate
+    // """
+    name: string;
+
+    // 1 implies a vote for. 0 implies no vote.
+    public constructor(object_id: string, sequence_order: number, name: string, vote: number, is_placeholder_selection: boolean, extened_data?: ExtendedData){
+        this.object_id = object_id;
+        this.sequence_order = sequence_order;
+        this.name = name;
+        this.vote = vote;
+        this.is_placeholder_selection = is_placeholder_selection;
+        this.extended_data = extened_data;
+    }
+
     public equals(any: PlaintextBallotSelection): boolean {
-        return this.name === any.name && this.choice === any.choice;
+        return this.name === any.name && this.vote === any.vote;
     }
 }
 
