@@ -3,12 +3,13 @@ import { DisjunctiveChaumPedersenProof,
     ConstantChaumPedersenProof,
     } from "./chaum_pedersen"
 
-import {ElGamalCiphertext, ElGamalKeyPair} from "./elgamal"
-import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q } from "./group"
+import {ElGamalCiphertext, ElGamalKeyPair, elgamal_add} from "./elgamal"
+import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q, add_q, ElementModQorInt } from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {Transform, Type} from "class-transformer";
 import "reflect-metadata";
+import { get_optional } from "./utils";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
 /**
@@ -288,7 +289,111 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         this.proof = proof;
     }
 
+    public equals(other: any): boolean {
+        return (
+            other instanceof CiphertextBallotContest
+            && this.object_id === other.object_id
+            && _list_eq(this.ballot_selections, other.ballot_selections)
+            && this.description_hash === other.description_hash
+            && this.crypto_hash === other.crypto_hash
+            && this.nonce === other.nonce
+            && this.proof === other.proof
+        );
+    }
+        
+    public notEquals(other: any): boolean {
+        return !this.equals(other);
+    }
+        
 
+    public aggregate_nonce(): ElementModQ | undefined {
+        // """
+        // :return: an aggregate nonce for the contest composed of the nonces of the selections
+        // """
+        return _ciphertext_ballot_contest_aggregate_nonce(
+            this.object_id, this.ballot_selections
+        )
+    }
+        
+    public elgamal_accumulate(): ElGamalCiphertext {
+        // """
+        // Add the individual ballot_selections `message` fields together, suitable for use
+        // in a Chaum-Pedersen proof.
+        // """
+        return _ciphertext_ballot_elgamal_accumulate(this.ballot_selections);
+    }
+        
+
+    public is_valid_encryption(
+        encryption_seed: ElementModQ,
+        elgamal_public_key: ElementModP,
+        crypto_extended_base_hash: ElementModQ,
+    ): boolean {
+        // """
+        // Given an encrypted BallotContest, validates the encryption state against a specific seed and public key
+        // by verifying the accumulated sum of selections match the proof.
+        // Calling this function expects that the object is in a well-formed encrypted state
+        // with the `ballot_selections` populated with valid encrypted ballot selections,
+        // the ElementModQ `description_hash`, the ElementModQ `crypto_hash`,
+        // and the ConstantChaumPedersenProof all populated.
+        // Specifically, the seed in this context is the hash of the ContestDescription,
+        // or whatever `ElementModQ` was used to populate the `description_hash` field.
+        // """
+        if (encryption_seed !== this.description_hash) {
+            // log_warning(
+            //     (
+            //         f"mismatching contest hash: {self.object_id} expected({str(encryption_seed)}), "
+            //         f"actual({str(self.description_hash)})"
+            //     )
+            // )
+            console.log("mismatching contest hash!");
+            return false;
+        }
+            
+
+        let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+        if (this.crypto_hash !== recalculated_crypto_hash) {
+            // log_warning(
+            //     (
+            //         f"mismatching crypto hash: {self.object_id} expected({str(recalculated_crypto_hash)}), "
+            //         f"actual({str(self.crypto_hash)})"
+            //     )
+            // )
+            console.log("mismatching crypto hash!");
+            return false;
+        }
+            
+
+        // NOTE: this check does not verify the proofs of the individual selections by design.
+
+        if (this.proof === undefined) {
+            // log_warning(f"no proof exists for: {self.object_id}")
+            console.log(`no proof exists for: ${this.object_id}`);
+            return false;
+        }
+            
+
+        let computed_ciphertext_accumulation = this.elgamal_accumulate();
+
+        // # Verify that the contest ciphertext matches the elgamal accumulation of all selections
+        if (this.ciphertext_accumulation !== computed_ciphertext_accumulation) {
+            // log_warning(
+            //     f"ciphertext does not equal elgamal accumulation for : {self.object_id}"
+            // )
+            console.log(`ciphertext does not equal elgamal accumulation for : ${this.object_id}`);
+            return false;
+        }
+            
+
+        // # Verify the sum of the selections matches the proof
+        return this.proof.is_valid(
+            computed_ciphertext_accumulation,
+            elgamal_public_key,
+            crypto_extended_base_hash,
+        )
+    }
+        
+    
 
     // public num_selections(): number{
     //     return this.selections.length;
@@ -372,7 +477,60 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
         this.proof = proof;
     }
 
+    public is_valid_encryption(
+        encryption_seed: ElementModQ,
+        elgamal_public_key: ElementModP,
+        crypto_extended_base_hash: ElementModQ,
+    ): boolean {
+        // """
+        // Given an encrypted BallotSelection, validates the encryption state against a specific seed and public key.
+        // Calling this function expects that the object is in a well-formed encrypted state
+        // with the elgamal encrypted `message` field populated along with
+        // the DisjunctiveChaumPedersenProof`proof` populated.
+        // the ElementModQ `description_hash` and the ElementModQ `crypto_hash` are also checked.
 
+        // :param encryption_seed: the hash of the SelectionDescription, or
+        //                   whatever `ElementModQ` was used to populate the `description_hash` field.
+        // :param elgamal_public_key: The election public key
+        // """
+
+        if (encryption_seed !== this.description_hash) {
+            // log_warning(
+            //     (
+            //         f"mismatching selection hash: {self.object_id} expected({str(encryption_seed)}), "
+            //         f"actual({str(self.description_hash)})"
+            //     )
+            // )
+            console.log("mismatching selection hash!");
+            return false;
+        }
+            
+
+        let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+        if (this.crypto_hash !== recalculated_crypto_hash) {
+            // log_warning(
+            //     (
+            //         f"mismatching crypto hash: {self.object_id} expected({str(recalculated_crypto_hash)}), "
+            //         f"actual({str(self.crypto_hash)})"
+            //     )
+            // )
+            console.log("mismatching crypto hash!");
+            return false;
+        }
+            
+
+        if (this.proof === null) {
+            // log_warning(f"no proof exists for: {self.object_id}")
+            console.log(`no proof exists for: ${this.object_id}`);
+            return false;
+        }
+            
+
+        return get_optional(this.proof).is_valid(
+            this.ciphertext, elgamal_public_key, crypto_extended_base_hash
+        );
+    }
+        
 
     public crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
         return _ciphertext_ballot_selection_crypto_hash_with(this.object_id, encryption_seed, this.ciphertext)
@@ -580,6 +738,96 @@ export function _ciphertext_ballot_selection_crypto_hash_with(
     return hash_elems([object_id, encryption_seed, ciphertext.crypto_hash()]);
 }
 
+
+export function _ciphertext_ballot_elgamal_accumulate(
+    ballot_selections: CiphertextBallotSelection[],
+): ElGamalCiphertext {
+    let ciphertexts: ElGamalCiphertext[] = [];
+    for (let selection of ballot_selections) {
+        ciphertexts.push(selection.ciphertext);
+    }
+    return elgamal_add(...ciphertexts);
+}
+    
+
+export function _ciphertext_ballot_contest_aggregate_nonce(
+    object_id: string, ballot_selections: CiphertextBallotSelection[]
+) : ElementModQ | undefined {
+    let selection_nonces: ElementModQ[] = [];
+    for (let i = 0; i < ballot_selections.length; i++) {
+        let selection = ballot_selections[i];
+        if (selection.nonce === undefined) {
+            // log_warning(
+            //     f"missing nonce values for contest {object_id} cannot calculate aggregate nonce"
+            // )
+            console.log(`missing nonce values for contest ${object_id} cannot calculate aggregat nonce`);
+            return undefined;
+        }
+            
+        selection_nonces.push(selection.nonce);
+    }
+        
+
+    return add_q(...selection_nonces);
+}
+    
+
+export function make_ciphertext_ballot_selection(
+    object_id: string,
+    sequence_order: number,
+    description_hash: ElementModQ,
+    ciphertext: ElGamalCiphertext,
+    elgamal_public_key: ElementModP,
+    crypto_extended_base_hash: ElementModQ,
+    proof_seed: ElementModQ,
+    selection_representation: number,
+    is_placeholder_selection: boolean = false,
+    nonce: ElementModQ | undefined = undefined,
+    crypto_hash: ElementModQ | undefined = undefined,
+    proof: DisjunctiveChaumPedersenProof | undefined = undefined,
+    extended_data: ElGamalCiphertext | undefined = undefined,
+): CiphertextBallotSelection {
+    // """
+    // Constructs a `CipherTextBallotSelection` object. Most of the parameters here match up to fields
+    // in the class, but this helper function will optionally compute a Chaum-Pedersen proof if the
+    // given nonce isn't `None`. Likewise, if a crypto_hash is not provided, it will be derived from
+    // the other fields.
+    // """
+    if (crypto_hash === null) {
+        crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(
+            object_id, description_hash, ciphertext
+        );
+    }
+        
+
+    if (proof === null) {
+        // proof = 
+        // flatmap_optional(
+        //     nonce,
+        //     lambda n: make_disjunctive_chaum_pedersen(
+        //         ciphertext,
+        //         n,
+        //         elgamal_public_key,
+        //         crypto_extended_base_hash,
+        //         proof_seed,
+        //         selection_representation,
+        //     ),
+        // )
+    }
+        
+
+    return new CiphertextBallotSelection(
+        object_id,
+        sequence_order,
+        description_hash,
+        ciphertext,
+        get_optional(crypto_hash),
+        is_placeholder_selection,
+        nonce,
+        proof,
+    )
+}
+    
 
 // export function make_ciphertext_ballot_selection(
 //     object_id: string,
