@@ -9,10 +9,10 @@ import { ElementModQ,
     g_pow_p,
     mult_p,
     pow_p,
-    // a_minus_b_q,
+    a_minus_b_q,
     a_plus_bc_q,
     add_q,
-    // negate_q,
+    negate_q,
     int_to_q,
     ZERO_MOD_Q,
     mult_inv_p,
@@ -75,7 +75,7 @@ export class DisjunctiveChaumPedersenProof {
                        c: ElementModQ,
                        v0: ElementModQ,
                        v1: ElementModQ,
-                       usage: ProofUsage) {
+                       usage: ProofUsage = ProofUsage.SelectionValue) {
         this.proof_zero_pad = a0;
         this.proof_zero_data = b0;
         this.proof_one_pad = a1;
@@ -180,7 +180,7 @@ export class ConstantChaumPedersenProof {
                        challenge: ElementModQ,
                        response: ElementModQ,
                        constant: bigint,
-                       usage: ProofUsage) {
+                       usage: ProofUsage = ProofUsage.SelectionLimit) {
         this.pad = pad;
         this.data = data;
         this.challenge = challenge;
@@ -326,27 +326,27 @@ export function make_disjunctive_chaum_pedersen_one(
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
-// export function make_constant_chaum_pedersen(
-//     message: ElGamalCiphertext,
-//     constant: bigint,
-//     r: ElementModQ,
-//     k: ElementModP,
-//     seed: ElementModQ,
-//     base_hash: ElementModQ,
-// ): ConstantChaumPedersenProof{
-//     const [alpha, beta] = [message.pad, message.data];
-//
-//     // Pick one random number in Q.
-//     const nonce = new Nonces(seed, "constant-chaum-pedersen-proof")
-//     const u = nonce.get(0);
-//
-//     const a = g_pow_p(u);  // 𝑔^𝑢𝑖 mod 𝑝
-//     const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
-//     const c = hash_elems([base_hash, alpha, beta, a, b]);  // sha256(𝑄', A, B, a, b)
-//     const v = a_plus_bc_q(u, c, r);
-//
-//     return new ConstantChaumPedersenProof(a, b, c, v, constant);
-// }
+export function make_constant_chaum_pedersen(
+    message: ElGamalCiphertext,
+    constant: bigint,
+    r: ElementModQ,
+    k: ElementModP,
+    seed: ElementModQ,
+    base_hash: ElementModQ,
+): ConstantChaumPedersenProof{
+    const [alpha, beta] = [message.pad, message.data];
+
+    // Pick one random number in Q.
+    const nonce = new Nonces(seed, "constant-chaum-pedersen-proof")
+    const u = nonce.get(0);
+
+    const a = g_pow_p(u);  // 𝑔^𝑢𝑖 mod 𝑝
+    const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
+    const c = hash_elems([base_hash, alpha, beta, a, b]);  // sha256(𝑄', A, B, a, b)
+    const v = a_plus_bc_q(u, c, r);
+
+    return new ConstantChaumPedersenProof(a, b, c, v, constant);
+}
 
 export class ChaumPedersenProofGeneric {
     // General-purpose Chaum-Pedersen proof object, demonstrating that the prover knows the exponent

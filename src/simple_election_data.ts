@@ -4,6 +4,7 @@ import { DisjunctiveChaumPedersenProof,
     make_chaum_pedersen_generic,
     make_disjunctive_chaum_pedersen_one,
     make_disjunctive_chaum_pedersen,
+    make_constant_chaum_pedersen,
     } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair, elgamal_add} from "./elgamal"
@@ -13,6 +14,7 @@ import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {Transform, Type} from "class-transformer";
 import "reflect-metadata";
 import { get_optional } from "./utils";
+import { create_ballot_hash } from "./simple_elections";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
 /**
@@ -62,9 +64,9 @@ export class PlaintextBallot implements ElectionObjectBase {
     @Type(() => PlaintextBallotContest)
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
-    public constructor(object_id: string, ballot_id: string, contests: PlaintextBallotContest[]){
+    public constructor(object_id: string, style_id: string, contests: PlaintextBallotContest[]){
         this.object_id = object_id;
-        this.style_id = ballot_id;
+        this.style_id = style_id;
         this.contests = contests;
     }
 
@@ -117,7 +119,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
     ballot_selections: PlaintextBallotSelection[];
     // The voter's selections. 1 implies a vote for. 0 implies no vote.
 
-    public constructor(sequence_order: number, object_id: string, selections: PlaintextBallotSelection[]){
+    public constructor(object_id: string, sequence_order: number, selections: PlaintextBallotSelection[]){
         this.sequence_order = sequence_order;
         this.object_id = object_id;
         this.ballot_selections = selections;
@@ -229,13 +231,13 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
     // """
     // an optional field of arbitrary data, such as the value of a write-in candidate
     // """
-    name: string;
+    // name: string;
 
     // 1 implies a vote for. 0 implies no vote.
-    public constructor(object_id: string, sequence_order: number, name: string, vote: number, is_placeholder_selection: boolean, extened_data?: ExtendedData){
+    public constructor(object_id: string, sequence_order: number, vote: number, is_placeholder_selection: boolean, extened_data?: ExtendedData){
         this.object_id = object_id;
         this.sequence_order = sequence_order;
-        this.name = name;
+        // this.name = name;
         this.vote = vote;
         this.is_placeholder_selection = is_placeholder_selection;
         this.extended_data = extened_data;
@@ -895,7 +897,7 @@ export function _ciphertext_ballot_context_crypto_hash(
     encryption_seed: ElementModQ):ElementModQ{
     if (ballot_selections.length == 0){
         console.log(
-            "mismatching ballot_selections state: {object_id} expected(some), actual(none)");
+            `mismatching ballot_selections state: ${object_id} expected(some), actual(none)`);
         return ZERO_MOD_Q;
     }
     const selection_hashes = []
@@ -930,9 +932,6 @@ export function _ciphertext_ballot_contest_aggregate_nonce(
     for (let i = 0; i < ballot_selections.length; i++) {
         let selection = ballot_selections[i];
         if (selection.nonce === undefined) {
-            // log_warning(
-            //     f"missing nonce values for contest {object_id} cannot calculate aggregate nonce"
-            // )
             console.log(`missing nonce values for contest ${object_id} cannot calculate aggregat nonce`);
             return undefined;
         }
@@ -979,6 +978,138 @@ export function make_ciphertext_ballot_selection(
         extended_data
     )
 }
+
+export function make_ciphertext_ballot_contest(
+    object_id: string,
+    sequence_order: number,
+    description_hash: ElementModQ,
+    ballot_selections: CiphertextBallotSelection[],
+    elgamal_public_key: ElementModP,
+    crypto_extended_base_hash: ElementModQ,
+    proof_seed: ElementModQ,
+    number_elected: number,
+    crypto_hash?: ElementModQ,
+    proof?: ConstantChaumPedersenProof,
+    nonce?: ElementModQ,
+): CiphertextBallotContest {
+    // """
+    // Constructs a `CipherTextBallotContest` object. Most of the parameters here match up to fields
+    // in the class, but this helper function will optionally compute a Chaum-Pedersen proof if the
+    // ballot selections include their encryption nonces. Likewise, if a crypto_hash is not provided,
+    // it will be derived from the other fields.
+    // """
+    if (crypto_hash === undefined) {
+        crypto_hash = _ciphertext_ballot_context_crypto_hash(
+            object_id, ballot_selections, description_hash
+        )
+    }
+        
+    let aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
+    let elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
+    if (proof === undefined) {
+        proof = make_constant_chaum_pedersen(
+            elgamal_accumulation,
+            BigInt(number_elected),
+            get_optional(aggregate),
+            elgamal_public_key,
+            proof_seed,
+            crypto_extended_base_hash,
+        );
+    }
+        
+    return new CiphertextBallotContest(
+        object_id,
+        sequence_order,
+        description_hash,
+        ballot_selections,
+        elgamal_accumulation,
+        crypto_hash,
+        nonce,
+        proof,
+    );
+}
+
+export function make_ciphertext_ballot(
+    object_id: string,
+    style_id: string,
+    manifest_hash: ElementModQ,
+    contests: CiphertextBallotContest[],
+    code_seed?: ElementModQ,
+    nonce?: ElementModQ,
+    timestamp?: number,
+    ballot_code?: ElementModQ,
+): CiphertextBallot {
+    // """
+    // Makes a `CiphertextBallot`, initially in the state where it's neither been cast nor spoiled.
+    // :param object_id: the object_id of this specific ballot
+    // :param style_id: The `object_id` of the `BallotStyle` in the `Election` Manifest
+    // :param manifest_hash: Hash of the election manifest
+    // :param crypto_base_hash: Hash of the cryptographic election context
+    // :param contests: List of contests for this ballot
+    // :param timestamp: Timestamp at which the ballot encryption is generated in tick
+    // :param code_seed: Seed for ballot code
+    // :param nonce: optional nonce used as part of the encryption process
+    // """
+
+    if (contests.length === 0) {
+        console.log("ciphertext ballot with no contests");
+    }
+
+    let contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
+
+    timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
+    if (code_seed === undefined) {
+        code_seed = manifest_hash;
+    }
+        
+    if (ballot_code === undefined) {
+        ballot_code = get_ballot_code(code_seed, timestamp, contest_hash);
+    }
+        
+
+    return new CiphertextBallot(
+        object_id,
+        style_id,
+        manifest_hash,
+        code_seed,
+        contests,
+        ballot_code,
+        timestamp,
+        contest_hash,
+        nonce,
+    )
+    
+}
+
+export function get_ballot_code(
+    prev_code: ElementModQ, timestamp: number, ballot_hash: ElementModQ
+): ElementModQ {
+    // """
+    // Get the rotated code for a particular ballot.
+    // :param prev_code: Previous code or starting hash from device
+    // :param timestamp: Timestamp in ticks
+    // :param ballot_hash: Hash of ballot
+    // :return: code
+    // """
+    return hash_elems([prev_code, timestamp, ballot_hash]);
+}
+
+export function to_ticks(date_time: Date): number {
+    // """
+    // Return the number of ticks for a date time.
+    // Ticks are defined here as number of seconds since the unix epoch (00:00:00 UTC on 1 January 1970)
+    // :param date_time: Date time to convert
+    // :return: number of ticks
+    // """
+
+    // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time 
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
+    let ticks = date_time.getTime() / 1000
+    return ticks;
+}
+    
+    
+    
 
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 
