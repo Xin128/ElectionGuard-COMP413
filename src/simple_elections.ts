@@ -66,7 +66,7 @@ export function encrypt_selection(selection: PlaintextBallotSelection,
     const  selection_description_hash = selection_description.crypto_hash()
 
     const nonce_sequence = new Nonces(selection_description_hash, nonce_seed);
-    const selection_nonce = nonce.get(selection_description.sequence_order);
+    const selection_nonce = nonce_sequence.get(selection_description.sequence_order);
     const selection_representation = selection.vote;
     const disjunctive_chaum_pedersen_nonce = nonce_sequence.next();
 
