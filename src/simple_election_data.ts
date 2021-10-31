@@ -1,6 +1,9 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
     ConstantChaumPedersenProof,
+    make_chaum_pedersen_generic,
+    make_disjunctive_chaum_pedersen_one,
+    make_disjunctive_chaum_pedersen,
     } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair, elgamal_add} from "./elgamal"
@@ -464,7 +467,8 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
       crypto_hash: ElementModQ,
       is_placeholder_selection: boolean,
       nonce?: ElementModQ,
-      proof?: DisjunctiveChaumPedersenProof
+      proof?: DisjunctiveChaumPedersenProof,
+      extended_data?: ElGamalCiphertext,
                        ){
         super();
         this.object_id = object_id;
@@ -801,18 +805,7 @@ export function make_ciphertext_ballot_selection(
         
 
     if (proof === null) {
-        // proof = 
-        // flatmap_optional(
-        //     nonce,
-        //     lambda n: make_disjunctive_chaum_pedersen(
-        //         ciphertext,
-        //         n,
-        //         elgamal_public_key,
-        //         crypto_extended_base_hash,
-        //         proof_seed,
-        //         selection_representation,
-        //     ),
-        // )
+        proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
     }
         
 

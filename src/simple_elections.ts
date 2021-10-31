@@ -13,11 +13,13 @@ import {
     CiphertextBallotContest,
     // _ciphertext_ballot_context_crypto_hash,
     PlaintextBallotContest,
-    CiphertextElectionContext
+    CiphertextElectionContext,
+    make_ciphertext_ballot_selection
 } from "./simple_election_data"
 // import { ElGamalCiphertext } from "./elgamal"
 import { ElementModQ,
     TWO_MOD_Q,
+    ElementModP,
     // add_q,
     // R
 } from "./group"
@@ -28,15 +30,25 @@ import {get_optional} from "./utils";
 import {
     hash_elems } from "./hash"
 import { InternalManifest } from "./manifest"
-import {from_file_to_class} from "./serialization";
+import {from_file_to_class, object_log} from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
 
 // const PLACEHOLDER_NAME = "PLACEHOLDER"
 
-// export function encrypt_selection(context: CiphertextElectionContext,
-//                                   selection: PlaintextBallotSelection,
-//                                   seed_nonce: ElementModQ):
-//     ([CiphertextBallotSelection, ElementModQ] | null) {
+export function encrypt_selection(context: CiphertextElectionContext,
+                                  selection: PlaintextBallotSelection,
+                                  seed_nonce: ElementModQ,
+
+                                  selection: PlaintextBallotSelection,
+                                  selection_description: undefined,
+                                    elgamal_public_key: ElementModP,
+                                    crypto_extended_base_hash: ElementModQ,
+                                    nonce_seed: ElementModQ,
+                                    is_placeholder: Boolean = false,
+                                    should_verify_proofs: Boolean = true,
+                                  
+                                  ):
+    (CiphertextBallotSelection | null) {
 //     //Given a selection and the necessary election context, encrypts the selection and returns the
 //     //     encrypted selection plus the encryption nonce. If anything goes wrong, `None` is returned.
 //     const public_key = context.elgamal_public_key;
@@ -52,14 +64,17 @@ import {sequence_order_sort} from "./election_object_base";
 //         seed_nonce,
 //         selection.choice
 //     )
-//     const cipher = make_ciphertext_ballot_selection(selection.name, seed_nonce, encryption, null, zero_or_one_pad);
-//     return [cipher, seed_nonce]
-// }
+    const cipher = make_ciphertext_ballot_selection(selection.name, seed_nonce, encryption, null, zero_or_one_pad);
+    return cipher
+}
 
 
-// export function encrypt_ballot_contests(ballot:PlaintextBallot, description: InternalManifest, context: CiphertextElectionContext, nonce_seed:ElementModQ,):CiphertextBallotContest[]|null {
-//     const encrypted_contests: CiphertextBallotContest[] = [];
-//     for (const contest of ballot.contests) {
+export function encrypt_ballot_contests(ballot:CiphertextBallot, 
+                                        description: InternalManifest | undefined, 
+                                        context: CiphertextElectionContext | undefined, 
+                                        nonce_seed:ElementModQ,): CiphertextBallotContest[]|null {
+    const encrypted_contests: CiphertextBallotContest[] = [];
+    // for (const contest of ballot.contests) {
 //         const nonces = [];
 //         const num_selection = contest.selections.length;
 //         const n = new Nonces(nonce_seed);
@@ -139,8 +154,41 @@ import {sequence_order_sort} from "./election_object_base";
 //         encrypted_contests.push(cipher);
 //     }
 //
-//     return encrypted_contests;
-// }
+    // 10/30/2021: Re-edit from Xin!
+    // # Only iterate on contests for this specific ballot style
+    // for (const ballot_style_contest of description.get_contests_for(ballot.style_id)) {
+    //     let use_contest = null;
+    //     for (const contest of ballot.contests) {
+    //         if (contest.object_id == ballot_style_contest.object_id) {
+    //             use_contest = contest
+    //             break
+    //         }
+    //     }
+    //     // no selections provided for the contest, so create a placeholder contest
+    //     if (use_contest == null) {
+    //         use_contest = contest_from(ballot_style_contest)
+    //     }
+    for (const contest of ballot.contests) {
+        // const encrypted_contest = encrypt_contest(
+        //     undefined,
+        //     undefined,
+        //     context.elgamal_public_key,
+        //     context.crypto_extended_base_hash,
+        //     nonce_seed,
+        // )
+
+        // if (encrypted_contest == null) {
+        //     return null
+        // }
+
+        encrypted_contests.push(contest);
+        console.log("encrypted_contest", object_log(contest));
+    }
+    return encrypted_contests;
+}
+
+
+
 
 //change parameter to accept null only for testing and demo purpose!!!
 export function encrypt_ballot(ballot: PlaintextBallot | undefined,
@@ -170,6 +218,21 @@ export function encrypt_ballot(ballot: PlaintextBallot | undefined,
     // const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,manifest, context, nonce_seed ));
     // console.dir(encrypted_contests[0].selections, { depth: 100 });
     const inputs = from_file_to_class();
+    
+    // const nonce_seed = CiphertextBallot.nonce_seed(
+    //     inputs.manifest_hash,
+    //     inputs.object_id,
+    //     inputs.nonce,
+    // )
+    const nonce_seed = hash_elems([inputs.manifest_hash,inputs.object_id, inputs.nonce]);
+    
+    const encrypted_contests = encrypt_ballot_contests(
+        inputs, undefined, context, nonce_seed
+    )
+    if (encrypted_contests == null) {
+        return null
+    }
+
 
     const contest_hash = create_ballot_hash(inputs.object_id, inputs.manifest_hash, inputs.contests);
     const encrypted_ballot = new CiphertextBallot(
@@ -177,7 +240,7 @@ export function encrypt_ballot(ballot: PlaintextBallot | undefined,
       inputs.style_id,
       inputs.manifest_hash,
       inputs.code_seed,
-      inputs.contests,
+      encrypted_contests,
       inputs.code,
       inputs.timestamp,
       contest_hash,
