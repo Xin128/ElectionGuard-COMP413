@@ -390,42 +390,42 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
     //         or whatever `ElementModQ` was used to populate the `manifest_hash` field.
     //
 
-    // //done, but need supports in contest
-    // public  is_valid_encryption(
-    //   encryption_seed: ElementModQ,
-    //   elgamal_public_key: ElementModP,
-    //   crypto_extended_base_hash: ElementModQ,
-    // ): boolean{
-    //     if (encryption_seed != this.manifest_hash) {
-    //         return false;
-    //     }
-    //     const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
-    //    if (this.crypto_hash != recalculated_crypto_hash) {
-    //         return false;
-    //    }
-    //
-    //    //Check the proofs on the ballot
-    //   const valid_proofs: boolean[] = [];
-    //    for (const contest of this.contests) {
-    //      for (const selection in contest.ballot_selections) {
-    //        valid_proofs.push(
-    //          selection.is_valid_encryption(
-    //            selection.description_hash,
-    //            elgamal_public_key,
-    //            crypto_extended_base_hash
-    //          )
-    //        );
-    //        valid_proofs.push(
-    //          contest.is_valid_encryption(
-    //            contest.description_hash,
-    //            elgamal_public_key,
-    //            crypto_extended_base_hash
-    //          )
-    //        );
-    //      }
-    //    }
-    //   return valid_proofs.every((elem)=>elem);
-    // }
+    //done, but need supports in contest
+    public  is_valid_encryption(
+      encryption_seed: ElementModQ,
+      elgamal_public_key: ElementModP,
+      crypto_extended_base_hash: ElementModQ,
+    ): boolean{
+        if (encryption_seed != this.manifest_hash) {
+            return false;
+        }
+        const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+       if (this.crypto_hash != recalculated_crypto_hash) {
+            return false;
+       }
+    
+       //Check the proofs on the ballot
+      const valid_proofs: boolean[] = [];
+       for (const contest of this.contests) {
+         for (const selection of contest.ballot_selections) {
+           valid_proofs.push(
+             selection.is_valid_encryption(
+               selection.description_hash,
+               elgamal_public_key,
+               crypto_extended_base_hash
+             )
+           );
+           valid_proofs.push(
+             contest.is_valid_encryption(
+               contest.description_hash,
+               elgamal_public_key,
+               crypto_extended_base_hash
+             )
+           );
+         }
+       }
+      return valid_proofs.every((elem)=>elem);
+    }
 
 
 
@@ -534,26 +534,14 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         // or whatever `ElementModQ` was used to populate the `description_hash` field.
         // """
         if (encryption_seed !== this.description_hash) {
-            // log_warning(
-            //     (
-            //         f"mismatching contest hash: {self.object_id} expected({str(encryption_seed)}), "
-            //         f"actual({str(self.description_hash)})"
-            //     )
-            // )
-            console.log("mismatching contest hash!");
+            console.log(`mismatching contest hash: ${this.object_id} expected(${encryption_seed.toString()}), actual(${this.description_hash.toString()})`);
             return false;
         }
             
 
         let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
-            // log_warning(
-            //     (
-            //         f"mismatching crypto hash: {self.object_id} expected({str(recalculated_crypto_hash)}), "
-            //         f"actual({str(self.crypto_hash)})"
-            //     )
-            // )
-            console.log("mismatching crypto hash!");
+            console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash})`);
             return false;
         }
             
@@ -561,7 +549,6 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         // NOTE: this check does not verify the proofs of the individual selections by design.
 
         if (this.proof === undefined) {
-            // log_warning(f"no proof exists for: {self.object_id}")
             console.log(`no proof exists for: ${this.object_id}`);
             return false;
         }
@@ -569,11 +556,8 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
 
         let computed_ciphertext_accumulation = this.elgamal_accumulate();
 
-        // # Verify that the contest ciphertext matches the elgamal accumulation of all selections
+        // Verify that the contest ciphertext matches the elgamal accumulation of all selections
         if (this.ciphertext_accumulation !== computed_ciphertext_accumulation) {
-            // log_warning(
-            //     f"ciphertext does not equal elgamal accumulation for : {self.object_id}"
-            // )
             console.log(`ciphertext does not equal elgamal accumulation for : ${this.object_id}`);
             return false;
         }
@@ -670,6 +654,7 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
         this.is_placeholder_selection = is_placeholder_selection;
         this.nonce = nonce;
         this.proof = proof;
+        this.extended_data = extended_data;
     }
 
     public is_valid_encryption(
@@ -690,32 +675,19 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
         // """
 
         if (encryption_seed !== this.description_hash) {
-            // log_warning(
-            //     (
-            //         f"mismatching selection hash: {self.object_id} expected({str(encryption_seed)}), "
-            //         f"actual({str(self.description_hash)})"
-            //     )
-            // )
-            console.log("mismatching selection hash!");
+            console.log(`mismatching selection hash: ${this.object_id} expected(${encryption_seed.toString()}), actual(${this.description_hash.toString()})`);
             return false;
         }
             
 
         let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
-            // log_warning(
-            //     (
-            //         f"mismatching crypto hash: {self.object_id} expected({str(recalculated_crypto_hash)}), "
-            //         f"actual({str(self.crypto_hash)})"
-            //     )
-            // )
-            console.log("mismatching crypto hash!");
+            console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash.toString()})`);
             return false;
         }
             
 
         if (this.proof === null) {
-            // log_warning(f"no proof exists for: {self.object_id}")
             console.log(`no proof exists for: ${this.object_id}`);
             return false;
         }
@@ -858,14 +830,20 @@ export class CiphertextElectionContext  {
     // the `joint public key (K)` in the specification
 
     commitment_hash: ElementModQ;
+    // the `commitment hash H(K 1,0 , K 2,0 ... , K n,0 )` of the public commitments
+    // guardians make to each other in the specification
 
     manifest_hash: ElementModQ;
+    // The hash of the election metadata
 
     crypto_base_hash: ElementModQ;
+    // The `base hash code (𝑄)` in the specification
 
     crypto_extended_base_hash: ElementModQ;
+    // The `extended base hash code (𝑄')` in specification
 
-    extended_data: Map<string, string>|null;
+    extended_data?: Map<string, string>;
+    // Data to allow extending the context for special cases.
 
     public constructor(
         number_of_guardians: number,
@@ -875,7 +853,7 @@ export class CiphertextElectionContext  {
         manifest_hash: ElementModQ,
         crypto_base_hash: ElementModQ,
         crypto_extended_base_hash: ElementModQ,
-        extended_data: Map<string, string>|null
+        extended_data?: Map<string, string>
     ){
         this.number_of_guardians = number_of_guardians;
         this.quorum = quorum;
@@ -894,7 +872,7 @@ export function make_ciphertext_election_context(
         elgamal_public_key:ElementModP,
         commitment_hash: ElementModQ,
         manifest_hash: ElementModQ,
-        extended_data: Map<string, string>|null
+        extended_data?: Map<string, string>
 ): CiphertextElectionContext{
     const crypto_base_hash = hash_elems(
         [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians,quorum,
@@ -998,6 +976,7 @@ export function make_ciphertext_ballot_selection(
         is_placeholder_selection,
         nonce,
         proof,
+        extended_data
     )
 }
 
