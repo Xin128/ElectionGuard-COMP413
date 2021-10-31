@@ -137,12 +137,13 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         }
         
         for (const placeholder of contest_description.placeholder_selections) {
-            let selection_placeholder = false;
+            let select_placeholder = false;
             if (selection_count < contest_description.number_elected) {
                 selection_count += 1;
-                selection_placeholder = true;
+                select_placeholder = true;
             }
-            encrypted_selection = encrypt_selection(
+            encrypted_selection = encrypt_selection(selection_from(placeholder, true, select_placeholder), placeholder, elgamal_public_key, crypto_extended_base_hash, contest_nonce, true, true)
+            encrypted_selections.push(get_optional(encrypted_selection))
         }
 
         const encrypted_contest = make_ciphertext_ballot_contest(
@@ -159,8 +160,7 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         return  encrypted_contest
                        }
 
-export function encrypt_ballot_contests(
-                                        ballot:CiphertextBallot, 
+export function encrypt_ballot_contests(ballot:CiphertextBallot, 
                                         description: InternalManifest | undefined, 
                                         context: CiphertextElectionContext | undefined, 
                                         nonce_seed:ElementModQ
