@@ -539,7 +539,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         }
             
 
-        let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+        const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
             console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash})`);
             return false;
@@ -554,7 +554,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         }
             
 
-        let computed_ciphertext_accumulation = this.elgamal_accumulate();
+        const computed_ciphertext_accumulation = this.elgamal_accumulate();
 
         // Verify that the contest ciphertext matches the elgamal accumulation of all selections
         if (this.ciphertext_accumulation !== computed_ciphertext_accumulation) {
@@ -680,7 +680,7 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
         }
             
 
-        let recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
+        const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
             console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash.toString()})`);
             return false;
@@ -915,8 +915,8 @@ export function _ciphertext_ballot_selection_crypto_hash_with(
 export function _ciphertext_ballot_elgamal_accumulate(
     ballot_selections: CiphertextBallotSelection[],
 ): ElGamalCiphertext {
-    let ciphertexts: ElGamalCiphertext[] = [];
-    for (let selection of ballot_selections) {
+    const ciphertexts: ElGamalCiphertext[] = [];
+    for (const selection of ballot_selections) {
         ciphertexts.push(selection.ciphertext);
     }
     return elgamal_add(...ciphertexts);
@@ -926,9 +926,9 @@ export function _ciphertext_ballot_elgamal_accumulate(
 export function _ciphertext_ballot_contest_aggregate_nonce(
     object_id: string, ballot_selections: CiphertextBallotSelection[]
 ) : ElementModQ | undefined {
-    let selection_nonces: ElementModQ[] = [];
+    const selection_nonces: ElementModQ[] = [];
     for (let i = 0; i < ballot_selections.length; i++) {
-        let selection = ballot_selections[i];
+        const selection = ballot_selections[i];
         if (selection.nonce === undefined) {
             console.log(`missing nonce values for contest ${object_id} cannot calculate aggregat nonce`);
             return undefined;
@@ -1002,8 +1002,8 @@ export function make_ciphertext_ballot_contest(
         )
     }
         
-    let aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
-    let elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
+    const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
+    const elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
     if (proof === undefined) {
         proof = make_constant_chaum_pedersen(
             elgamal_accumulation,
@@ -1053,7 +1053,7 @@ export function make_ciphertext_ballot(
         console.log("ciphertext ballot with no contests");
     }
 
-    let contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
+    const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
 
     timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
     if (code_seed === undefined) {
@@ -1102,7 +1102,7 @@ export function to_ticks(date_time: Date): number {
 
     // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
-    let ticks = date_time.getTime() / 1000
+    const ticks = date_time.getTime() / 1000
     return ticks;
 }
     
