@@ -595,11 +595,11 @@ export function make_ciphertext_ballot_selection(
     crypto_extended_base_hash: ElementModQ,
     proof_seed: ElementModQ,
     selection_representation: number,
-    is_placeholder_selection: boolean,
-    nonce: ElementModQ | null,
-    crypto_hash: ElementModQ|null,
-    proof: DisjunctiveChaumPedersenProof|null,
-    extended_data: ElGamalCiphertext|null):CiphertextBallotSelection{
+    is_placeholder_selection = false,
+    nonce?: ElementModQ,
+    crypto_hash?: ElementModQ,
+    proof?: DisjunctiveChaumPedersenProof,
+    extended_data?: ElGamalCiphertext):CiphertextBallotSelection{
     if (crypto_hash == null) {
         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, description_hash, ciphertext);
     }

@@ -32,21 +32,18 @@ import {
 import { InternalManifest } from "./manifest"
 import {from_file_to_class, object_log} from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
+import { Nonces } from "./nonces";
+import { elgamal_encrypt } from "./elgamal";
 
 // const PLACEHOLDER_NAME = "PLACEHOLDER"
 
-export function encrypt_selection(context: CiphertextElectionContext,
-                                  selection: PlaintextBallotSelection,
-                                  seed_nonce: ElementModQ,
-
-                                  selection: PlaintextBallotSelection,
+export function encrypt_selection(selection: PlaintextBallotSelection,
                                   selection_description: undefined,
                                     elgamal_public_key: ElementModP,
                                     crypto_extended_base_hash: ElementModQ,
                                     nonce_seed: ElementModQ,
-                                    is_placeholder: Boolean = false,
-                                    should_verify_proofs: Boolean = true,
-                                  
+                                    is_placeholder: boolean,
+                                    should_verify_proofs: boolean
                                   ):
     (CiphertextBallotSelection | null) {
 //     //Given a selection and the necessary election context, encrypts the selection and returns the
@@ -64,8 +61,32 @@ export function encrypt_selection(context: CiphertextElectionContext,
 //         seed_nonce,
 //         selection.choice
 //     )
-    const cipher = make_ciphertext_ballot_selection(selection.name, seed_nonce, encryption, null, zero_or_one_pad);
-    return cipher
+    
+    // const cipher = make_ciphertext_ballot_selection(selection.name, seed_nonce, encryption, null, zero_or_one_pad);
+    const  selection_description_hash = selection_description.crypto_hash()
+
+    const nonce_sequence = new Nonces(selection_description_hash, nonce_seed);
+    const selection_nonce = nonce.get(selection_description.sequence_order);
+    const selection_representation = selection.vote;
+    const disjunctive_chaum_pedersen_nonce = nonce_sequence.next();
+
+    const elgamal_encryption = elgamal_encrypt(
+            selection_representation, selection_nonce, elgamal_public_key
+        )
+    
+    const encrypted_selection = make_ciphertext_ballot_selection(
+        selection.object_id,
+        selection.sequence_order,
+        selection_description_hash,
+        get_optional(elgamal_encryption),
+        elgamal_public_key,
+        crypto_extended_base_hash,
+        disjunctive_chaum_pedersen_nonce,
+        selection_representation,
+        is_placeholder,
+        selection_nonce,
+    );
+    return encrypted_selection
 }
 
 

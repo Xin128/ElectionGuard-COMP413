@@ -30,7 +30,7 @@ describe("TestPart2", () => {
         const encryption_seed = new ElementModQ(BigInt('52523'));
         ballots.forEach((ballot) => {
             // eslint-disable prefer-const
-            const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, manifest, ciphertext,encryption_seed, null));
+            const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, manifest, ciphertext,encryption_seed, undefined));
             console.log('encrypted_ballot', (encrypted_ballot));
             // eslint-disable-next-line prefer-const
             // let decrypted_ballot: PlaintextBallotWithProofs = decrypt_ballot(context, encrypted_ballot, seed_nonce);
