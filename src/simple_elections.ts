@@ -29,7 +29,7 @@ import * as cp from "./chaum_pedersen"
 import {get_optional} from "./utils";
 import {
     hash_elems } from "./hash"
-import { InternalManifest } from "./manifest"
+import { ContestDescriptionWithPlaceholders, InternalManifest, SelectionDescription } from "./manifest"
 import {from_file_to_class, object_log} from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
 import { Nonces } from "./nonces";
@@ -52,7 +52,7 @@ export function selection_from(
 
 
 export function encrypt_selection(selection: PlaintextBallotSelection,
-                                  selection_description: SelectionDescription | undefined,
+                                  selection_description: SelectionDescription ,
                                     elgamal_public_key: ElementModP,
                                     crypto_extended_base_hash: ElementModQ,
                                     nonce_seed: ElementModQ,
@@ -85,7 +85,7 @@ export function encrypt_selection(selection: PlaintextBallotSelection,
     const disjunctive_chaum_pedersen_nonce = nonce_sequence.next();
 
     const elgamal_encryption = elgamal_encrypt(
-            selection_representation, selection_nonce, elgamal_public_key
+            BigInt(selection_representation), selection_nonce, elgamal_public_key
         )
     
     const encrypted_selection = make_ciphertext_ballot_selection(
@@ -115,7 +115,7 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         const contest_description_hash = contest_description.crypto_hash();
         const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
         const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
-        const chaum_pedersen_nonce = next(iter(nonce_sequence));
+        const chaum_pedersen_nonce = nonce_sequence.next();
         const encrypted_selections: CiphertextBallotSelection[] = [];
         let encrypted_selection = null;
         let selection_count  = 0; 

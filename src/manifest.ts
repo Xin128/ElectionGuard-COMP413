@@ -199,7 +199,7 @@ export class GeopoliticalUnit extends CryptoHashable implements ElectionObjectBa
 /**
  * A BallotStyle works as a key to uniquely specify a set of contests. See also `ContestDescription`.
  */
-class BallotStyle extends CryptoHashable implements ElectionObjectBase {
+export class BallotStyle extends CryptoHashable implements ElectionObjectBase {
   object_id: string;
 
   geopolitical_unit_ids?: string[] = undefined;
@@ -225,7 +225,7 @@ class BallotStyle extends CryptoHashable implements ElectionObjectBase {
  * Use this entity to describe a political party that can then be referenced from other entities.
  * See: https://developers.google.com/elections-data/reference/party
  */
-class Party extends CryptoHashable implements ElectionObjectBase {
+export class Party extends CryptoHashable implements ElectionObjectBase {
   object_id: string;
   @Type(() => InternationalizedText)
   name: InternationalizedText = new InternationalizedText();
@@ -265,7 +265,7 @@ class Party extends CryptoHashable implements ElectionObjectBase {
  * would be included in the model to represent the `affirmative` and `negative`
  * selections for the contest.  See the wiki, readme's, and tests in this repo for more info
  */
-class Candidate extends CryptoHashable implements ElectionObjectBase {
+export class Candidate extends CryptoHashable implements ElectionObjectBase {
   object_id:string;
   @Type(() => InternationalizedText)
   name: InternationalizedText = new InternationalizedText();
@@ -307,7 +307,7 @@ class Candidate extends CryptoHashable implements ElectionObjectBase {
  * For a given election, the sequence of selections displayed to a user may be different
  * however that informat
  */
-class SelectionDescription extends CryptoHashable implements OrderedObjectBase {
+export class SelectionDescription extends CryptoHashable implements OrderedObjectBase {
   object_id: string;
   sequence_order: number;
 
