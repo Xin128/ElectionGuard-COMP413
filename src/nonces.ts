@@ -4,6 +4,7 @@ import { hash_elems } from "./hash"
 
 export class Nonces {
     __seed: ElementModQ;
+    __idx = 0;
     public constructor(seed: ElementModQ, ...header: (ElementModPOrQ | string)[]) {
         if (header.length > 0) {
             const hash_lst:(ElementModPOrQ | string)[] = [seed,...header];
@@ -21,6 +22,11 @@ export class Nonces {
         const hash_lst:(ElementModQ | number | string)[] = [this.__seed,item];
         hash_lst.concat(headers);
         return hash_elems(hash_lst);
+    }
+    public next(): ElementModQ {
+        const newNonce = this.get(this.__idx);
+        this.__idx++;
+        return newNonce;
     }
 
     public slice(start: number, end:number): ElementModQ[] {
