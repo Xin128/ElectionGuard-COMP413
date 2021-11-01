@@ -229,9 +229,8 @@ export function encrypt_ballot(ballot: PlaintextBallot,
     // console.log('None seed!!!', nonce_seed)
     // const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,manifest, context, nonce_seed ));
     // console.dir(encrypted_contests[0].selections, { depth: 100 });
-    
-    const inputs = from_file_to_class();
 
+    const inputs = from_file_to_class();
     
     const nonce_seed = hash_elems([inputs.manifest_hash,inputs.object_id, inputs.nonce]);
     
