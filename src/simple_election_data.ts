@@ -222,7 +222,7 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
 
     vote: number;
 
-    is_placeholder_selection = false;
+    is_placeholder_selection: boolean = false;
     // """Determines if this is a placeholder selection"""
 
     // # TODO: ISSUE #35: encrypt/decrypt

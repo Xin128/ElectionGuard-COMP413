@@ -1,4 +1,4 @@
-import {CiphertextBallot} from "./simple_election_data";
+import {CiphertextBallot, PlaintextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
@@ -187,6 +187,34 @@ const json_string = "{\n" +
   "    \"nonce\": \"9DA6\"\n" +
   "}";
 
+export const simple_ballot_json = `{
+  "object_id": "some-external-id-string-123",
+  "style_id": "jefferson-county-ballot-style",
+  "contests": [
+    {
+      "object_id": "justice-supreme-court",
+      "sequence_order": 0,
+      "ballot_selections": [
+        {
+          "object_id": "john-adams-selection",
+          "sequence_order": 0,
+          "vote": 1
+        },
+        {
+          "object_id": "write-in-selection",
+          "sequence_order": 3,
+          "vote": 1,
+          "extended_data": {
+            "value": "Susan B. Anthony",
+            "length": 16
+          }
+        }
+      ]
+    }
+  ]
+}`
+
+
 const numberList: string[] = ["timestamp", "sequence_order"];
 const booleanList: string[] = ["is_placeholder_selection"];
 const banList: string[] = ["object_id", "style_id"];
@@ -209,6 +237,25 @@ export function from_file_to_class(): CiphertextBallot{
   );
   return plainToClass(CiphertextBallot, result as CiphertextBallot);
 
+}
+
+export function from_file_to_PlaintextBallot(jsonString: string): PlaintextBallot {
+  const result = JSON.parse(jsonString, (key, value) => {
+    //the purpose of this reviver is to replace string inputs into appropriate primitive objects
+    //like number, boolean, and string. More complicated objects are handled at by plainToClass method
+    if (banList.includes(key)) {
+      return value;
+    } else if (numberList.includes(key)) {
+      return parseInt(value);
+    } else if (booleanList.includes(key)) {
+      return value !== "00";
+    } else {
+      //default case
+      return value;
+    }
+  }
+  );
+  return plainToClass(PlaintextBallot, result as PlaintextBallot);
 }
 
 export function hex_to_bigint(numstr: string): bigint {

@@ -32,7 +32,7 @@ import {get_optional} from "./utils";
 import {
     hash_elems } from "./hash"
 import { ContestDescription, ContestDescriptionWithPlaceholders, InternalManifest, SelectionDescription } from "./manifest"
-import {from_file_to_class, object_log} from "./serialization";
+import {from_file_to_class, from_file_to_PlaintextBallot, object_log} from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
 import { Nonces } from "./nonces";
 import { elgamal_encrypt } from "./elgamal";
@@ -202,8 +202,6 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
 }
 
 
-
-
 //change parameter to accept null only for testing and demo purpose!!!
 export function encrypt_ballot(ballot: PlaintextBallot,
                                internal_manifest: InternalManifest,
@@ -231,6 +229,7 @@ export function encrypt_ballot(ballot: PlaintextBallot,
     // console.log('None seed!!!', nonce_seed)
     // const encrypted_contests = get_optional(encrypt_ballot_contests(ballot,manifest, context, nonce_seed ));
     // console.dir(encrypted_contests[0].selections, { depth: 100 });
+    
     const inputs = from_file_to_class();
 
     
