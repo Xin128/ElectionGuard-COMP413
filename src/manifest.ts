@@ -337,7 +337,7 @@ export class SelectionDescription extends CryptoHashable implements OrderedObjec
  * For a given election, the sequence of contests displayed to a user may be different
  * however that information is not captured by default when encrypting a specific ballot.
  */
-class ContestDescription extends CryptoHashable implements OrderedObjectBase {
+export class ContestDescription extends CryptoHashable implements OrderedObjectBase {
   object_id: string;
   sequence_order: number;
 
