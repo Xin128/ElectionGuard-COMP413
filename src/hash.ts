@@ -38,7 +38,11 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     let hash_me = 'null';
     if (x instanceof ElementModQ || x instanceof ElementModP) {
       if (x.elem != BigInt(0)) {
-        hash_me = x.to_hex().toUpperCase();
+        if (x.to_hex().startsWith('00')) {
+          hash_me = x.to_hex().substring(2).toUpperCase();
+        } else {
+          hash_me = x.to_hex().toUpperCase();
+        }
       }
     } else if (x instanceof CryptoHashable) {
       hash_me = x.crypto_hash().to_hex();
@@ -91,15 +95,17 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
     BigInt(tempRsltForDebug) % Q_MINUS_ONE);
     
     /// just for testing!!
-    // const hash_newlist:string[] = ["01"]
-  //   const hash_newlist:string[] = ['01', '03', '09', '3CA2', '7CF3', '0103', 'B925']
+  //   const hash_newlist:string[] = ['FEF3', '7F79', '03', '1', '1', '3793',]
   //   const h1 = crypto.createHash('sha256');
   //    h1.update("|", "utf-8");  
   //    for (const element of hash_newlist) {
-  //      console.log(element) 
   //      h1.update(element + '|', "utf-8");
   //    }
-
-  // const hash_rslt = int_to_q_unchecked(1n);
+  //   console.log("hash_rslt!!!!")
+  //   const tempRsltForDebug = BigInt('0x' + h1.digest('hex').toString()).toString(10);
+  //   const hash_rslt = int_to_q_unchecked(
+  //     BigInt(tempRsltForDebug) % Q_MINUS_ONE);
+  //   console.log(hash_rslt)
+  // // const hash_rslt = int_to_q_unchecked(1n);
   return hash_rslt;
 }

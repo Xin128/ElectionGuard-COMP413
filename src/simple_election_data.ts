@@ -867,18 +867,20 @@ export class CiphertextElectionContext  {
 }
 
 export function make_ciphertext_election_context(
-    number_of_guardians: number,
+        number_of_guardians: number,
         quorum: number,
         elgamal_public_key:ElementModP,
         commitment_hash: ElementModQ,
         manifest_hash: ElementModQ,
         extended_data?: Map<string, string>
 ): CiphertextElectionContext{
+   
     const crypto_base_hash = hash_elems(
-        [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians,quorum,
+        [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians, quorum,
         manifest_hash]);
     const crypto_extended_base_hash = hash_elems([crypto_base_hash, commitment_hash]);
-    return new CiphertextElectionContext(number_of_guardians,
+    return new CiphertextElectionContext(
+        number_of_guardians,
         quorum,
         elgamal_public_key,
         commitment_hash,
