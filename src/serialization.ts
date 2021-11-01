@@ -235,14 +235,14 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
 
 export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-    else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-      return value.toString(16);
-    } else if (typeof value === "boolean") {
-      return value == false ? "00" : "01";
-    }
+    // if (typeof value === "bigint") {
+    //   return value.toString();
+    // }
+    // else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //   return value.toString(16);
+    // } else if (typeof value === "boolean") {
+    //   return value == false ? "00" : "01";
+    // }
     return value;
   }, '\t');
 }
