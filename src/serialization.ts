@@ -1,5 +1,6 @@
 import {CiphertextBallot, PlaintextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
+import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
 
@@ -256,6 +257,11 @@ export function from_file_to_PlaintextBallot(jsonString: string): PlaintextBallo
   }
   );
   return plainToClass(PlaintextBallot, result as PlaintextBallot);
+}
+
+export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
+  const result = JSON.parse(manifest_JSON);
+  return plainToClass(Manifest, result as Manifest);
 }
 
 export function hex_to_bigint(numstr: string): bigint {
