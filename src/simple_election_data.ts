@@ -1056,8 +1056,8 @@ export function make_ciphertext_ballot(
     }
 
     const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
-
     timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
+
     if (code_seed === undefined) {
         code_seed = manifest_hash;
     }
@@ -1105,7 +1105,7 @@ export function to_ticks(date_time: Date): number {
     // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
     const ticks = date_time.getTime() / 1000
-    return ticks;
+    return Math.floor(ticks);
 }
     
     

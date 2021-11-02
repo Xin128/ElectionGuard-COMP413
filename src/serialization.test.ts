@@ -24,8 +24,8 @@ describe("TestDeserialization", () => {
     const inputs = from_file_to_class();
     const internal_manifest = new InternalManifest(from_file_to_class_manifest(manifest_json));
     const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
-    const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, inputs.nonce);
-    console.log(object_log(encrypted_ballot));
+    const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
+    console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
     // console.log(get_optional(encryped_ballot).crypto_hash);
   });
 
@@ -36,13 +36,10 @@ describe("TestDeserialization", () => {
   //   console.log(JSON_string);
   // })
 
-  test('testConvertJsonFileToPlaintextBallot', () => {
-    const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
-    // console.log()
-    console.log("plaintextBallot is ", object_log(plaintextBallot));
-    // console.log("contests is ", plaintextBallot.contests);
-    // console.log("selections are ", plaintextBallot.contests[0].ballot_selections);
-  });
+  // test('testConvertJsonFileToPlaintextBallot', () => {
+  //   const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
+  //   console.log("plaintextBallot is ", object_log(plaintextBallot));
+  // });
 
   // test('testEncryptContest', () => {
   //   const inputs = from_file_to_class();
@@ -50,17 +47,17 @@ describe("TestDeserialization", () => {
   //   const 
   // });
   
-  test('testConvertObjToJsonFile', () => {
-    // hex_to_bigint("7FED");
-    const encryped_ballot = encrypt_ballot(undefined, undefined, undefined, undefined, undefined);
-    const JSON_string = encrypt_compatible_testing_demo(get_optional(encryped_ballot));
-    console.log(JSON_string);
-  })
+  // test('testConvertObjToJsonFile', () => {
+  //   // hex_to_bigint("7FED");
+  //   const encryped_ballot = encrypt_ballot(undefined, undefined, undefined, undefined, undefined);
+  //   const JSON_string = encrypt_compatible_testing_demo(get_optional(encryped_ballot));
+  //   console.log(JSON_string);
+  // })
 
-  test('testConvertManifestJsonFileToObj', () => {
-    //manifest JSON input file
-    const readin_manifest = from_file_to_class_manifest(manifest_json);
-    const internal_manifest = new InternalManifest(readin_manifest);
-    console.log(JSON.stringify(internal_manifest, null, "\t"));
-  });
+  // test('testConvertManifestJsonFileToObj', () => {
+  //   //manifest JSON input file
+  //   const readin_manifest = from_file_to_class_manifest(manifest_json);
+  //   const internal_manifest = new InternalManifest(readin_manifest);
+  //   console.log(JSON.stringify(internal_manifest, null, "\t"));
+  // });
 });
