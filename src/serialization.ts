@@ -1,5 +1,6 @@
 import {CiphertextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
+import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
 
@@ -211,6 +212,11 @@ export function from_file_to_class(): CiphertextBallot{
 
 }
 
+export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
+  const result = JSON.parse(manifest_JSON);
+  return plainToClass(Manifest, result as Manifest);
+}
+
 export function hex_to_bigint(numstr: string): bigint {
   console.log("numstr: " + numstr + "\n");
   return BigInt("0x" + numstr);
@@ -231,5 +237,6 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
     return value;
   }, '\t');
 }
+
 
 

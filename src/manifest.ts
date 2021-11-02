@@ -537,6 +537,8 @@ class CandidateContestDescription extends ContestDescription{
 
 }
 
+CandidateContestDescription;
+
 /**
  * Use this entity to describe a contest that involves selecting exactly one 'candidate'.
  * See: https://developers.google.com/elections-data/reference/contest
@@ -547,7 +549,7 @@ class ReferendumContestDescription extends ContestDescription{
   //python Electionguard is empty here as well. this is expected.
 }
 
-
+ReferendumContestDescription;
 
 /**
  * ContestDescriptionWithPlaceholders is a `ContestDescription` with ElectionGuard `placeholder_selections`.
@@ -629,7 +631,7 @@ export class ContestDescriptionWithPlaceholders extends ContestDescription {
  * other hash representations within an ElectionGuard election context.
  * See: https://developers.google.com/elections-data/reference/election
  */
-class Manifest extends CryptoHashable {
+export class Manifest extends CryptoHashable {
   election_scope_id: string;
   spec_version: string;
   @Transform(({value}) => value as ElectionType)
