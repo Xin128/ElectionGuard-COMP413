@@ -31,9 +31,10 @@ describe("TestDeserialization", () => {
 
   test('testConvertJsonFileToPlaintextBallot', () => {
     const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
-    console.log("plaintextBallot is ", plaintextBallot);
-    console.log("contests is ", plaintextBallot.contests);
-    console.log("selections are ", plaintextBallot.contests[0].ballot_selections);
+    // console.log()
+    console.log("plaintextBallot is ", object_log(plaintextBallot));
+    // console.log("contests is ", plaintextBallot.contests);
+    // console.log("selections are ", plaintextBallot.contests[0].ballot_selections);
   });
 
   // test('testEncryptContest', () => {
