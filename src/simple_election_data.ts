@@ -959,9 +959,12 @@ export function make_ciphertext_ballot_selection(
     crypto_hash?: ElementModQ,
     proof?: DisjunctiveChaumPedersenProof,
     extended_data?: ElGamalCiphertext):CiphertextBallotSelection{
+    console.log("crypto hash before _ciphertext_ballot_selection_crypto_hash_with", crypto_hash, object_id, description_hash, ciphertext.crypto_hash())
+
     if (crypto_hash == null) {
         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, description_hash, ciphertext);
     }
+    console.log(crypto_hash)
     if (proof == null) {
         proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
     }

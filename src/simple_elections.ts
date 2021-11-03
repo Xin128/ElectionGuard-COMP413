@@ -99,7 +99,8 @@ export function encrypt_selection(selection: PlaintextBallotSelection,
     const elgamal_encryption = elgamal_encrypt(
             BigInt(selection_representation), selection_nonce, elgamal_public_key
         )
-
+    console.log("before ciphertext:", selection_representation, selection_nonce, elgamal_public_key)
+    console.log("ciphertext:", elgamal_encryption)
     // console.log("descrption hash", selection_description_hash)
     // console.log("crypto hash hash", selection_description.crypto_hash())
 
