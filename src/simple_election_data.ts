@@ -904,6 +904,7 @@ export function _ciphertext_ballot_context_crypto_hash(
     for ( let i = 0; i < ballot_selections.length; i ++) {
         selection_hashes.push(ballot_selections[i].crypto_hash);
     }
+    console.log("selection hashes is ", selection_hashes);
     return hash_elems([object_id, encryption_seed, selection_hashes])
 }
 export function _ciphertext_ballot_selection_crypto_hash_with(
@@ -1002,6 +1003,7 @@ export function make_ciphertext_ballot_contest(
         crypto_hash = _ciphertext_ballot_context_crypto_hash(
             object_id, ballot_selections, description_hash
         )
+        console.log("crypto hash at contest level is ", crypto_hash);
     }
         
     const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
