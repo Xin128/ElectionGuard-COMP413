@@ -105,7 +105,6 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
   const tempRsltForDebug = BigInt('0x' + h.digest('hex').toString()).toString(10);
   const hash_rslt = int_to_q_unchecked(
     BigInt(tempRsltForDebug) % Q_MINUS_ONE);
-    
     /// just for testing!!
   //   const hash_newlist:string[] = ['FEF3', '7F79', '03', '1', '1', '3793',]
   //   const h1 = crypto.createHash('sha256');

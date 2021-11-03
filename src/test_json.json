@@ -5,6 +5,7 @@
     "code_seed": "CD2B",
     "contests": [
             {
+                    "nonce": "6D12",
                     "proof": {
                             "usage": "Prove value within selection's limit",
                             "pad": "1AF83E0462972D1C",
@@ -166,7 +167,7 @@
                             "pad": "FD8E580AEAA6B4F8",
                             "data": "FF0B86A401930DD0"
                     },
-                    "crypto_hash": "6D12"
+                    "crypto_hash": "2B76"
             }
     ],
     "code": "84F",

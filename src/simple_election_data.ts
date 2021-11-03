@@ -900,11 +900,11 @@ export function _ciphertext_ballot_context_crypto_hash(
             `mismatching ballot_selections state: ${object_id} expected(some), actual(none)`);
         return ZERO_MOD_Q;
     }
-    const selection_hashes = []
+    const total_with_selection_hashes = [object_id, encryption_seed]
     for ( let i = 0; i < ballot_selections.length; i ++) {
-        selection_hashes.push(ballot_selections[i].crypto_hash);
+        total_with_selection_hashes.push(ballot_selections[i].crypto_hash);
     }
-    return hash_elems([object_id, encryption_seed, selection_hashes])
+    return hash_elems(total_with_selection_hashes)
 }
 export function _ciphertext_ballot_selection_crypto_hash_with(
   object_id: string,
@@ -1001,11 +1001,14 @@ export function make_ciphertext_ballot_contest(
     // ballot selections include their encryption nonces. Likewise, if a crypto_hash is not provided,
     // it will be derived from the other fields.
     // """
+    console.log("contest crypto hash", crypto_hash)
     if (crypto_hash === undefined) {
         crypto_hash = _ciphertext_ballot_context_crypto_hash(
             object_id, ballot_selections, description_hash
         )
     }
+    console.log("after contest crypto hash", crypto_hash)
+
         
     const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
     const elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
