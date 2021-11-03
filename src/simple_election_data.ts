@@ -988,9 +988,9 @@ export function make_ciphertext_ballot_contest(
     crypto_extended_base_hash: ElementModQ,
     proof_seed: ElementModQ,
     number_elected: number,
+    nonce?: ElementModQ,
     crypto_hash?: ElementModQ,
     proof?: ConstantChaumPedersenProof,
-    nonce?: ElementModQ,
 ): CiphertextBallotContest {
     // """
     // Constructs a `CipherTextBallotContest` object. Most of the parameters here match up to fields

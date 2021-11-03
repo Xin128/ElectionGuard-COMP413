@@ -221,7 +221,7 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
             ));
         encrypted_contests.push(encrypted_contest);
     }   
-    console.log(object_log(encrypted_contests));
+    // console.log("encrypted contests is ", object_log(encrypted_contests));
     return encrypted_contests;
 }
 
