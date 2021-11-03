@@ -132,7 +132,10 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         console.log("inside encrypt contest contest description hash", contest_description_hash, nonce_seed)
         const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
         const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
+        console.log("contest nonce:", contest_nonce)
         const chaum_pedersen_nonce = nonce_sequence.next();
+        console.log("chaum_pedersen_nonc:", chaum_pedersen_nonce)
+
         const encrypted_selections: CiphertextBallotSelection[] = [];
         let encrypted_selection = null;
         let selection_count  = 0; 
@@ -196,7 +199,7 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
                                         ): CiphertextBallotContest[]|null {
 
     const encrypted_contests: CiphertextBallotContest[] = [];
-    console.log("inside encrypt_ballot_contests", nonce_seed)
+    
 
     for (const ballot_style_contest of description.get_contests_for(ballot.style_id)) {
         let use_contest = null;

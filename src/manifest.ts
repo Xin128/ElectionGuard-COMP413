@@ -114,9 +114,6 @@ export class Language extends CryptoHashable {
 
   //A hash representation of the object
   crypto_hash(): ElementModQ {
-    console.log("value", this.value)
-    console.log("langauge", this.language)
-    console.log("hash of laugange", hash_elems([this.value, this.language]))
     return hash_elems([this.value, this.language]);
   }
 
@@ -137,10 +134,7 @@ class InternationalizedText extends CryptoHashable {
 
   //A hash representation of the object.
   crypto_hash(): ElementModQ {
-    console.log("text", this.text)
-    console.log("hash of text", hash_elems(this.text))
-    console.log("hard code", hash_elems([new ElementModQ(32013n), new ElementModQ(42969n)]))
-    return hash_elems(this.text);
+    return hash_elems([this.text]);
   }
 
 }
