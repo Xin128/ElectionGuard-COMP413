@@ -131,6 +131,7 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         let selection_count  = 0; 
         for (const description of contest_description.ballot_selections) {
             for (const selection of contest.ballot_selections) {
+                console.log("selection object id is ", selection.object_id, " description object id is ", description.object_id);
                 if (selection.object_id == description.object_id) {
                     selection_count += selection.vote;
                     encrypted_selection = encrypt_selection(
