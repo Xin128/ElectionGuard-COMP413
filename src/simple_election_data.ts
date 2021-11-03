@@ -922,6 +922,7 @@ export function _ciphertext_ballot_elgamal_accumulate(
     for (const selection of ballot_selections) {
         ciphertexts.push(selection.ciphertext);
     }
+    console.log("ciphertexts inside elgamal accumulate ", ciphertexts);
     return elgamal_add(...ciphertexts);
 }
     
@@ -1012,6 +1013,7 @@ export function make_ciphertext_ballot_contest(
     const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
     const elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
     if (proof === undefined) {
+        console.log("elgamal accumulation is ", elgamal_accumulation, "number selected ", number_elected, "aggregate is ", aggregate)
         proof = make_constant_chaum_pedersen(
             elgamal_accumulation,
             BigInt(number_elected),
