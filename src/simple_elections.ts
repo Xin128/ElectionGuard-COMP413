@@ -200,6 +200,7 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
             ));
         encrypted_contests.push(encrypted_contest);
     }   
+    console.log(object_log(encrypted_contests));
     return encrypted_contests;
 }
 
@@ -233,12 +234,13 @@ export function encrypt_ballot(ballot: PlaintextBallot,
     // console.dir(encrypted_contests[0].selections, { depth: 100 });
 
     const inputs = from_file_to_class();
-    
-    const nonce_seed = hash_elems([inputs.manifest_hash,inputs.object_id, inputs.nonce]);
-    
+    const nonce_seed = hash_elems([inputs.manifest_hash,ballot.object_id, inputs.nonce]);
+    // pass & todo: change to internal_manifest.manifest_hash
+   
     const encrypted_contests = get_optional(encrypt_ballot_contests(
         ballot, internal_manifest, context, nonce_seed
     ))
+
     const encrypted_ballot = make_ciphertext_ballot(ballot.object_id,
         ballot.style_id,
         internal_manifest.manifest_hash,

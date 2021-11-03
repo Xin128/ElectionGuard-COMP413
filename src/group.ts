@@ -4,11 +4,20 @@ import * as bigintModArith from 'bigint-mod-arith'
 import {Type} from "class-transformer";
 import "reflect-metadata";
 // Constants used by ElectionGuard
-const Q = 32633n;
-const P = 65267n;
-const R = 2n;
-const G = 3n;
+// const Q = 32633n;
+// const P = 65267n;
+// const R = 2n;
+// const G = 3n;
+// const Q_MINUS_ONE = Q - 1n;
+
+
+// // Large Test constants used by electionguard
+const Q = 65521n;
+const P = 18446744073704586917n;
+const R = 281539415968996n;
+const G = 15463152587872997502n;
 const Q_MINUS_ONE = Q - 1n;
+
 
 // const Q = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639747');
 // const Q = BigInt('65521');
@@ -92,7 +101,9 @@ class ElementModQ {
     }
 
     toJSON():string {
-        return this.elem.toString(16).toUpperCase();
+        // return this.elem.toString(16).toUpperCase();
+        return this.elem.toString().toUpperCase();
+
     }
 
     // TODO: Not sure if this is needed in TypeScript version
@@ -159,7 +170,9 @@ class ElementModP {
 
 
     toJSON():string {
-      return this.elem.toString(16).toUpperCase();
+    //   return this.elem.toString(16).toUpperCase();
+      return this.elem.toString().toUpperCase();
+
     }
     // def __getstate__(self) -> dict:
     //     return {"elem": int(self.elem)}
