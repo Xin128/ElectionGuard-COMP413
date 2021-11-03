@@ -23,13 +23,15 @@ describe("TestDeserialization", () => {
                   undefined);
     const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
     const inputs = from_file_to_class();
-    const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
+    // const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
+    // console.log("encryption seed!", encryption_seed)
     const readin_manifest = from_file_to_class_manifest(manifest_json);
     const internal_manifest = new InternalManifest(readin_manifest);
 
     console.log("manifest hash", internal_manifest.manifest_hash);
-    const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
-    // console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
+    const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, inputs.code_seed, get_optional(inputs.nonce));
+    console.log("final")
+    console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
   });
 
   // test('testConvertJsonFileToPlaintextBallot', () => {

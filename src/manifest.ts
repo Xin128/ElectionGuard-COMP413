@@ -102,7 +102,7 @@ class AnnotatedString extends CryptoHashable {
  * The ISO-639 language
  * see: https://en.wikipedia.org/wiki/ISO_639
  */
-class Language extends CryptoHashable {
+export class Language extends CryptoHashable {
   value: string;
   language = "en";
 
@@ -114,6 +114,9 @@ class Language extends CryptoHashable {
 
   //A hash representation of the object
   crypto_hash(): ElementModQ {
+    console.log("value", this.value)
+    console.log("langauge", this.language)
+    console.log("hash of laugange", hash_elems([this.value, this.language]))
     return hash_elems([this.value, this.language]);
   }
 
@@ -134,6 +137,9 @@ class InternationalizedText extends CryptoHashable {
 
   //A hash representation of the object.
   crypto_hash(): ElementModQ {
+    console.log("text", this.text)
+    console.log("hash of text", hash_elems(this.text))
+    console.log("hard code", hash_elems([new ElementModQ(32013n), new ElementModQ(42969n)]))
     return hash_elems(this.text);
   }
 
@@ -322,7 +328,7 @@ export class SelectionDescription extends CryptoHashable implements OrderedObjec
 
   //A hash representation of the object
   crypto_hash(): ElementModQ {
-    return hash_elems([this.object_id, this.sequence_order, this.candidate_id]);
+   return hash_elems([this.object_id, this.sequence_order, this.candidate_id]);
   }
 
 }
@@ -416,6 +422,16 @@ export class ContestDescription extends CryptoHashable implements OrderedObjectB
    * description match up.
    */
   crypto_hash(): ElementModQ {
+    console.log("decription crypto hash")
+    console.log(this.object_id,
+      this.sequence_order,
+      this.electoral_district_id,
+      VoteVariationType[this.vote_variation],
+      get_optional(this.ballot_title).crypto_hash(),
+      get_optional(this.ballot_subtitle).crypto_hash(),
+      this.name,
+      this.number_elected,
+      this.votes_allowed);
     return hash_elems([
       this.object_id,
       this.sequence_order,

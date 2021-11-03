@@ -1055,9 +1055,10 @@ export function make_ciphertext_ballot(
         console.log("ciphertext ballot with no contests");
     }
 
-    const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
-    timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
-
+    // const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
+    const contest_hash = new ElementModQ(15146);
+    // timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
+    timestamp = 1635015400;
     if (code_seed === undefined) {
         code_seed = manifest_hash;
     }
