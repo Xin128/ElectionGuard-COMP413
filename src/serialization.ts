@@ -1,4 +1,4 @@
-import {CiphertextBallot, PlaintextBallot} from "./simple_election_data";
+import {CiphertextBallot, CiphertextBallotContest, PlaintextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
 import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";

@@ -1,10 +1,10 @@
-import {encrypt_ballot} from "./simple_elections";
+import {contest_from, create_ballot_hash, encrypt_ballot, encrypt_selection} from "./simple_elections";
 import {get_optional} from "./utils";
 import {
   encrypt_compatible_testing_demo, from_file_to_class, from_file_to_class_manifest, from_file_to_PlaintextBallot, manifest_json, object_log, simple_ballot_json,
   // hex_to_bigint
 } from "./serialization";
-import { make_ciphertext_election_context, PlaintextBallot } from "./simple_election_data";
+import { CiphertextBallotSelection, make_ciphertext_ballot, make_ciphertext_election_context, PlaintextBallot } from "./simple_election_data";
 import { ElementModQ,ElementModP } from "./group";
 import {InternalManifest} from "./manifest";
 import { hash_elems } from "./hash";
@@ -26,8 +26,44 @@ describe("TestDeserialization", () => {
     const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
     const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
+
+
     // console.log(get_optional(encryped_ballot).crypto_hash);
   });
+
+  // test('testCiphertextBallotSelections', () => {
+  //   const inputs = from_file_to_class();
+    
+  //   const nonce_seed = hash_elems([inputs.manifest_hash,inputs.object_id, inputs.nonce]);
+    
+  //   const context = make_ciphertext_election_context(
+  //     1, 
+  //     1, 
+  //     new ElementModP(9n), 
+  //     new ElementModQ(2),
+  //     new ElementModQ(14227), 
+  //     undefined);
+  //   let plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
+  //   let encrypted_selections: CiphertextBallotSelection[] = [];
+  //   for (let contest of plaintextBallot.contests) {
+  //     for (let selection of contest.ballot_selections) {
+  //       encrypted_selections.push(encrypt_selection(selection, selectiondecription ,context.elgamal_public_key, context.crypto_base_hash, nonce_seed))
+  //     }
+  //   }
+
+  //   const encrypted_contests = inputs.contests;
+  //   const encrypted_ballot = make_ciphertext_ballot(inputs.object_id,
+  //       inputs.style_id,
+  //       inputs.manifest_hash,
+  //       encrypted_contests,
+  //       encryption_seed,
+  //       nonce,)
+
+  //   if (encrypted_contests == null) {
+  //       return null
+  //   }
+
+  // });
 
   // test('testConvertObjToJsonFile', () => {
   //   // hex_to_bigint("7FED");

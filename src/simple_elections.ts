@@ -156,6 +156,8 @@ export function encrypt_contest(contest: PlaintextBallotContest,
             encrypted_selections.push(get_optional(encrypted_selection))
         }
 
+        console.log("number of ballot selection is ", encrypted_selections.length);
+
         const encrypted_contest = make_ciphertext_ballot_contest(
             contest.object_id,
             contest.sequence_order,
