@@ -17,7 +17,7 @@ describe("TestDeserialization", () => {
     const context = make_ciphertext_election_context(
                   1, 
                   1, 
-                  new ElementModP(9n), 
+                  new ElementModP(11621479678980606145n), 
                   new ElementModQ(2),
                   new ElementModQ(14227), 
                   undefined);
