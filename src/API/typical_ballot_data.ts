@@ -10,6 +10,21 @@ export enum BallotMarkerType {
     Grid = 2
 }
 
+export enum ErrorType {
+    MissingElectionName = 0,
+    MissingBallotPartyId = 1,
+    MissingBallotPartyName = 2,
+    MissingPrecinctName = 3,
+    MissingPrecintId = 4,
+    MissingBallotId = 5,
+    MissingBallotItems = 6,
+    MissingBallotOptions = 7,
+    MissingCandidateName = 8,
+    MissingCandidateId = 9,
+    MissingCandidatePartyId = 10,
+    MissingCandidatePartyName = 11
+}
+
 export class Ballot {
     id: string;
     electionName: LanguageText[];
@@ -24,6 +39,7 @@ export class Ballot {
     partyId: string;
     partyName: LanguageText[];
     precinctName: string;
+    precinctId: string;
     ballotMarkerLayoutType: BallotMarkerType;
 
     //wizard types
@@ -92,6 +108,7 @@ export class BallotOption {
     id: string;
     order: number; // the order of the selection
     type: BallotOptionType;
+    candidateId: string;
     title: LanguageText[]; // candidate name
     subTitle: LanguageText[];
     text1: LanguageText[];
@@ -128,5 +145,23 @@ export class EncryptBallotOutput {
     constructor(seed: string, hash: string) {
         this.seed = seed;
         this.hash = hash;
+    }
+}
+
+// This is a class that represent error ballot input 
+export class ErrorBallotInput {
+    errorType: number;
+    errorMsg: string;
+    constructor(errorType: number, errorMsg: string) {
+        this.errorType = errorType;
+        this.errorMsg = errorMsg;
+    }
+
+    getErrorType() {
+        return this.errorType;
+    }
+
+    getErrorMsg() {
+        return this.errorMsg;
     }
 }
