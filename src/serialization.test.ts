@@ -1,10 +1,10 @@
-import {encrypt_ballot} from "./simple_elections";
+import {contest_from, create_ballot_hash, encrypt_ballot, encrypt_selection} from "./simple_elections";
 import {get_optional} from "./utils";
 import {
   encrypt_compatible_testing_demo, from_file_to_class, from_file_to_class_manifest, from_file_to_PlaintextBallot, object_log, simple_ballot_json,
   manifest_json, // hex_to_bigint
 } from "./serialization";
-import { make_ciphertext_election_context, PlaintextBallot } from "./simple_election_data";
+import { CiphertextBallotSelection, make_ciphertext_ballot, make_ciphertext_election_context, PlaintextBallot } from "./simple_election_data";
 import { ElementModQ,ElementModP } from "./group";
 import { hash_elems } from "./hash";
 
@@ -33,13 +33,10 @@ describe("TestDeserialization", () => {
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
   });
 
-  test('testConvertJsonFileToPlaintextBallot', () => {
-    const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
-    // console.log()
-    console.log("plaintextBallot is ", object_log(plaintextBallot));
-    // console.log("contests is ", plaintextBallot.contests);
-    // console.log("selections are ", plaintextBallot.contests[0].ballot_selections);
-  });
+  // test('testConvertJsonFileToPlaintextBallot', () => {
+  //   const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
+  //   console.log("plaintextBallot is ", object_log(plaintextBallot));
+  // });
 
   // test('testConvertObjToJsonFile', () => {
   //   // hex_to_bigint("7FED");

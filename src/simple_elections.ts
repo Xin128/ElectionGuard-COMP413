@@ -144,6 +144,7 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         for (const description of contest_description.ballot_selections) {
             let has_selection = false
             for (const selection of contest.ballot_selections) {
+                console.log("selection object id is ", selection.object_id, " description object id is ", description.object_id);
                 if (selection.object_id == description.object_id) {
                     has_selection = true
                     selection_count += selection.vote;
@@ -223,7 +224,7 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
             ));
         encrypted_contests.push(encrypted_contest);
     }   
-    console.log(object_log(encrypted_contests));
+    // console.log("encrypted contests is ", object_log(encrypted_contests));
     return encrypted_contests;
 }
 

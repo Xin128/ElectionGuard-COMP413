@@ -991,9 +991,9 @@ export function make_ciphertext_ballot_contest(
     crypto_extended_base_hash: ElementModQ,
     proof_seed: ElementModQ,
     number_elected: number,
+    nonce?: ElementModQ,
     crypto_hash?: ElementModQ,
     proof?: ConstantChaumPedersenProof,
-    nonce?: ElementModQ,
 ): CiphertextBallotContest {
     // """
     // Constructs a `CipherTextBallotContest` object. Most of the parameters here match up to fields
@@ -1006,6 +1006,7 @@ export function make_ciphertext_ballot_contest(
         crypto_hash = _ciphertext_ballot_context_crypto_hash(
             object_id, ballot_selections, description_hash
         )
+        console.log("crypto hash at contest level is ", crypto_hash);
     }
     console.log("after contest crypto hash", crypto_hash)
 
@@ -1112,7 +1113,7 @@ export function to_ticks(date_time: Date): number {
     // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
     const ticks = date_time.getTime() / 1000
-    return ticks;
+    return Math.floor(ticks);
 }
     
     
