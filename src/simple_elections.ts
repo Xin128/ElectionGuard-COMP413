@@ -188,6 +188,8 @@ export function encrypt_contest(contest: PlaintextBallotContest,
             crypto_extended_base_hash,
             chaum_pedersen_nonce,
             contest_description.number_elected,
+            undefined,
+            undefined,
             contest_nonce,
         )
         return  encrypted_contest
