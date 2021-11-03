@@ -35,21 +35,24 @@ export type CRYPTO_HASHABLE_T = CryptoHashable | ElementModPOrQ | string | numbe
 
 export type CRYPTO_HASHABLE_ALL = CRYPTO_HASHABLE_T[] | CRYPTO_HASHABLE_T | CRYPTO_HASHABLE_ALL[];
 
+export function tohex_for_hash(x:ElementModQ|ElementModP):string {
+  let hash_me = '';
+  if (x.to_hex().startsWith('00')) {
+    hash_me = x.to_hex().substring(2).toUpperCase();
+  } else {
+    hash_me = x.to_hex().toUpperCase();
+  }
+  return hash_me
+}
+
 export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     let hash_me = 'null';
     if (x instanceof ElementModQ || x instanceof ElementModP) {
       if (x.elem != BigInt(0)) {
-        if (x.to_hex().startsWith('00')) {
-          hash_me = x.to_hex().substring(2).toUpperCase();
-        } else {
-          hash_me = x.to_hex().toUpperCase();
-        }
-        if ((x.elem == 42969n) ||( x.elem == 32013n)){
-          console.log(x,  x.to_hex(), hash_me)
-        }
+        hash_me = tohex_for_hash(x);
       }
     } else if (x instanceof CryptoHashable) {
-      hash_me = x.crypto_hash().to_hex();
+      hash_me = tohex_for_hash(x.crypto_hash());
     } else if (typeof x === "string") {
       hash_me = x;
     } else if (typeof x === "number") {
@@ -72,9 +75,9 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
  * return A cryptographic hash of these elements, concatenated.
  */
 export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
+  const hashme_lst = [];
   const h = crypto.createHash('sha256');
   h.update("|", "utf-8");  
-  // console.log(BigInt('0x' + h.digest('hex').toString()).toString(10));
   let hash_me:string; 
 
   if (!(a instanceof(Array))) {
@@ -87,13 +90,14 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
         hash_me = "null";
       } else {
         const tmp = hash_elems(x);
-        hash_me = tmp.to_hex();
+        hash_me = tohex_for_hash(tmp);
       }
     } else if ((x === null || x === undefined)) {
       hash_me = "null";
     } else {
       hash_me = hash_elem(x);
     }
+    hashme_lst.push(hash_me);
 
     h.update(hash_me + "|", "utf-8")
   }

@@ -30,7 +30,6 @@ describe("TestDeserialization", () => {
 
     console.log("manifest hash", internal_manifest.manifest_hash);
     const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, inputs.code_seed, get_optional(inputs.nonce));
-    console.log("final")
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
   });
 
