@@ -6,6 +6,7 @@ import {
   ElementModP} from "./group";
 
 import * as crypto from "crypto";
+import { Language } from "./manifest";
 
 /**
  * Denotes Hashable
@@ -43,6 +44,9 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
         } else {
           hash_me = x.to_hex().toUpperCase();
         }
+        if ((x.elem == 42969n) ||( x.elem == 32013n)){
+          console.log(x,  x.to_hex(), hash_me)
+        }
       }
     } else if (x instanceof CryptoHashable) {
       hash_me = x.crypto_hash().to_hex();
@@ -51,6 +55,9 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
     } else if (typeof x === "number") {
       if (x!= 0) {
         hash_me = x.toString();
+      } else {
+        hash_me = '0'
+        // john-adams-selection 0 adams hash wrong result
       }
     }
     return hash_me;
@@ -82,11 +89,12 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
         const tmp = hash_elems(x);
         hash_me = tmp.to_hex();
       }
-    } else if (x === null || x === undefined) {
+    } else if ((x === null || x === undefined)) {
       hash_me = "null";
     } else {
       hash_me = hash_elem(x);
     }
+
     h.update(hash_me + "|", "utf-8")
   }
 }

@@ -101,8 +101,8 @@ class ElementModQ {
     }
 
     toJSON():string {
-        // return this.elem.toString(16).toUpperCase();
-        return this.elem.toString().toUpperCase();
+        return this.elem.toString(16).toUpperCase();
+        // return this.elem.toString().toUpperCase();
 
     }
 
@@ -170,8 +170,8 @@ class ElementModP {
 
 
     toJSON():string {
-    //   return this.elem.toString(16).toUpperCase();
-      return this.elem.toString().toUpperCase();
+      return this.elem.toString(16).toUpperCase();
+    //   return this.elem.toString().toUpperCase();
 
     }
     // def __getstate__(self) -> dict:
