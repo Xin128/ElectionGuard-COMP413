@@ -19,8 +19,10 @@ export class Nonces {
     }
 
     public get_with_headers(item: number, ...headers: string[]): ElementModQ {
-        const hash_lst:(ElementModQ | number | string)[] = [this.__seed,item];
+        let hash_lst:(ElementModQ | number | string)[] = [this.__seed,item];
         hash_lst.concat(headers);
+        console.log("hash list is ", hash_lst)
+        console.log("hash elems result is ", hash_elems(hash_lst));
         return hash_elems(hash_lst);
     }
     public next(): ElementModQ {

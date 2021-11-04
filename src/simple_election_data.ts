@@ -878,8 +878,9 @@ export function make_ciphertext_election_context(
     const crypto_base_hash = hash_elems(
         [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians, quorum,
         manifest_hash]);
-    // console.log("crypto base hash and commitment hash is ", crypto_base_hash, commitment_hash, manifest_hash);
+    console.log("crypto base hash and commitment hash is ", crypto_base_hash, commitment_hash, manifest_hash);
     const crypto_extended_base_hash = hash_elems([crypto_base_hash, commitment_hash]);
+    console.log("crypto extended base hash is ", crypto_extended_base_hash);
     return new CiphertextElectionContext(
         number_of_guardians,
         quorum,
@@ -965,8 +966,9 @@ export function make_ciphertext_ballot_selection(
     if (crypto_hash == null) {
         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, description_hash, ciphertext);
     }
-    console.log(crypto_hash)
+    // console.log(crypto_hash)
     if (proof == null) {
+        console.log("before make disjunctive chaum pedersen all fields ", ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation)
         proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
     }
         

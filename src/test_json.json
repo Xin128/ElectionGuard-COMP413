@@ -10,8 +10,8 @@
                                 "usage": "Prove value within selection's limit",
                                 "pad": "1AF83E0462972D1C",
                                 "data": "4176748170CA3581",
-                                "challenge": "479A",
-                                "response": "D37C",
+                                "challenge": "7FED",
+                                "response": "13A",
                                 "constant": "2"
                         },
                         "object_id": "justice-supreme-court",
@@ -23,15 +23,15 @@
                                         "nonce": "3298",
                                         "proof": {
                                                 "usage": "Prove selection's value (0 or 1)",
-                                                "proof_zero_pad": "AE10AB5C58A6E050",
-                                                "proof_zero_data": "1D24BEF44F655522",
+                                                "proof_zero_pad": "752891843074247A",
+                                                "proof_zero_data": "FE766CAE62A23669",
                                                 "proof_one_pad": "DA0925B3CB94BEBF",
                                                 "proof_one_data": "F2B07E4537D02EF1",
-                                                "proof_zero_challenge": "BAE1",
-                                                "proof_one_challenge": "D947",
-                                                "challenge": "9437",
-                                                "proof_zero_response": "6041",
-                                                "proof_one_response": "439B"
+                                                "proof_zero_challenge": "4510",
+                                                "proof_one_challenge": "976A",
+                                                "challenge": "DC7A",
+                                                "proof_zero_response": "4E8A",
+                                                "proof_one_response": "3B18"
                                         },
                                         "object_id": "john-adams-selection",
                                         "sequence_order": "0",
@@ -49,13 +49,13 @@
                                                 "usage": "Prove selection's value (0 or 1)",
                                                 "proof_zero_pad": "5CBA2CE88415EC77",
                                                 "proof_zero_data": "5224F144103911F7",
-                                                "proof_one_pad": "8C415ADDD03BED38",
-                                                "proof_one_data": "403E749059A628F1",
-                                                "proof_zero_challenge": "24A6",
+                                                "proof_one_pad": "5A1356B5308AFB32",
+                                                "proof_one_data": "BA2E6C583C7C887B",
+                                                "proof_zero_challenge": "95CB",
                                                 "proof_one_challenge": "A97A",
-                                                "challenge": "CE20",
-                                                "proof_zero_response": "9306",
-                                                "proof_one_response": "5866"
+                                                "challenge": "3F54",
+                                                "proof_zero_response": "7681",
+                                                "proof_one_response": "C33"
                                         },
                                         "object_id": "benjamin-franklin-selection",
                                         "sequence_order": "1",
@@ -73,13 +73,13 @@
                                                 "usage": "Prove selection's value (0 or 1)",
                                                 "proof_zero_pad": "6CFF2112C7D799F3",
                                                 "proof_zero_data": "81954E2672536621",
-                                                "proof_one_pad": "E307410887091E28",
-                                                "proof_one_data": "1CF9EADE12A398A4",
-                                                "proof_zero_challenge": "D616",
+                                                "proof_one_pad": "87EAAB1A5D6F3BA3",
+                                                "proof_one_data": "34B8C4A3DFEBCF41",
+                                                "proof_zero_challenge": "D7EF",
                                                 "proof_one_challenge": "4A37",
-                                                "challenge": "205C",
-                                                "proof_zero_response": "2FFB",
-                                                "proof_one_response": "DBA6"
+                                                "challenge": "2235",
+                                                "proof_zero_response": "2964",
+                                                "proof_one_response": "5332"
                                         },
                                         "object_id": "john-hancock-selection",
                                         "sequence_order": "2",
@@ -95,15 +95,15 @@
                                         "nonce": "5434",
                                         "proof": {
                                                 "usage": "Prove selection's value (0 or 1)",
-                                                "proof_zero_pad": "5E33B63433E92C8F",
-                                                "proof_zero_data": "F0AE9A09BAF2A067",
+                                                "proof_zero_pad": "8C7AEE8708D7656B",
+                                                "proof_zero_data": "BB1A7F0D2932512",
                                                 "proof_one_pad": "525205FA6255D06E",
                                                 "proof_one_data": "9660FBC5C9B9432A",
-                                                "proof_zero_challenge": "150D",
-                                                "proof_one_challenge": "C078",
-                                                "challenge": "D585",
-                                                "proof_zero_response": "10BA",
-                                                "proof_one_response": "E2A6"
+                                                "proof_zero_challenge": "EAE4",
+                                                "proof_one_challenge": "E540",
+                                                "challenge": "D033",
+                                                "proof_zero_response": "1E33",
+                                                "proof_one_response": "B0CC"
                                         },
                                         "object_id": "write-in-selection",
                                         "sequence_order": "3",
@@ -120,10 +120,14 @@
                                         "proof": {
                                                 "usage": "Prove selection's value (0 or 1)",
                                                 "proof_zero_pad": "3F3A97C9B33D4D5E",
+                                                "proof_zero_data": "2A289C13626CE66",
+                                                "proof_one_pad": "9D1B6331B93DA74C",
+                                                "proof_one_data": "9F876A7B90A6A2BF",
+                                                "proof_zero_challenge": "8F98",
                                                 "proof_one_challenge": "943D",
-                                                "challenge": "7D20",
-                                                "proof_zero_response": "1741",
-                                                "proof_one_response": "7432"
+                                                "challenge": "23E4",
+                                                "proof_zero_response": "F09A",
+                                                "proof_one_response": "5723"
                                         },
                                         "object_id": "justice-supreme-court-4-placeholder",
                                         "sequence_order": "4",
@@ -141,13 +145,13 @@
                                                 "usage": "Prove selection's value (0 or 1)",
                                                 "proof_zero_pad": "144C7AB9807FE928",
                                                 "proof_zero_data": "B927960B117A8861",
-                                                "proof_one_pad": "EB4E3CE99D1686F5",
-                                                "proof_one_data": "C695FF203006409C",
-                                                "proof_zero_challenge": "5A4D",
+                                                "proof_one_pad": "1DE06BE9956EEA6D",
+                                                "proof_one_data": "77E649D9FFCF7EC",
+                                                "proof_zero_challenge": "1978",
                                                 "proof_one_challenge": "CC9C",
-                                                "challenge": "26F8",
-                                                "proof_zero_response": "39FA",
-                                                "proof_one_response": "3077"
+                                                "challenge": "E614",
+                                                "proof_zero_response": "3755",
+                                                "proof_one_response": "EF6D"
                                         },
                                         "object_id": "justice-supreme-court-5-placeholder",
                                         "sequence_order": "5",
@@ -163,7 +167,7 @@
                                 "pad": "FD8E580AEAA6B4F8",
                                 "data": "FF0B86A401930DD0"
                         },
-                        "crypto_hash": "3882"
+                        "crypto_hash": "2B76"
                 }
         ],
         "code": "84F",

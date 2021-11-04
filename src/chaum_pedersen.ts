@@ -283,20 +283,36 @@ export function make_disjunctive_chaum_pedersen_zero(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
+    // const c1 = nonces.get(0);
+    // const v1 = nonces.get(1);
+    // const u0 = nonces.get(2);
+    // // Compute the NIZKP
+    // const a0 = g_pow_p(u0);
+    // const b0 = pow_p(k, u0);
+    // const q_minus_c1 = negate_q(c1);
+    // const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
+    // const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
+    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
+    // const c0 = a_minus_b_q(c, c1);
+
+    // const v0 = a_plus_bc_q(u0, c0, r);
+    // console.log("make disjunctive one c1 v1 u0 a0 b1 c0 c v0 v1", c1, v1, u0, a0, b0, a1, b1, c0, c1, c, v0, v1);
+    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
+
     const c1 = nonces.get(0);
-    const v1 = nonces.get(1);
+    const v = nonces.get(1);
     const u0 = nonces.get(2);
-    // Compute the NIZKP
+
+    // # Compute the NIZKP
     const a0 = g_pow_p(u0);
     const b0 = pow_p(k, u0);
-    const q_minus_c1 = negate_q(c1);
-    const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
-    const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
+    const a1 = g_pow_p(v);
+    const b1 = mult_p(pow_p(k, v), g_pow_p(c1));
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c0 = a_minus_b_q(c, c1);
-
     const v0 = a_plus_bc_q(u0, c0, r);
-
+    const v1 = a_plus_bc_q(v, c1, r);
+    console.log("make disjunctive zero c1 v1 u0 a0 ", c1, v1, u0, a0)
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
@@ -309,18 +325,34 @@ export function make_disjunctive_chaum_pedersen_one(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    const c0 = nonces.get(0);
-    const v0 = nonces.get(1);
+    // const c0 = nonces.get(0);
+    // const v0 = nonces.get(1);
+    // const u1 = nonces.get(2);
+
+    // // Compute the NIZKP
+    // const q_minus_c0 = negate_q(c0);
+    // const a0 = mult_p(g_pow_p(v0), pow_p(alpha, q_minus_c0));
+    // const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
+    // const a1 = g_pow_p(u1);
+    // const b1 = pow_p(k, u1);
+    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
+    // const c1 = a_minus_b_q(c, c0);
+    // const v1 = a_plus_bc_q(u1, c1, r);
+
+    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
+    const w = nonces.get(0);
+    const v = nonces.get(1);
     const u1 = nonces.get(2);
 
-    // Compute the NIZKP
-    const q_minus_c0 = negate_q(c0);
-    const a0 = mult_p(g_pow_p(v0), pow_p(alpha, q_minus_c0));
-    const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
+    // # Compute the NIZKP
+    const a0 = g_pow_p(v);
+    const b0 = mult_p(pow_p(k, v), g_pow_p(w));
     const a1 = g_pow_p(u1);
     const b1 = pow_p(k, u1);
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
-    const c1 = a_minus_b_q(c, c0);
+    const c0 = negate_q(w);
+    const c1 = add_q(c, w);
+    const v0 = a_plus_bc_q(v, c0, r);
     const v1 = a_plus_bc_q(u1, c1, r);
 
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
