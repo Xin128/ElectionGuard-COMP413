@@ -878,6 +878,7 @@ export function make_ciphertext_election_context(
     const crypto_base_hash = hash_elems(
         [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians, quorum,
         manifest_hash]);
+    // console.log("crypto base hash and commitment hash is ", crypto_base_hash, commitment_hash, manifest_hash);
     const crypto_extended_base_hash = hash_elems([crypto_base_hash, commitment_hash]);
     return new CiphertextElectionContext(
         number_of_guardians,

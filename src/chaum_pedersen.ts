@@ -344,6 +344,8 @@ export function make_constant_chaum_pedersen(
     const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
     const c = hash_elems([base_hash, alpha, beta, a, b]);  // sha256(𝑄', A, B, a, b)
     const v = a_plus_bc_q(u, c, r);
+    console.log("constant in make constant chaum pedersen ", base_hash, alpha, beta, a, b);
+    console.log("hashed result is ", c, v);
 
     return new ConstantChaumPedersenProof(a, b, c, v, constant);
 }

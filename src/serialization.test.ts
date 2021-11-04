@@ -19,7 +19,8 @@ describe("TestDeserialization", () => {
                   1, 
                   new ElementModP(11621479678980606145n), 
                   new ElementModQ(2),
-                  new ElementModQ(14227), 
+                  new ElementModQ(9973),//python manifest hash
+                  // new ElementModQ(14227), 
                   undefined);
     const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
     const inputs = from_file_to_class();
@@ -28,7 +29,11 @@ describe("TestDeserialization", () => {
     const readin_manifest = from_file_to_class_manifest(manifest_json);
     const internal_manifest = new InternalManifest(readin_manifest);
 
+    // TODO: Need to change this !!!!!!!!!!!!!! Now hard coded!!!!!!!
+    // context.crypto_extended_base_hash = new ElementModQ(60911n);
     console.log("manifest hash", internal_manifest.manifest_hash);
+    console.log("context.crypto_extended_base_hash is ", context.crypto_extended_base_hash);
+    
     const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, inputs.code_seed, get_optional(inputs.nonce));
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
   });
