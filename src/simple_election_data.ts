@@ -1,20 +1,22 @@
 import { DisjunctiveChaumPedersenProof,
     ChaumPedersenDecryptionProof,
     ConstantChaumPedersenProof,
-    make_chaum_pedersen_generic,
-    make_disjunctive_chaum_pedersen_one,
+    // make_chaum_pedersen_generic,
+    // make_disjunctive_chaum_pedersen_one,
     make_disjunctive_chaum_pedersen,
     make_constant_chaum_pedersen,
     } from "./chaum_pedersen"
 
 import {ElGamalCiphertext, ElGamalKeyPair, elgamal_add} from "./elgamal"
-import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q, add_q, ElementModQorInt } from "./group"
+import {P, Q, G, ElementModP, ElementModQ, ZERO_MOD_Q, add_q,
+  // ElementModQorInt
+} from "./group"
 import { hash_elems, CryptoHashCheckable } from "./hash";
 import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {Transform, Type} from "class-transformer";
 import "reflect-metadata";
 import { get_optional } from "./utils";
-import { create_ballot_hash } from "./simple_elections";
+// import { create_ballot_hash } from "./simple_elections";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
 /**
@@ -60,7 +62,7 @@ export class PlaintextBallot implements ElectionObjectBase {
     object_id: string;
     style_id: string;
     // The object id of this specific ballot. Will also appear in any corresponding encryption of this ballot.
-    
+
     @Type(() => PlaintextBallotContest)
     contests: PlaintextBallotContest[];
     // The list of contests for this ballot
@@ -82,7 +84,7 @@ export class PlaintextBallot implements ElectionObjectBase {
         }
         return true;
     }
-        
+
 
     public equals(other: any): boolean {
         return (
@@ -91,12 +93,12 @@ export class PlaintextBallot implements ElectionObjectBase {
             && _list_eq(this.contests, other.contests)
         )
     }
-        
+
 
     public notEquals(other: any): boolean {
         return !this.equals(other);
     }
-    
+
 }
 
 export class PlaintextBallotContest implements OrderedObjectBase {
@@ -112,7 +114,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
     // """
 
     sequence_order: number;
-    
+
     object_id: string;
 
     @Type(() => PlaintextBallotSelection)
@@ -124,7 +126,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
         this.object_id = object_id;
         this.ballot_selections = selections;
     }
-    
+
     public is_valid(
         expected_object_id: string,
         expected_number_selections: number,
@@ -140,7 +142,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
             console.log(`invalid object_id: expected(${expected_object_id}) actual(${this.object_id})`);
             return false;
         }
-            
+
 
         if (this.ballot_selections.length > expected_number_selections) {
             console.log(`invalid number_selections: expected(${expected_number_selections}) actual(${this.ballot_selections.length})`)
@@ -157,7 +159,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
                 number_elected += 1;
             }
         }
-            
+
 
         if (number_elected > expected_number_elected) {
             console.log(`invalid number_elected: expected(${expected_number_elected}) actual(${number_elected})`);
@@ -171,7 +173,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
 
         return true;
     }
-        
+
     public equals(other: any): boolean {
         return other instanceof PlaintextBallotContest && this.object_id === other.object_id && _list_eq(
             this.ballot_selections, other.ballot_selections
@@ -260,7 +262,7 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
 
         return true;
     }
-        
+
     public equals(other: any): boolean {
         return (
             other instanceof PlaintextBallotSelection
@@ -270,7 +272,7 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
             && this.extended_data === other.extended_data
         )
     }
-        
+
     public notEquals(other: any): boolean {
         return !this.equals(other);
     }
@@ -403,7 +405,7 @@ export class CiphertextBallot extends CryptoHashCheckable implements ElectionObj
        if (this.crypto_hash != recalculated_crypto_hash) {
             return false;
        }
-    
+
        //Check the proofs on the ballot
       const valid_proofs: boolean[] = [];
        for (const contest of this.contests) {
@@ -494,11 +496,11 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             && this.proof === other.proof
         );
     }
-        
+
     public notEquals(other: any): boolean {
         return !this.equals(other);
     }
-        
+
 
     public aggregate_nonce(): ElementModQ | undefined {
         // """
@@ -508,7 +510,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             this.object_id, this.ballot_selections
         )
     }
-        
+
     public elgamal_accumulate(): ElGamalCiphertext {
         // """
         // Add the individual ballot_selections `message` fields together, suitable for use
@@ -516,7 +518,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
         // """
         return _ciphertext_ballot_elgamal_accumulate(this.ballot_selections);
     }
-        
+
 
     public is_valid_encryption(
         encryption_seed: ElementModQ,
@@ -537,14 +539,14 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             console.log(`mismatching contest hash: ${this.object_id} expected(${encryption_seed.toString()}), actual(${this.description_hash.toString()})`);
             return false;
         }
-            
+
 
         const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
             console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash})`);
             return false;
         }
-            
+
 
         // NOTE: this check does not verify the proofs of the individual selections by design.
 
@@ -552,7 +554,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             console.log(`no proof exists for: ${this.object_id}`);
             return false;
         }
-            
+
 
         const computed_ciphertext_accumulation = this.elgamal_accumulate();
 
@@ -561,7 +563,7 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             console.log(`ciphertext does not equal elgamal accumulation for : ${this.object_id}`);
             return false;
         }
-            
+
 
         // # Verify the sum of the selections matches the proof
         return this.proof.is_valid(
@@ -570,8 +572,8 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
             crypto_extended_base_hash,
         )
     }
-        
-    
+
+
 
     // public num_selections(): number{
     //     return this.selections.length;
@@ -678,26 +680,26 @@ export class CiphertextBallotSelection extends CryptoHashCheckable implements Or
             console.log(`mismatching selection hash: ${this.object_id} expected(${encryption_seed.toString()}), actual(${this.description_hash.toString()})`);
             return false;
         }
-            
+
 
         const recalculated_crypto_hash = this.crypto_hash_with(encryption_seed);
         if (this.crypto_hash !== recalculated_crypto_hash) {
             console.log(`mismatching crypto hash: ${this.object_id} expected(${recalculated_crypto_hash.toString()}), actual(${this.crypto_hash.toString()})`);
             return false;
         }
-            
+
 
         if (this.proof === null) {
             console.log(`no proof exists for: ${this.object_id}`);
             return false;
         }
-            
+
 
         return get_optional(this.proof).is_valid(
             this.ciphertext, elgamal_public_key, crypto_extended_base_hash
         );
     }
-        
+
 
     public crypto_hash_with(encryption_seed: ElementModQ): ElementModQ {
         return _ciphertext_ballot_selection_crypto_hash_with(this.object_id, encryption_seed, this.ciphertext)
@@ -874,7 +876,7 @@ export function make_ciphertext_election_context(
         manifest_hash: ElementModQ,
         extended_data?: Map<string, string>
 ): CiphertextElectionContext{
-   
+
     const crypto_base_hash = hash_elems(
         [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians, quorum,
         manifest_hash]);
@@ -926,7 +928,7 @@ export function _ciphertext_ballot_elgamal_accumulate(
     console.log("ciphertexts inside elgamal accumulate ", ciphertexts);
     return elgamal_add(...ciphertexts);
 }
-    
+
 
 export function _ciphertext_ballot_contest_aggregate_nonce(
     object_id: string, ballot_selections: CiphertextBallotSelection[]
@@ -938,14 +940,14 @@ export function _ciphertext_ballot_contest_aggregate_nonce(
             console.log(`missing nonce values for contest ${object_id} cannot calculate aggregat nonce`);
             return undefined;
         }
-            
+
         selection_nonces.push(selection.nonce);
     }
-        
+
 
     return add_q(...selection_nonces);
 }
-    
+
 
 export function make_ciphertext_ballot_selection(
     object_id: string,
@@ -971,7 +973,7 @@ export function make_ciphertext_ballot_selection(
         console.log("before make disjunctive chaum pedersen all fields ", ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation)
         proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
     }
-        
+
 
     return new CiphertextBallotSelection(
         object_id,
@@ -1014,7 +1016,7 @@ export function make_ciphertext_ballot_contest(
     }
     console.log("after contest crypto hash", crypto_hash)
 
-        
+
     const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
     const elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
     if (proof === undefined) {
@@ -1028,7 +1030,7 @@ export function make_ciphertext_ballot_contest(
             crypto_extended_base_hash,
         );
     }
-        
+
     return new CiphertextBallotContest(
         object_id,
         sequence_order,
@@ -1074,11 +1076,11 @@ export function make_ciphertext_ballot(
     if (code_seed === undefined) {
         code_seed = manifest_hash;
     }
-        
+
     if (ballot_code === undefined) {
         ballot_code = get_ballot_code(code_seed, timestamp, contest_hash);
     }
-        
+
 
     return new CiphertextBallot(
         object_id,
@@ -1091,7 +1093,7 @@ export function make_ciphertext_ballot(
         contest_hash,
         nonce,
     )
-    
+
 }
 
 export function get_ballot_code(
@@ -1115,14 +1117,14 @@ export function to_ticks(date_time: Date): number {
     // :return: number of ticks
     // """
 
-    // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time 
+    // JavaScript uses milliseconds as the unit of measurement and getTime() should always return UTC time
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
     const ticks = date_time.getTime() / 1000
     return Math.floor(ticks);
 }
-    
-    
-    
+
+
+
 
 export type AnyElectionContext = PublicElectionContext | PrivateElectionContext;
 

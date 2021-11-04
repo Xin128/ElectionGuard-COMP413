@@ -6,7 +6,7 @@ import {
   ElementModP} from "./group";
 
 import * as crypto from "crypto";
-import { Language } from "./manifest";
+// import { Language } from "./manifest";
 
 /**
  * Denotes Hashable
@@ -77,13 +77,13 @@ export function hash_elem(x:CRYPTO_HASHABLE_T):string {
 export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
   const hashme_lst = [];
   const h = crypto.createHash('sha256');
-  h.update("|", "utf-8");  
-  let hash_me:string; 
+  h.update("|", "utf-8");
+  let hash_me:string;
 
   if (!(a instanceof(Array))) {
     hash_me = hash_elem(a as CRYPTO_HASHABLE_T);
     h.update(hash_me + "|", "utf-8")
-  } else { 
+  } else {
   for (const x of a as Array<CRYPTO_HASHABLE_T>) {
     if (Array.isArray(x)) {
       if (x.length === 0) {
@@ -108,7 +108,7 @@ export function hash_elems(a: CRYPTO_HASHABLE_ALL): ElementModQ {
     /// just for testing!!
   //   const hash_newlist:string[] = ['FEF3', '7F79', '03', '1', '1', '3793',]
   //   const h1 = crypto.createHash('sha256');
-  //    h1.update("|", "utf-8");  
+  //    h1.update("|", "utf-8");
   //    for (const element of hash_newlist) {
   //      h1.update(element + '|', "utf-8");
   //    }

@@ -698,9 +698,10 @@ export class Manifest extends CryptoHashable {
   crypto_hash(): ElementModQ {
     //TODO: date object to ISO date string
     return hash_elems([
+      this.election_scope_id,
       this.type.toString(),
-      this.start_date.toString(),
-      this.end_date.toString(),
+      this.start_date.toISOString().split('.')[0]+"Z",
+      this.end_date.toISOString().split('.')[0]+"Z",
       this.name,
       this.contact_information,
       this.geopolitical_units,

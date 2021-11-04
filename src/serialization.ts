@@ -1,4 +1,6 @@
-import {CiphertextBallot, CiphertextBallotContest, PlaintextBallot} from "./simple_election_data";
+import {CiphertextBallot,
+  // CiphertextBallotContest,
+  PlaintextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
 import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
@@ -666,6 +668,7 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
 
 export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
+    key;
     if (typeof value === "bigint") {
       return value.toString();
     }
