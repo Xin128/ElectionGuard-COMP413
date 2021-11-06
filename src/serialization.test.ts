@@ -49,8 +49,6 @@ describe("TestDeserialization", () => {
     const encryption_seed = new ElementModQ(BigInt('88136692332113344175662474900446441286169260372780056734314948839391938984061'));
     const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
-    console.log(context.crypto_extended_base_hash);
-    console.log(get_optional(encrypted_ballot).is_valid_encryption(encryption_seed,  new ElementModP(11621479678980606145n), context.crypto_extended_base_hash))
   });
 
   // test('testConvertJsonFileToPlaintextBallot', () => {

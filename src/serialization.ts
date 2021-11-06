@@ -190,9 +190,252 @@ const json_string = "{\n" +
   "    \"nonce\": \"9DA6\"\n" +
   "}";
 
-export const simple_ballot_json = `{
-  "object_id": "some-external-id-string-123",
-  "style_id": "jefferson-county-ballot-style",
+export const simple_ballot_json = `
+  {
+    "object_id": "some-external-id-string-123",
+    "style_id": "jefferson-county-ballot-style",
+    "contests": [
+      {
+        "object_id": "justice-supreme-court",
+        "sequence_order": 0,
+        "ballot_selections": [
+          {
+            "object_id": "john-adams-selection",
+            "sequence_order": 0,
+            "vote": 1
+          },
+          {
+            "object_id": "write-in-selection",
+            "sequence_order": 3,
+            "vote": 1,
+            "extended_data": {
+              "value": "Susan B. Anthony",
+              "length": 16
+            }
+          }
+        ]
+      },
+      { "object_id": "referendum-pineapple",
+        "sequence_order": 1,
+        "ballot_selections": [
+              {
+                  "object_id": "referendum-pineapple-affirmative-selection",
+                  "sequence_order": 0,
+                  "vote": 1
+                }
+          ]
+      }
+    ]
+  }`
+
+export const manifest_json = `{
+  "spec_version": "v0.95",
+  "geopolitical_units": [
+    {
+      "object_id": "jefferson-county",
+      "name": "Jefferson County",
+      "type": "county",
+      "contact_information": {
+        "address_line": ["1234 Samuel Adams Way", "Jefferson, Hamilton 999999"],
+        "name": "Jefferson County Clerk",
+        "email": [
+          {
+            "annotation": "inquiries",
+            "value": "inquiries@jefferson.hamilton.state.gov"
+          }
+        ],
+        "phone": [
+          {
+            "annotation": "domestic",
+            "value": "123-456-7890"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "harrison-township",
+      "name": "Harrison Township",
+      "type": "township",
+      "contact_information": {
+        "address_line": ["1234 Thorton Drive", "Harrison, Hamilton 999999"],
+        "name": "Harrison Town Hall",
+        "email": [
+          {
+            "annotation": "inquiries",
+            "value": "inquiries@harrison.hamilton.state.gov"
+          }
+        ],
+        "phone": [
+          {
+            "annotation": "domestic",
+            "value": "123-456-7890"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "harrison-township-precinct-east",
+      "name": "Harrison Township Precinct",
+      "type": "township",
+      "contact_information": {
+        "address_line": ["1234 Thorton Drive", "Harrison, Hamilton 999999"],
+        "name": "Harrison Town Hall",
+        "email": [
+          {
+            "annotation": "inquiries",
+            "value": "inquiries@harrison.hamilton.state.gov"
+          }
+        ],
+        "phone": [
+          {
+            "annotation": "domestic",
+            "value": "123-456-7890"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "rutledge-elementary",
+      "name": "Rutledge Elementary School district",
+      "type": "school",
+      "contact_information": {
+        "address_line": ["1234 Wolcott Parkway", "Harrison, Hamilton 999999"],
+        "name": "Rutledge Elementary School",
+        "email": [
+          {
+            "annotation": "inquiries",
+            "value": "inquiries@harrison.hamilton.state.gov"
+          }
+        ],
+        "phone": [
+          {
+            "annotation": "domestic",
+            "value": "123-456-7890"
+          }
+        ]
+      }
+    }
+  ],
+  "parties": [
+    {
+      "object_id": "whig",
+      "abbreviation": "WHI",
+      "color": "AAAAAA",
+      "logo_uri": "http://some/path/to/whig.svg",
+      "name": {
+        "text": [
+          {
+            "value": "Whig Party",
+            "language": "en"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "federalist",
+      "abbreviation": "FED",
+      "color": "CCCCCC",
+      "logo_uri": "http://some/path/to/federalist.svg",
+      "name": {
+        "text": [
+          {
+            "value": "Federalist Party",
+            "language": "en"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "democratic-republican",
+      "abbreviation": "DEMREP",
+      "color": "EEEEEE",
+      "logo_uri": "http://some/path/to/democratic-repulbican.svg",
+      "name": {
+        "text": [
+          {
+            "value": "Democratic Republican Party",
+            "language": "en"
+          }
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "object_id": "benjamin-franklin",
+      "name": {
+        "text": [
+          {
+            "value": "Benjamin Franklin",
+            "language": "en"
+          }
+        ]
+      },
+      "party_id": "whig"
+    },
+    {
+      "object_id": "john-adams",
+      "name": {
+        "text": [
+          {
+            "value": "John Adams",
+            "language": "en"
+          }
+        ]
+      },
+      "party_id": "federalist"
+    },
+    {
+      "object_id": "john-hancock",
+      "name": {
+        "text": [
+          {
+            "value": "John Hancock",
+            "language": "en"
+          }
+        ]
+      },
+      "party_id": "democratic-republican"
+    },
+    {
+      "object_id": "write-in",
+      "name": {
+        "text": [
+          {
+            "value": "Write In Candidate",
+            "language": "en"
+          },
+          {
+            "value": "Escribir en la candidata",
+            "language": "es"
+          }
+        ]
+      },
+      "is_write_in": true
+    },
+    {
+      "object_id": "referendum-pineapple-affirmative",
+      "name": {
+        "text": [
+          {
+            "value": "Pineapple should be banned on pizza",
+            "language": "en"
+          }
+        ]
+      }
+    },
+    {
+      "object_id": "referendum-pineapple-negative",
+      "name": {
+        "text": [
+          {
+            "value": "Pineapple should not be banned on pizza",
+            "language": "en"
+          }
+        ]
+      }
+    }
+  ],
   "contests": [
     {
       "object_id": "justice-supreme-court",
@@ -201,400 +444,170 @@ export const simple_ballot_json = `{
         {
           "object_id": "john-adams-selection",
           "sequence_order": 0,
-          "vote": 1
+          "candidate_id": "john-adams"
+        },
+        {
+          "object_id": "benjamin-franklin-selection",
+          "sequence_order": 1,
+          "candidate_id": "benjamin-franklin"
+        },
+        {
+          "object_id": "john-hancock-selection",
+          "sequence_order": 2,
+          "candidate_id": "john-hancock"
         },
         {
           "object_id": "write-in-selection",
           "sequence_order": 3,
-          "vote": 1,
-          "extended_data": {
-            "value": "Susan B. Anthony",
-            "length": 16
-          }
+          "candidate_id": "write-in"
         }
+      ],
+      "ballot_title": {
+        "text": [
+          {
+            "value": "Justice of the Supreme Court",
+            "language": "en"
+          },
+          {
+            "value": "Juez de la corte suprema",
+            "language": "es"
+          }
+        ]
+      },
+      "ballot_subtitle": {
+        "text": [
+          {
+            "value": "Please choose up to two candidates",
+            "language": "en"
+          },
+          {
+            "value": "Uno",
+            "language": "es"
+          }
+        ]
+      },
+      "vote_variation": "n_of_m",
+      "electoral_district_id": "jefferson-county",
+      "name": "Justice of the Supreme Court",
+      "number_elected": 2,
+      "votes_allowed": 2
+    },
+    {
+      "object_id": "referendum-pineapple",
+      "sequence_order": 1,
+      "ballot_selections": [
+        {
+          "object_id": "referendum-pineapple-affirmative-selection",
+          "sequence_order": 0,
+          "candidate_id": "referendum-pineapple-affirmative"
+        },
+        {
+          "object_id": "referendum-pineapple-negative-selection",
+          "sequence_order": 1,
+          "candidate_id": "referendum-pineapple-negative"
+        }
+      ],
+      "ballot_title": {
+        "text": [
+          {
+            "value": "Should pineapple be banned on pizza?",
+            "language": "en"
+          },
+          {
+            "value": "¿Debería prohibirse la piña en la pizza?",
+            "language": "es"
+          }
+        ]
+      },
+      "ballot_subtitle": {
+        "text": [
+          {
+            "value": "The township considers this issue to be very important",
+            "language": "en"
+          },
+          {
+            "value": "El municipio considera que esta cuestión es muy importante",
+            "language": "es"
+          }
+        ]
+      },
+      "vote_variation": "one_of_m",
+      "electoral_district_id": "harrison-township",
+      "name": "The Pineapple Question",
+      "number_elected": 1,
+      "votes_allowed": 1
+    }
+  ],
+  "ballot_styles": [
+    {
+      "object_id": "jefferson-county-ballot-style",
+      "geopolitical_unit_ids": ["jefferson-county", "harrison-township"]
+    },
+    {
+      "object_id": "harrison-township-ballot-style",
+      "geopolitical_unit_ids": ["jefferson-county", "harrison-township"]
+    },
+    {
+      "object_id": "harrison-township-precinct-east-ballot-style",
+      "geopolitical_unit_ids": [
+        "jefferson-county",
+        "harrison-township",
+        "harrison-township-precinct-east",
+        "rutledge-elementary"
+      ]
+    },
+    {
+      "object_id": "rutledge-elementary-ballot-style",
+      "geopolitical_unit_ids": [
+        "jefferson-county",
+        "harrison-township",
+        "rutledge-elementary"
       ]
     }
-  ]
-}`
+  ],
+  "name": {
+    "text": [
+      {
+        "value": "Jefferson County Spring Primary",
+        "language": "en"
+      },
+      {
+        "value": "Primaria de primavera del condado de Jefferson",
+        "language": "es"
+      }
+    ]
+  },
+  "contact_information": {
+    "address_line": ["1234 Paul Revere Run", "Jefferson, Hamilton 999999"],
+    "name": "Hamilton State Election Commission",
+    "email": [
+      {
+        "annotation": "press",
+        "value": "inquiries@hamilton.state.gov"
+      },
+      {
+        "annotation": "federal",
+        "value": "commissioner@hamilton.state.gov"
+      }
+    ],
+    "phone": [
+      {
+        "annotation": "domestic",
+        "value": "123-456-7890"
+      },
+      {
+        "annotation": "international",
+        "value": "+1-123-456-7890"
+      }
+    ]
+  },
+  "start_date": "2020-03-01T08:00:00-05:00",
+  "end_date": "2020-03-01T20:00:00-05:00",
+  "election_scope_id": "jefferson-county-primary",
+  "type": "primary"
+}
+`
 
-export const manifest_json = "{\n" +
-  "  \"spec_version\": \"v0.95\",\n" +
-  "  \"geopolitical_units\": [\n" +
-  "    {\n" +
-  "      \"object_id\": \"jefferson-county\",\n" +
-  "      \"name\": \"Jefferson County\",\n" +
-  "      \"type\": \"county\",\n" +
-  "      \"contact_information\": {\n" +
-  "        \"address_line\": [\"1234 Samuel Adams Way\", \"Jefferson, Hamilton 999999\"],\n" +
-  "        \"name\": \"Jefferson County Clerk\",\n" +
-  "        \"email\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"inquiries\",\n" +
-  "            \"value\": \"inquiries@jefferson.hamilton.state.gov\"\n" +
-  "          }\n" +
-  "        ],\n" +
-  "        \"phone\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"domestic\",\n" +
-  "            \"value\": \"123-456-7890\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"harrison-township\",\n" +
-  "      \"name\": \"Harrison Township\",\n" +
-  "      \"type\": \"township\",\n" +
-  "      \"contact_information\": {\n" +
-  "        \"address_line\": [\"1234 Thorton Drive\", \"Harrison, Hamilton 999999\"],\n" +
-  "        \"name\": \"Harrison Town Hall\",\n" +
-  "        \"email\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"inquiries\",\n" +
-  "            \"value\": \"inquiries@harrison.hamilton.state.gov\"\n" +
-  "          }\n" +
-  "        ],\n" +
-  "        \"phone\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"domestic\",\n" +
-  "            \"value\": \"123-456-7890\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"harrison-township-precinct-east\",\n" +
-  "      \"name\": \"Harrison Township Precinct\",\n" +
-  "      \"type\": \"township\",\n" +
-  "      \"contact_information\": {\n" +
-  "        \"address_line\": [\"1234 Thorton Drive\", \"Harrison, Hamilton 999999\"],\n" +
-  "        \"name\": \"Harrison Town Hall\",\n" +
-  "        \"email\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"inquiries\",\n" +
-  "            \"value\": \"inquiries@harrison.hamilton.state.gov\"\n" +
-  "          }\n" +
-  "        ],\n" +
-  "        \"phone\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"domestic\",\n" +
-  "            \"value\": \"123-456-7890\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"rutledge-elementary\",\n" +
-  "      \"name\": \"Rutledge Elementary School district\",\n" +
-  "      \"type\": \"school\",\n" +
-  "      \"contact_information\": {\n" +
-  "        \"address_line\": [\"1234 Wolcott Parkway\", \"Harrison, Hamilton 999999\"],\n" +
-  "        \"name\": \"Rutledge Elementary School\",\n" +
-  "        \"email\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"inquiries\",\n" +
-  "            \"value\": \"inquiries@harrison.hamilton.state.gov\"\n" +
-  "          }\n" +
-  "        ],\n" +
-  "        \"phone\": [\n" +
-  "          {\n" +
-  "            \"annotation\": \"domestic\",\n" +
-  "            \"value\": \"123-456-7890\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    }\n" +
-  "  ],\n" +
-  "  \"parties\": [\n" +
-  "    {\n" +
-  "      \"object_id\": \"whig\",\n" +
-  "      \"abbreviation\": \"WHI\",\n" +
-  "      \"color\": \"AAAAAA\",\n" +
-  "      \"logo_uri\": \"http://some/path/to/whig.svg\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Whig Party\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"federalist\",\n" +
-  "      \"abbreviation\": \"FED\",\n" +
-  "      \"color\": \"CCCCCC\",\n" +
-  "      \"logo_uri\": \"http://some/path/to/federalist.svg\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Federalist Party\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"democratic-republican\",\n" +
-  "      \"abbreviation\": \"DEMREP\",\n" +
-  "      \"color\": \"EEEEEE\",\n" +
-  "      \"logo_uri\": \"http://some/path/to/democratic-repulbican.svg\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Democratic Republican Party\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    }\n" +
-  "  ],\n" +
-  "  \"candidates\": [\n" +
-  "    {\n" +
-  "      \"object_id\": \"benjamin-franklin\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Benjamin Franklin\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"party_id\": \"whig\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"john-adams\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"John Adams\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"party_id\": \"federalist\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"john-hancock\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"John Hancock\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"party_id\": \"democratic-republican\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"write-in\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Write In Candidate\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          },\n" +
-  "          {\n" +
-  "            \"value\": \"Escribir en la candidata\",\n" +
-  "            \"language\": \"es\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"is_write_in\": true\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"referendum-pineapple-affirmative\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Pineapple should be banned on pizza\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"referendum-pineapple-negative\",\n" +
-  "      \"name\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Pineapple should not be banned on pizza\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      }\n" +
-  "    }\n" +
-  "  ],\n" +
-  "  \"contests\": [\n" +
-  "    {\n" +
-  "      \"object_id\": \"justice-supreme-court\",\n" +
-  "      \"sequence_order\": 0,\n" +
-  "      \"ballot_selections\": [\n" +
-  "        {\n" +
-  "          \"object_id\": \"john-adams-selection\",\n" +
-  "          \"sequence_order\": 0,\n" +
-  "          \"candidate_id\": \"john-adams\"\n" +
-  "        },\n" +
-  "        {\n" +
-  "          \"object_id\": \"benjamin-franklin-selection\",\n" +
-  "          \"sequence_order\": 1,\n" +
-  "          \"candidate_id\": \"benjamin-franklin\"\n" +
-  "        },\n" +
-  "        {\n" +
-  "          \"object_id\": \"john-hancock-selection\",\n" +
-  "          \"sequence_order\": 2,\n" +
-  "          \"candidate_id\": \"john-hancock\"\n" +
-  "        },\n" +
-  "        {\n" +
-  "          \"object_id\": \"write-in-selection\",\n" +
-  "          \"sequence_order\": 3,\n" +
-  "          \"candidate_id\": \"write-in\"\n" +
-  "        }\n" +
-  "      ],\n" +
-  "      \"ballot_title\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Justice of the Supreme Court\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          },\n" +
-  "          {\n" +
-  "            \"value\": \"Juez de la corte suprema\",\n" +
-  "            \"language\": \"es\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"ballot_subtitle\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Please choose up to two candidates\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          },\n" +
-  "          {\n" +
-  "            \"value\": \"Uno\",\n" +
-  "            \"language\": \"es\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"vote_variation\": \"n_of_m\",\n" +
-  "      \"electoral_district_id\": \"jefferson-county\",\n" +
-  "      \"name\": \"Justice of the Supreme Court\",\n" +
-  "      \"number_elected\": 2,\n" +
-  "      \"votes_allowed\": 2\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"referendum-pineapple\",\n" +
-  "      \"sequence_order\": 1,\n" +
-  "      \"ballot_selections\": [\n" +
-  "        {\n" +
-  "          \"object_id\": \"referendum-pineapple-affirmative-selection\",\n" +
-  "          \"sequence_order\": 0,\n" +
-  "          \"candidate_id\": \"referendum-pineapple-affirmative\"\n" +
-  "        },\n" +
-  "        {\n" +
-  "          \"object_id\": \"referendum-pineapple-negative-selection\",\n" +
-  "          \"sequence_order\": 1,\n" +
-  "          \"candidate_id\": \"referendum-pineapple-negative\"\n" +
-  "        }\n" +
-  "      ],\n" +
-  "      \"ballot_title\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"Should pineapple be banned on pizza?\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          },\n" +
-  "          {\n" +
-  "            \"value\": \"¿Debería prohibirse la piña en la pizza?\",\n" +
-  "            \"language\": \"es\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"ballot_subtitle\": {\n" +
-  "        \"text\": [\n" +
-  "          {\n" +
-  "            \"value\": \"The township considers this issue to be very important\",\n" +
-  "            \"language\": \"en\"\n" +
-  "          },\n" +
-  "          {\n" +
-  "            \"value\": \"El municipio considera que esta cuestión es muy importante\",\n" +
-  "            \"language\": \"es\"\n" +
-  "          }\n" +
-  "        ]\n" +
-  "      },\n" +
-  "      \"vote_variation\": \"one_of_m\",\n" +
-  "      \"electoral_district_id\": \"harrison-township\",\n" +
-  "      \"name\": \"The Pineapple Question\",\n" +
-  "      \"number_elected\": 1,\n" +
-  "      \"votes_allowed\": 1\n" +
-  "    }\n" +
-  "  ],\n" +
-  "  \"ballot_styles\": [\n" +
-  "    {\n" +
-  "      \"object_id\": \"jefferson-county-ballot-style\",\n" +
-  "      \"geopolitical_unit_ids\": [\"jefferson-county\"]\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"harrison-township-ballot-style\",\n" +
-  "      \"geopolitical_unit_ids\": [\"jefferson-county\", \"harrison-township\"]\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"harrison-township-precinct-east-ballot-style\",\n" +
-  "      \"geopolitical_unit_ids\": [\n" +
-  "        \"jefferson-county\",\n" +
-  "        \"harrison-township\",\n" +
-  "        \"harrison-township-precinct-east\",\n" +
-  "        \"rutledge-elementary\"\n" +
-  "      ]\n" +
-  "    },\n" +
-  "    {\n" +
-  "      \"object_id\": \"rutledge-elementary-ballot-style\",\n" +
-  "      \"geopolitical_unit_ids\": [\n" +
-  "        \"jefferson-county\",\n" +
-  "        \"harrison-township\",\n" +
-  "        \"rutledge-elementary\"\n" +
-  "      ]\n" +
-  "    }\n" +
-  "  ],\n" +
-  "  \"name\": {\n" +
-  "    \"text\": [\n" +
-  "      {\n" +
-  "        \"value\": \"Jefferson County Spring Primary\",\n" +
-  "        \"language\": \"en\"\n" +
-  "      },\n" +
-  "      {\n" +
-  "        \"value\": \"Primaria de primavera del condado de Jefferson\",\n" +
-  "        \"language\": \"es\"\n" +
-  "      }\n" +
-  "    ]\n" +
-  "  },\n" +
-  "  \"contact_information\": {\n" +
-  "    \"address_line\": [\"1234 Paul Revere Run\", \"Jefferson, Hamilton 999999\"],\n" +
-  "    \"name\": \"Hamilton State Election Commission\",\n" +
-  "    \"email\": [\n" +
-  "      {\n" +
-  "        \"annotation\": \"press\",\n" +
-  "        \"value\": \"inquiries@hamilton.state.gov\"\n" +
-  "      },\n" +
-  "      {\n" +
-  "        \"annotation\": \"federal\",\n" +
-  "        \"value\": \"commissioner@hamilton.state.gov\"\n" +
-  "      }\n" +
-  "    ],\n" +
-  "    \"phone\": [\n" +
-  "      {\n" +
-  "        \"annotation\": \"domestic\",\n" +
-  "        \"value\": \"123-456-7890\"\n" +
-  "      },\n" +
-  "      {\n" +
-  "        \"annotation\": \"international\",\n" +
-  "        \"value\": \"+1-123-456-7890\"\n" +
-  "      }\n" +
-  "    ]\n" +
-  "  },\n" +
-  "  \"start_date\": \"2020-03-01T08:00:00-05:00\",\n" +
-  "  \"end_date\": \"2020-03-01T20:00:00-05:00\",\n" +
-  "  \"election_scope_id\": \"jefferson-county-primary\",\n" +
-  "  \"type\": \"primary\"\n" +
-  "}\n";
 
 
 const numberList: string[] = ["timestamp", "sequence_order"];
