@@ -416,16 +416,7 @@ export class ContestDescription extends CryptoHashable implements OrderedObjectB
    * description match up.
    */
   crypto_hash(): ElementModQ {
-    console.log("decription crypto hash")
-    console.log(this.object_id,
-      this.sequence_order,
-      this.electoral_district_id,
-      VoteVariationType[this.vote_variation],
-      get_optional(this.ballot_title).crypto_hash(),
-      get_optional(this.ballot_subtitle).crypto_hash(),
-      this.name,
-      this.number_elected,
-      this.votes_allowed);
+
     return hash_elems([
       this.object_id,
       this.sequence_order,

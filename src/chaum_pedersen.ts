@@ -135,11 +135,11 @@ export class DisjunctiveChaumPedersenProof {
         );
 
         if (!success) {
-            // console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
-            // "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
-            // "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
-            // "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
-            // "k: ", k);
+            console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
+            "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
+            "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
+            "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
+            "k: ", k);
         }
         return success;
 
@@ -312,7 +312,6 @@ export function make_disjunctive_chaum_pedersen_zero(
     const c0 = a_minus_b_q(c, c1);
     const v0 = a_plus_bc_q(u0, c0, r);
     const v1 = a_plus_bc_q(v, c1, r);
-    console.log("make disjunctive zero c1 v1 u0 a0 ", c1, v1, u0, a0)
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
@@ -376,8 +375,6 @@ export function make_constant_chaum_pedersen(
     const b = pow_p(k, u);  // 𝐴^𝑢𝑖 mod 𝑝
     const c = hash_elems([base_hash, alpha, beta, a, b]);  // sha256(𝑄', A, B, a, b)
     const v = a_plus_bc_q(u, c, r);
-    console.log("constant in make constant chaum pedersen ", base_hash, alpha, beta, a, b);
-    console.log("hashed result is ", c, v);
 
     return new ConstantChaumPedersenProof(a, b, c, v, constant);
 }

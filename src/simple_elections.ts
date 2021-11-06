@@ -104,8 +104,6 @@ export function encrypt_selection(selection: PlaintextBallotSelection,
     const elgamal_encryption = elgamal_encrypt(
             BigInt(selection_representation), selection_nonce, elgamal_public_key
         )
-    console.log("before ciphertext:", selection_representation, selection_nonce, elgamal_public_key)
-    console.log("ciphertext:", elgamal_encryption)
     // console.log("descrption hash", selection_description_hash)
     // console.log("crypto hash hash", selection_description.crypto_hash())
 
@@ -136,12 +134,9 @@ export function encrypt_contest(contest: PlaintextBallotContest,
                             ): CiphertextBallotContest | null {
         should_verify_proofs;
         const contest_description_hash = contest_description.crypto_hash();
-        console.log("inside encrypt contest contest description hash", contest_description_hash, nonce_seed)
         const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
         const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
-        console.log("contest nonce:", contest_nonce)
         const chaum_pedersen_nonce = nonce_sequence.next();
-        console.log("chaum_pedersen_nonc:", chaum_pedersen_nonce)
 
         const encrypted_selections: CiphertextBallotSelection[] = [];
         let encrypted_selection = null;
@@ -150,7 +145,6 @@ export function encrypt_contest(contest: PlaintextBallotContest,
         for (const description of contest_description.ballot_selections) {
             let has_selection = false
             for (const selection of contest.ballot_selections) {
-                console.log("selection object id is ", selection.object_id, " description object id is ", description.object_id);
                 if (selection.object_id == description.object_id) {
                     has_selection = true
                     selection_count += selection.vote;
@@ -262,7 +256,7 @@ export function encrypt_ballot(ballot: PlaintextBallot,
     // console.dir(encrypted_contests[0].selections, { depth: 100 });
 
     const inputs = from_file_to_class();
-    const nonce_seed = hash_elems([inputs.manifest_hash,ballot.object_id, inputs.nonce]);
+    const nonce_seed = hash_elems([internal_manifest.manifest_hash, ballot.object_id, inputs.nonce]);
     // pass & todo: change to internal_manifest.manifest_hash
 
     const encrypted_contests = get_optional(encrypt_ballot_contests(
@@ -271,7 +265,7 @@ export function encrypt_ballot(ballot: PlaintextBallot,
 
     const encrypted_ballot = make_ciphertext_ballot(ballot.object_id,
         ballot.style_id,
-        inputs.manifest_hash,
+        internal_manifest.manifest_hash,
         encrypted_contests,
         encryption_seed,
         nonce,)

@@ -16,6 +16,7 @@ import {ElectionObjectBase, OrderedObjectBase} from "./election_object_base";
 import {Transform, Type} from "class-transformer";
 import "reflect-metadata";
 import { get_optional } from "./utils";
+import { create_ballot_hash } from "./simple_elections";
 // import { create_ballot_hash } from "./simple_elections";
 
 //!!! Caution: This operation do sort in place! It mutates the compared arrays' order!
@@ -254,7 +255,7 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
             return false;
         }
 
-        let vote = this.vote;
+        const vote = this.vote;
         if (vote < 0 || vote > 1) {
             console.log(`Currently only supporting choices of 0 or 1: ${this.toString()}`);
             return false;
@@ -557,7 +558,6 @@ export class CiphertextBallotContest extends CryptoHashCheckable implements Orde
 
 
         const computed_ciphertext_accumulation = this.elgamal_accumulate();
-
         // Verify that the contest ciphertext matches the elgamal accumulation of all selections
         if (this.ciphertext_accumulation !== computed_ciphertext_accumulation) {
             console.log(`ciphertext does not equal elgamal accumulation for : ${this.object_id}`);
@@ -880,9 +880,7 @@ export function make_ciphertext_election_context(
     const crypto_base_hash = hash_elems(
         [new ElementModP(P), new ElementModQ(Q), new ElementModP(G) ,number_of_guardians, quorum,
         manifest_hash]);
-    console.log("crypto base hash and commitment hash is ", crypto_base_hash, commitment_hash, manifest_hash);
     const crypto_extended_base_hash = hash_elems([crypto_base_hash, commitment_hash]);
-    console.log("crypto extended base hash is ", crypto_extended_base_hash);
     return new CiphertextElectionContext(
         number_of_guardians,
         quorum,
@@ -925,7 +923,6 @@ export function _ciphertext_ballot_elgamal_accumulate(
     for (const selection of ballot_selections) {
         ciphertexts.push(selection.ciphertext);
     }
-    console.log("ciphertexts inside elgamal accumulate ", ciphertexts);
     return elgamal_add(...ciphertexts);
 }
 
@@ -963,14 +960,12 @@ export function make_ciphertext_ballot_selection(
     crypto_hash?: ElementModQ,
     proof?: DisjunctiveChaumPedersenProof,
     extended_data?: ElGamalCiphertext):CiphertextBallotSelection{
-    console.log("crypto hash before _ciphertext_ballot_selection_crypto_hash_with", crypto_hash, object_id, description_hash, ciphertext.crypto_hash())
 
     if (crypto_hash == null) {
         crypto_hash = _ciphertext_ballot_selection_crypto_hash_with(object_id, description_hash, ciphertext);
     }
     // console.log(crypto_hash)
     if (proof == null) {
-        console.log("before make disjunctive chaum pedersen all fields ", ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation)
         proof = make_disjunctive_chaum_pedersen(ciphertext, get_optional(nonce), elgamal_public_key, crypto_extended_base_hash, proof_seed, selection_representation);
     }
 
@@ -1007,20 +1002,16 @@ export function make_ciphertext_ballot_contest(
     // ballot selections include their encryption nonces. Likewise, if a crypto_hash is not provided,
     // it will be derived from the other fields.
     // """
-    console.log("contest crypto hash", crypto_hash)
     if (crypto_hash === undefined) {
         crypto_hash = _ciphertext_ballot_context_crypto_hash(
             object_id, ballot_selections, description_hash
         )
-        console.log("crypto hash at contest level is ", crypto_hash);
     }
-    console.log("after contest crypto hash", crypto_hash)
 
 
     const aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections);
     const elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections);
     if (proof === undefined) {
-        console.log("elgamal accumulation is ", elgamal_accumulation, "number selected ", number_elected, "aggregate is ", aggregate)
         proof = make_constant_chaum_pedersen(
             elgamal_accumulation,
             BigInt(number_elected),
@@ -1069,8 +1060,7 @@ export function make_ciphertext_ballot(
         console.log("ciphertext ballot with no contests");
     }
 
-    // const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
-    const contest_hash = new ElementModQ(15146);
+    const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
     // timestamp = timestamp === undefined ? to_ticks(new Date()) : timestamp;
     timestamp = 1635015400;
     if (code_seed === undefined) {
