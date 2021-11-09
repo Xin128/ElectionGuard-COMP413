@@ -154,7 +154,7 @@ export class PlaintextBallotContest implements OrderedObjectBase {
         let votes = 0;
 
         // Verify the selections are well-formed
-        for (let selection of this.ballot_selections) {
+        for (const selection of this.ballot_selections) {
             votes += selection.vote;
             if (selection.vote >= 1) {
                 number_elected += 1;
@@ -225,7 +225,7 @@ export class PlaintextBallotSelection implements OrderedObjectBase {
 
     vote: number;
 
-    is_placeholder_selection: boolean = false;
+    is_placeholder_selection = false;
     // """Determines if this is a placeholder selection"""
 
     // # TODO: ISSUE #35: encrypt/decrypt

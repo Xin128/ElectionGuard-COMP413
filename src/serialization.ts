@@ -679,6 +679,7 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
 }
 
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
     key;
