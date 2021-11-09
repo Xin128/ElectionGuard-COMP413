@@ -67,6 +67,6 @@ describe("TestDeserialization", () => {
     const readin_manifest = from_file_to_class_manifest(manifest_json);
     const internal_manifest = new InternalManifest(readin_manifest);
     // console.log(JSON.stringify(internal_manifest, null, "\t"));
-    console.log(internal_manifest.manifest_hash);
+    // console.log(internal_manifest.manifest_hash);
   });
 });
