@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {CiphertextBallot,
   // CiphertextBallotContest,
   PlaintextBallot} from "./simple_election_data";
@@ -680,6 +681,7 @@ export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBall
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
     key;
