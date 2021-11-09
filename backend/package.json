@@ -1,13 +1,20 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "license": "MIT",
   "dependencies": {
+    "@electionguard-comp413/config": "1.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "express": "^4.17.1",
-    "@electionguard-comp413/config": "1.0.0"
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon server.js --exec babel-node --presets env",
+    "release": "npm run clean && npm run build && npm run serve",
+    "clean": "rm -rf dist && mkdir dist", "build": "babel . -s -D -d dist --presets env --ignore node_modules",
+    "serve": "node dist/server.js"
   }
 }
