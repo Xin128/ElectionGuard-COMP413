@@ -20,7 +20,13 @@
   "bin": {
     "my-cli-tool": "./dist/esbuild/cli.js"
   },
+  "private": true,
+  "workspaces": [
+    "backend",
+    "packages/*"
+  ],
   "scripts": {
+    "start-backend": "yarn --cwd backend start",
     "cli": "ts-node src/cli.ts",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
