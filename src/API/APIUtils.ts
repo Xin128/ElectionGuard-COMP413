@@ -7,6 +7,8 @@ import { get_optional } from "../utils";
 import { Ballot, BallotItem, BallotOption, EncryptBallotOutput, ErrorBallotInput, ErrorType} from "./typical_ballot_data";
 import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
+import { Manifest, Date, Party, Candidate, GeopoliticalUnit, ContestDescription, BallotStyle, ElectionType, ReportingUnitType, InternationalizedText, Language, VoteVariationType, SelectionDescription} from "../manifest"
+
 /**
  * Ballot ==> Whole Election 
  * BallotItem ==> A single question on the ballot
@@ -111,6 +113,105 @@ export function buildBallot(ballot): Ballot {
 
     return electionBallot;
 }
+
+// this function builds a manifest from given ballot
+export function buildManifest(ballot): Manifest {
+
+    // same as name of this election
+    const election_scope_id: string = ballot.electionName[0].text;
+    // we do not have spec version in our code
+    const spec_version = "spec_version";
+    // we do not have the election type from the ballot
+    const type: ElectionType = ElectionType.unknown;
+    // we assume start date and end date are the same since we only have start date from the ballot
+    const start_date: Date = ballot.text1[0].text;
+    const end_date: Date = ballot.text1[0].text;
+
+    let geopolitical_units: GeopoliticalUnit[] = [];
+    let parties: Party[] = [];
+    let candidates: Candidate[] = [];
+    let contests: ContestDescription[] = [];
+    let ballot_styles: BallotStyle[] = [];
+
+    // same as name of this election
+    const name = ballot.electionName[0].text;
+
+    geopolitical_units = buildGeopoliticalUnit(ballot);
+    parties = buildParty(ballot);
+    candidates = buildCandidate(ballot);
+    contests = buildContest(ballot);
+    ballot_styles = buildBallotStyle(ballot);
+
+    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
+}
+
+export function buildGeopoliticalUnit(ballot): GeopoliticalUnit[] {
+    const object_id = ballot.precinctId;
+    const name = ballot.precinctName;
+    const type : ReportingUnitType = ReportingUnitType.precinct;
+
+    return [new GeopoliticalUnit(object_id, name, type)];
+}
+
+export function buildParty(ballot): Party[] {
+    const object_id = ballot.partyId;
+    const languageName = new Language(ballot.partyName[0].text, "en");
+    const name = new InternationalizedText(languageName);
+    return [new Party(object_id, name)]
+}
+
+export function buildCandidate(ballot): Candidate[] {
+    const candidates: Candidate[] = [];
+    for (let i = 0; i < ballot.ballotItems.length; i++) {
+        for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
+            // we do not have candidate id, object_id same as candidate name
+            const object_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
+            const candidateName = new Language(ballot.ballotItems[i].ballotOptions[j].title[0].text, "en");
+            const name = new InternationalizedText(candidateName);
+            const candidate = new Candidate(object_id, name);
+            candidates.push(candidate);
+        }
+    }
+    return candidates;
+}
+
+export function buildContest(ballot): ContestDescription[] {
+    const descriptions: ContestDescription[] = [];
+    for (let i = 0; i < ballot.ballotItems.length; i++) {
+        const object_id = ballot.ballotItems[i].id;
+        const sequence_order = ballot.ballotItems[i].order;
+        const electoral_district_id = ballot.precinctId;
+        const vote_variation = VoteVariationType.unknown;
+        // number of candidates are elected
+        //TODO: double check with Aaron on how this can be extrapolated from the
+        const number_elected = 0;
+        const votes_allowed = null;
+        const name = ballot.ballotItems[i].title[0].text;
+        const ballot_selections: SelectionDescription[] = [];
+        for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
+            const option_object_id = ballot.ballotItems[i].ballotOptions[j].id;
+            const option_sequence_order = ballot.ballotItems[i].ballotOptions[j].order;
+            const option_candidate_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
+            const selection = new SelectionDescription(option_object_id, option_sequence_order, option_candidate_id);
+            ballot_selections.push(selection);
+        }
+        const description = new ContestDescription(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, votes_allowed, name, ballot_selections);
+        descriptions.push(description);
+    }
+    return descriptions;
+}
+
+export function buildBallotStyle(ballot): BallotStyle[] {
+    const object_id = ballot.electioinName[0].text;
+    const geopolitical_unit_ids = [ballot.precinctId];
+    const party_ids = [ballot.partyId];
+    return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
+}
+
+
+
+
+
 
 
 // Only used for testing
