@@ -2,7 +2,7 @@ import {get_optional} from "./utils";
 import {buildFakeBallot, encryptBallot, getQRCode, buildBallot} from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
-import * as ballot from './simple.json';
+import * as ballot from './AaronBallot/super_complex_ballot.json';
 
 function downloadJson(exportName: string){
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
@@ -77,6 +77,7 @@ get_optional(document.getElementById("next2")).addEventListener("click", functio
 get_optional(document.getElementById("next3")).addEventListener("click", function () {
   console.log('click');
   const realBallot = buildBallot(ballot);
+  console.log(realBallot)
   // const fakeBallot = buildFakeBallot();
   const result = encryptBallot(realBallot);
   if (result instanceof ErrorBallotInput) {

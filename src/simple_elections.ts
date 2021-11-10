@@ -133,6 +133,7 @@ export function encrypt_ballot_contest(contest:PlaintextBallotContest, context: 
 export function encrypt_ballot_contests(ballot:PlaintextBallot, context: AnyElectionContext, seed_nonce:ElementModQ,):CiphertextBallotContest[]|null {
     const encrypted_contests: CiphertextBallotContest[] = [];
     for (const contest of ballot.contests) {
+        // const myWorker = new Worker("../../worker.js");
         const cipher = get_optional(encrypt_ballot_contest(contest, context, seed_nonce));
         encrypted_contests.push(cipher);
     }
