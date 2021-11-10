@@ -6,6 +6,7 @@ import {plainToClass} from "class-transformer";
 import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
+import fs from 'fs';
 
 const json_string = "{\n" +
   "    \"object_id\": \"some-external-id-string-123\",\n" +
@@ -610,7 +611,6 @@ export const manifest_json = `{
 `
 
 
-
 const numberList: string[] = ["timestamp", "sequence_order"];
 const booleanList: string[] = ["is_placeholder_selection"];
 const banList: string[] = ["object_id", "style_id"];
@@ -695,4 +695,9 @@ export function object_log(object_to_log: any): string{
     // }
     return value;
   }, '\t');
+}
+
+export async function export2File() {
+  let json = {foo:true};
+  fs.writeFileSync('foo.json', JSON.stringify(json));
 }

@@ -12,7 +12,8 @@ import {
   from_file_to_PlaintextBallot,
   // object_log,
   simple_ballot_json,
-  manifest_json, // hex_to_bigint
+  manifest_json,
+  export2File, // hex_to_bigint
 } from "./serialization";
 import {
   // CiphertextBallotSelection,
@@ -68,5 +69,9 @@ describe("TestDeserialization", () => {
     const internal_manifest = new InternalManifest(readin_manifest);
     // console.log(JSON.stringify(internal_manifest, null, "\t"));
     console.log(internal_manifest.manifest_hash);
+  });
+
+  test('testWriteJson2File', async () => {
+    export2File();
   });
 });
