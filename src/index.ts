@@ -1,5 +1,5 @@
 import {get_optional} from "./utils";
-import {buildFakeBallot, encryptBallot, getQRCode, buildBallot} from "./API/APIUtils";
+import {encryptBallot, getQRCode, buildBallot, buildManifest} from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './AaronBallot/super_complex_ballot.json';
@@ -74,12 +74,16 @@ get_optional(document.getElementById("next2")).addEventListener("click", functio
   get_optional(document.getElementById("previous3")).style.display = "block";
 });
 
+
 get_optional(document.getElementById("next3")).addEventListener("click", function () {
-  console.log('click');
+  console.log('buildBallot');
   const realBallot = buildBallot(ballot);
+  console.log('buildManifest');
+  const realManifest = buildManifest(ballot);
   console.log(realBallot)
+  console.log(realManifest)
   // const fakeBallot = buildFakeBallot();
-  const result = encryptBallot(realBallot);
+  const result = encryptBallot(realBallot, realManifest);
   if (result instanceof ErrorBallotInput) {
     console.log("error input!")
     return;
@@ -93,7 +97,8 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   get_optional(document.getElementById("screen_4")).style.display = "contents";
   alert("Downloading Encrypted Ballot! qwq");
   //Download an encrypted ballot json file.
-  // downloadJson("encrpted_ballot");
+  downloadJson("encrpted_ballot");
 
 
 });
+

@@ -53,9 +53,11 @@
     "assert-browserify": "^2.0.0",
     "bigint-mod-arith": "^3.0.1",
     "buffer": "^6.0.3",
+    "class-transformer": "^0.4.0",
     "crypto-browserify": "^3.12.0",
     "events": "^3.3.0",
     "qrcode-generator-ts": "^0.0.4",
+    "reflect-metadata": "^0.1.13",
     "stream-browserify": "^3.0.0"
   }
 }

@@ -24,30 +24,58 @@ import { hash_elems } from "./hash"
 // import loggings
 
 import { Nonces } from "./nonces"
+import {Transform} from "class-transformer";
 
+//Usage case for proof
+export enum ProofUsage {
+  Unknown = "Unknown",
+  SecretValue = "Prove knowledge of secret value",
+  SelectionLimit = "Prove value within selection's limit",
+  SelectionValue = "Prove selection's value (0 or 1)",
+}
 
 export class DisjunctiveChaumPedersenProof {
     // Representation of disjunctive Chaum Pederson proof
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_zero_pad: ElementModP;
     // a0 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_zero_data: ElementModP;
     // b0 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_one_pad: ElementModP;
     // a1 in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
     proof_one_data: ElementModP;
     // b1 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_zero_challenge: ElementModQ;
     // c0 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_one_challenge: ElementModQ;
     // c1 in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     challenge: ElementModQ;
     // c in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_zero_response: ElementModQ;
     // proof_zero_response in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
     proof_one_response: ElementModQ;
     // proof_one_response in the spec
+    @Transform(({value}) => value as ProofUsage)
+    usage: ProofUsage = ProofUsage.SelectionValue;
 
-    public constructor(a0: ElementModP, b0: ElementModP, a1: ElementModP, b1: ElementModP, c0: ElementModQ, c1: ElementModQ, c: ElementModQ, v0: ElementModQ, v1: ElementModQ) {
+    public constructor(a0: ElementModP,
+                       b0: ElementModP,
+                       a1: ElementModP,
+                       b1: ElementModP,
+                       c0: ElementModQ,
+                       c1: ElementModQ,
+                       c: ElementModQ,
+                       v0: ElementModQ,
+                       v1: ElementModQ,
+                       usage: ProofUsage = ProofUsage.SelectionValue) {
         this.proof_zero_pad = a0;
         this.proof_zero_data = b0;
         this.proof_one_pad = a1;
@@ -57,6 +85,7 @@ export class DisjunctiveChaumPedersenProof {
         this.challenge = c;
         this.proof_zero_response = v0;
         this.proof_one_response = v1;
+        this.usage = usage;
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
@@ -106,11 +135,11 @@ export class DisjunctiveChaumPedersenProof {
         );
 
         if (!success) {
-            // console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
-            // "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
-            // "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
-            // "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
-            // "k: ", k);
+            console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a0: ", in_bounds_a0,
+            "in_bounds_b0: ", in_bounds_b0, "in_bounds_a1: ", in_bounds_a1, "in_bounds_b1: ", in_bounds_b1, "in_bounds_c0: ", in_bounds_c0,
+            "in_bounds_c1: ", in_bounds_c1, "in_bounds_v0: ", in_bounds_v0, "in_bounds_v1: ", in_bounds_v1, "consistent_c: ", consistent_c,
+            "consistent_gv0: ", consistent_gv0, "consistent_gv1: ", consistent_gv1, "consistent_kv0: ", consistent_kv0, "consistent_gc1kv1: ", consistent_gc1kv1,
+            "k: ", k);
         }
         return success;
 
@@ -118,25 +147,46 @@ export class DisjunctiveChaumPedersenProof {
 
 }
 
+// Representation of constant Chaum Pederson proof.
 export class ConstantChaumPedersenProof {
-    // Representation of constant Chaum Pederson proof.
-    pad: ElementModP;
     // a in the spec
-    data: ElementModP;
-    // b in the spec
-    challenge: ElementModQ;
-    // c in the spec
-    response: ElementModQ;
-    // v in the spec
-    constant: bigint;
-    // constant value
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
+    pad: ElementModP;
 
-    public constructor(pad: ElementModP, data: ElementModP, challenge: ElementModQ, response: ElementModQ, constant: bigint) {
+    // b in the spec
+    @Transform(({value}) => new ElementModP(BigInt("0x"+value)))
+    data: ElementModP;
+
+    // c in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
+    challenge: ElementModQ;
+
+    // v in the spec
+    @Transform(({value}) => new ElementModQ(BigInt("0x"+value)))
+    response: ElementModQ;
+
+    // constant value
+    @Transform(({value}) => BigInt("0x" + value))
+    constant: bigint;
+
+    //a description of how to use this proof
+    @Transform(({value}) => value as ProofUsage)
+    usage: ProofUsage = ProofUsage.SelectionLimit
+
+
+
+    public constructor(pad: ElementModP,
+                       data: ElementModP,
+                       challenge: ElementModQ,
+                       response: ElementModQ,
+                       constant: bigint,
+                       usage: ProofUsage = ProofUsage.SelectionLimit) {
         this.pad = pad;
         this.data = data;
         this.challenge = challenge;
         this.response = response;
         this.constant = constant;
+        this.usage = usage;
     }
 
     public is_valid(message: ElGamalCiphertext, k: ElementModP, q: ElementModQ): boolean {
@@ -233,20 +283,35 @@ export function make_disjunctive_chaum_pedersen_zero(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
+    // const c1 = nonces.get(0);
+    // const v1 = nonces.get(1);
+    // const u0 = nonces.get(2);
+    // // Compute the NIZKP
+    // const a0 = g_pow_p(u0);
+    // const b0 = pow_p(k, u0);
+    // const q_minus_c1 = negate_q(c1);
+    // const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
+    // const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
+    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
+    // const c0 = a_minus_b_q(c, c1);
+
+    // const v0 = a_plus_bc_q(u0, c0, r);
+    // console.log("make disjunctive one c1 v1 u0 a0 b1 c0 c v0 v1", c1, v1, u0, a0, b0, a1, b1, c0, c1, c, v0, v1);
+    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
+
     const c1 = nonces.get(0);
-    const v1 = nonces.get(1);
+    const v = nonces.get(1);
     const u0 = nonces.get(2);
-    // Compute the NIZKP
+
+    // # Compute the NIZKP
     const a0 = g_pow_p(u0);
     const b0 = pow_p(k, u0);
-    const q_minus_c1 = negate_q(c1);
-    const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
-    const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
+    const a1 = g_pow_p(v);
+    const b1 = mult_p(pow_p(k, v), g_pow_p(c1));
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
     const c0 = a_minus_b_q(c, c1);
-
     const v0 = a_plus_bc_q(u0, c0, r);
-
+    const v1 = a_plus_bc_q(v, c1, r);
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 }
 
@@ -259,18 +324,34 @@ export function make_disjunctive_chaum_pedersen_one(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    const c0 = nonces.get(0);
-    const v0 = nonces.get(1);
+    // const c0 = nonces.get(0);
+    // const v0 = nonces.get(1);
+    // const u1 = nonces.get(2);
+
+    // // Compute the NIZKP
+    // const q_minus_c0 = negate_q(c0);
+    // const a0 = mult_p(g_pow_p(v0), pow_p(alpha, q_minus_c0));
+    // const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
+    // const a1 = g_pow_p(u1);
+    // const b1 = pow_p(k, u1);
+    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
+    // const c1 = a_minus_b_q(c, c0);
+    // const v1 = a_plus_bc_q(u1, c1, r);
+
+    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
+    const w = nonces.get(0);
+    const v = nonces.get(1);
     const u1 = nonces.get(2);
 
-    // Compute the NIZKP
-    const q_minus_c0 = negate_q(c0);
-    const a0 = mult_p(g_pow_p(v0), pow_p(alpha, q_minus_c0));
-    const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
+    // # Compute the NIZKP
+    const a0 = g_pow_p(v);
+    const b0 = mult_p(pow_p(k, v), g_pow_p(w));
     const a1 = g_pow_p(u1);
     const b1 = pow_p(k, u1);
     const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
-    const c1 = a_minus_b_q(c, c0);
+    const c0 = negate_q(w);
+    const c1 = add_q(c, w);
+    const v0 = a_plus_bc_q(v, c0, r);
     const v1 = a_plus_bc_q(u1, c1, r);
 
     return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
