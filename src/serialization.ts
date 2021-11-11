@@ -698,6 +698,6 @@ export function object_log(object_to_log: any): string{
 }
 
 export async function export2File() {
-  let json = {foo:true};
+  const json = {foo:true};
   fs.writeFileSync('foo.json', JSON.stringify(json));
 }
