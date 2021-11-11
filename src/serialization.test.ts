@@ -24,6 +24,7 @@ import { ElementModQ,ElementModP } from "./group";
 // import { hash_elems } from "./hash";
 
 import {InternalManifest} from "./manifest";
+import fs from 'fs';
 
 describe("TestDeserialization", () => {
 
@@ -45,10 +46,11 @@ describe("TestDeserialization", () => {
       // new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061")),//python manifest hash
       // new ElementModQ(14227),
       undefined);
-    // TODO: Need to change this !!!!!!!!!!!!!! Now hard coded!!!!!!!
-    // context.crypto_extended_base_hash = new ElementModQ(60911n);
+    
     const encryption_seed = new ElementModQ(BigInt('88136692332113344175662474900446441286169260372780056734314948839391938984061'));
     const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
+    // output encrypted_ballot to json file 
+    fs.writeFileSync('test_json_testing.json', JSON.stringify(encrypt_compatible_testing_demo(get_optional(encrypted_ballot))));
     console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
   });
 
