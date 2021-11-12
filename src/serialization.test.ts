@@ -13,9 +13,13 @@ import {
   // object_log,
   simple_ballot_json,
   manifest_json,
-  export2File, // hex_to_bigint
+  export2File,
+  readFromFile,
+  from_file_to_PlaintextBallots,
+  object_log, // hex_to_bigint
 } from "./serialization";
 import {
+  CiphertextBallot,
   // CiphertextBallotSelection,
   // make_ciphertext_ballot,
   make_ciphertext_election_context,
@@ -30,12 +34,16 @@ describe("TestDeserialization", () => {
 
   test('testConvertJsonFileToObj', () => {
     // const encryped_ballot = encrypt_ballot(undefined, undefined, undefined, undefined, undefined);
-  
-    const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
+    let ballotNum = `ballot-235`;
+    const plaintextBallots: PlaintextBallot[] = from_file_to_PlaintextBallots("electiongaurd_python\\ballotOnly-235.json");
+    // let encrypted_ballots: string[] = [];
+    
+    // const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
     const inputs = from_file_to_class();
     // const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
     // console.log("encryption seed!", encryption_seed)
-    const readin_manifest = from_file_to_class_manifest(manifest_json);
+    const readin_manifest = from_file_to_class_manifest("electiongaurd_python\\manifestOnly-235.json");
+    console.log("readin manifest is ", readin_manifest);
     const internal_manifest = new InternalManifest(readin_manifest);
     const context = make_ciphertext_election_context(
       1,
@@ -46,12 +54,21 @@ describe("TestDeserialization", () => {
       // new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061")),//python manifest hash
       // new ElementModQ(14227),
       undefined);
-    
+    // console.log("context is ", context);
+    console.log("internal manifest is ", object_log(internal_manifest));
     const encryption_seed = new ElementModQ(BigInt('88136692332113344175662474900446441286169260372780056734314948839391938984061'));
-    const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
+    let idx = 0;
+    for (let plaintextBallot of plaintextBallots) {
+      const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
+      fs.writeFileSync(`electionguard_typescript\\encrypted_ballot_${ballotNum}-${idx}.json`, encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
+      idx++;
+      // console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
+    }
+    
     // output encrypted_ballot to json file 
-    fs.writeFileSync('test_json_testing.json', JSON.stringify(encrypt_compatible_testing_demo(get_optional(encrypted_ballot))));
-    console.log(encrypt_compatible_testing_demo(get_optional(encrypted_ballot)));
+    // fs.writeFileSync('test_json_testing.json', JSON.stringify(encrypt_compatible_testing_demo(get_optional(encrypted_ballot))));
+    // fs.writeFileSync(`electionguard_typescript\\encrypted_ballot_${ballotNum}.json`, encrypted_ballots.toString());
+    
   });
 
   // test('testConvertJsonFileToPlaintextBallot', () => {
@@ -75,5 +92,22 @@ describe("TestDeserialization", () => {
 
   test('testWriteJson2File', async () => {
     export2File();
+  });
+
+  test('testReadFromFile', () => {
+    let compareBallot = from_file_to_PlaintextBallot(simple_ballot_json);
+    console.log("compare ballot is ", object_log(compareBallot));
+    
+    let ballots = from_file_to_PlaintextBallots("electionguard_typescript\\ballots.json");
+    for (let ballot of ballots) {
+      console.log("plaintextballots are ", object_log(ballot));
+      // for (let contest of ballot.contests) {
+      //   for (let selection of contest.ballot_selections) {
+      //     console.log("selections are ", selection);
+      //   }
+      // }
+      
+    }
+    
   });
 });

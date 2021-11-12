@@ -653,8 +653,20 @@ export function from_file_to_PlaintextBallot(jsonString: string): PlaintextBallo
   );
   return plainToClass(PlaintextBallot, result as PlaintextBallot);
 }
+
+export function from_file_to_PlaintextBallots(path: string): PlaintextBallot[] {
+  let ballots: PlaintextBallot[] = [];
+  const dataJson = fs.readFileSync(path, "utf8");
+  const data = JSON.parse(dataJson);
+  for (let ballot of data) {
+    ballots.push(from_file_to_PlaintextBallot(JSON.stringify(ballot)));
+  }
+  return ballots;
+}
+
 export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
-  const result = JSON.parse(manifest_JSON);
+  const data = fs.readFileSync(manifest_JSON, "utf8");
+  const result = JSON.parse(data);
   return plainToClass(Manifest, result as Manifest);
 }
 
@@ -686,7 +698,7 @@ export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
     key;
     if (typeof value === "bigint") {
-      return value.toString();
+      return value.toString(10);
     }
     // else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
     //   return value.toString(16);
@@ -700,4 +712,9 @@ export function object_log(object_to_log: any): string{
 export async function export2File() {
   const json = {foo:true};
   fs.writeFileSync('foo.json', JSON.stringify(json));
+}
+
+export function readFromFile(path: string) {
+  const data = fs.readFileSync(path, "utf8");
+  console.log("read from file json is ", JSON.parse(data));
 }
