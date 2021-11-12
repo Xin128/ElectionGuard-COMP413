@@ -14,12 +14,10 @@ import {
   simple_ballot_json,
   manifest_json,
   export2File,
-  readFromFile,
   from_file_to_PlaintextBallots,
   object_log, // hex_to_bigint
 } from "./serialization";
 import {
-  CiphertextBallot,
   // CiphertextBallotSelection,
   // make_ciphertext_ballot,
   make_ciphertext_election_context,
@@ -35,14 +33,14 @@ describe("TestDeserialization", () => {
   test('testConvertJsonFileToObj', () => {
     // const encryped_ballot = encrypt_ballot(undefined, undefined, undefined, undefined, undefined);
     let ballotNum = `ballot-235`;
-    const plaintextBallots: PlaintextBallot[] = from_file_to_PlaintextBallots("electiongaurd_python\\ballotOnly-235.json");
+    const plaintextBallots: PlaintextBallot[] = from_file_to_PlaintextBallots("generated_data/ballot-101.json");
     // let encrypted_ballots: string[] = [];
     
     // const plaintextBallot: PlaintextBallot = from_file_to_PlaintextBallot(simple_ballot_json);
     const inputs = from_file_to_class();
     // const encryption_seed = hash_elems([inputs.manifest_hash, inputs.object_id, inputs.nonce]);
     // console.log("encryption seed!", encryption_seed)
-    const readin_manifest = from_file_to_class_manifest("electiongaurd_python\\manifestOnly-235.json");
+    const readin_manifest = from_file_to_class_manifest("generated_data/manifest-101.json");
     console.log("readin manifest is ", readin_manifest);
     const internal_manifest = new InternalManifest(readin_manifest);
     const context = make_ciphertext_election_context(
