@@ -33,9 +33,9 @@ import {
     hash_elems } from "./hash"
 import { ContestDescription, ContestDescriptionWithPlaceholders, InternalManifest, SelectionDescription } from "./manifest"
 import {
-  from_file_to_class,
-  // from_file_to_PlaintextBallot,
-  // object_log
+    from_file_to_class,
+    // from_file_to_PlaintextBallot,
+    // object_log
 } from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
 import { Nonces } from "./nonces";
@@ -44,17 +44,17 @@ import { elgamal_encrypt } from "./elgamal";
 // const PLACEHOLDER_NAME = "PLACEHOLDER"
 
 export function selection_from(
-                    description: SelectionDescription,
-                    is_placeholder = false,
-                    is_affirmative = false,
-                ) : PlaintextBallotSelection {
-        return new PlaintextBallotSelection(
-            description.object_id,
-            description.sequence_order,
-            is_affirmative ? 1 : 0,
-            is_placeholder
-        );
-    }
+    description: SelectionDescription,
+    is_placeholder = false,
+    is_affirmative = false,
+) : PlaintextBallotSelection {
+    return new PlaintextBallotSelection(
+        description.object_id,
+        description.sequence_order,
+        is_affirmative ? 1 : 0,
+        is_placeholder
+    );
+}
 
 export function contest_from(description: ContestDescription) : PlaintextBallotContest {
     const selections:PlaintextBallotSelection[] = [];
@@ -67,14 +67,14 @@ export function contest_from(description: ContestDescription) : PlaintextBallotC
 
 export function encrypt_selection(selection: PlaintextBallotSelection,
                                   selection_description: SelectionDescription ,
-                                    elgamal_public_key: ElementModP,
-                                    crypto_extended_base_hash: ElementModQ,
-                                    nonce_seed: ElementModQ,
-                                    is_placeholder = false,
-                                    should_verify_proofs = true
-                                  ):
+                                  elgamal_public_key: ElementModP,
+                                  crypto_extended_base_hash: ElementModQ,
+                                  nonce_seed: ElementModQ,
+                                  is_placeholder = false,
+                                  should_verify_proofs = true
+):
     (CiphertextBallotSelection | null) {
-  should_verify_proofs;
+    should_verify_proofs;
 //     //Given a selection and the necessary election context, encrypts the selection and returns the
 //     //     encrypted selection plus the encryption nonce. If anything goes wrong, `None` is returned.
 //     const public_key = context.elgamal_public_key;
@@ -102,8 +102,8 @@ export function encrypt_selection(selection: PlaintextBallotSelection,
     const disjunctive_chaum_pedersen_nonce = nonce_sequence.next();
 
     const elgamal_encryption = elgamal_encrypt(
-            BigInt(selection_representation), selection_nonce, elgamal_public_key
-        )
+        BigInt(selection_representation), selection_nonce, elgamal_public_key
+    )
     // console.log("descrption hash", selection_description_hash)
     // console.log("crypto hash hash", selection_description.crypto_hash())
 
@@ -131,73 +131,73 @@ export function encrypt_contest(contest: PlaintextBallotContest,
                                 nonce_seed: ElementModQ,
                                 should_verify_proofs = true,
 
-                            ): CiphertextBallotContest | null {
-        should_verify_proofs;
-        const contest_description_hash = contest_description.crypto_hash();
-        const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
-        const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
-        const chaum_pedersen_nonce = nonce_sequence.next();
+): CiphertextBallotContest | null {
+    should_verify_proofs;
+    const contest_description_hash = contest_description.crypto_hash();
+    const nonce_sequence = new Nonces(contest_description_hash, nonce_seed);
+    const contest_nonce = nonce_sequence.get(contest_description.sequence_order);
+    const chaum_pedersen_nonce = nonce_sequence.next();
 
-        const encrypted_selections: CiphertextBallotSelection[] = [];
-        let encrypted_selection = null;
-        let selection_count  = 0;
+    const encrypted_selections: CiphertextBallotSelection[] = [];
+    let encrypted_selection = null;
+    let selection_count  = 0;
 
-        for (const description of contest_description.ballot_selections) {
-            let has_selection = false
-            for (const selection of contest.ballot_selections) {
-                if (selection.object_id == description.object_id) {
-                    has_selection = true
-                    selection_count += selection.vote;
-                    encrypted_selection = encrypt_selection(
-                        selection,
-                        description,
-                        elgamal_public_key,
-                        crypto_extended_base_hash,
-                        contest_nonce,
-                    );
-                    break;
-                }
-            }
-            if (has_selection == false) {
+    for (const description of contest_description.ballot_selections) {
+        let has_selection = false
+        for (const selection of contest.ballot_selections) {
+            if (selection.object_id == description.object_id) {
+                has_selection = true
+                selection_count += selection.vote;
                 encrypted_selection = encrypt_selection(
-                    selection_from(description),
+                    selection,
                     description,
                     elgamal_public_key,
                     crypto_extended_base_hash,
                     contest_nonce,
                 );
+                break;
             }
-            encrypted_selections.push(get_optional(encrypted_selection))
         }
-
-        for (const placeholder of contest_description.placeholder_selections) {
-            let select_placeholder = false;
-            if (selection_count < contest_description.number_elected) {
-                selection_count += 1;
-                select_placeholder = true;
-            }
-            encrypted_selection = encrypt_selection(selection_from(placeholder, true, select_placeholder), placeholder, elgamal_public_key, crypto_extended_base_hash, contest_nonce, true, true)
-            encrypted_selections.push(get_optional(encrypted_selection))
+        if (has_selection == false) {
+            encrypted_selection = encrypt_selection(
+                selection_from(description),
+                description,
+                elgamal_public_key,
+                crypto_extended_base_hash,
+                contest_nonce,
+            );
         }
-        const encrypted_contest = make_ciphertext_ballot_contest(
-            contest.object_id,
-            contest.sequence_order,
-            contest_description_hash,
-            encrypted_selections,
-            elgamal_public_key,
-            crypto_extended_base_hash,
-            chaum_pedersen_nonce,
-            contest_description.number_elected,
-            contest_nonce,
-        )
-        return  encrypted_contest
+        encrypted_selections.push(get_optional(encrypted_selection))
     }
+
+    for (const placeholder of contest_description.placeholder_selections) {
+        let select_placeholder = false;
+        if (selection_count < contest_description.number_elected) {
+            selection_count += 1;
+            select_placeholder = true;
+        }
+        encrypted_selection = encrypt_selection(selection_from(placeholder, true, select_placeholder), placeholder, elgamal_public_key, crypto_extended_base_hash, contest_nonce, true, true)
+        encrypted_selections.push(get_optional(encrypted_selection))
+    }
+    const encrypted_contest = make_ciphertext_ballot_contest(
+        contest.object_id,
+        contest.sequence_order,
+        contest_description_hash,
+        encrypted_selections,
+        elgamal_public_key,
+        crypto_extended_base_hash,
+        chaum_pedersen_nonce,
+        contest_description.number_elected,
+        contest_nonce,
+    )
+    return  encrypted_contest
+}
 
 export function encrypt_ballot_contests(ballot:PlaintextBallot,
                                         description: InternalManifest,
                                         context: CiphertextElectionContext,
                                         nonce_seed:ElementModQ
-                                        ): CiphertextBallotContest[]|null {
+): CiphertextBallotContest[]|null {
 
     const encrypted_contests: CiphertextBallotContest[] = [];
 
@@ -219,7 +219,7 @@ export function encrypt_ballot_contests(ballot:PlaintextBallot,
             context.elgamal_public_key,
             context.crypto_extended_base_hash,
             nonce_seed,
-            ));
+        ));
         encrypted_contests.push(encrypted_contest);
     }
     // console.log("encrypted contests is ", object_log(encrypted_contests));
@@ -294,8 +294,8 @@ export function encrypt_ballot(ballot: PlaintextBallot,
 export function create_ballot_hash(ballot_id: string,
                                    description_hash: ElementModQ,
                                    contests: CiphertextBallotContest[]): ElementModQ {
-  const contests_hash = sequence_order_sort(contests).map(contest => contest.crypto_hash);
-  return hash_elems([ballot_id, description_hash, ...contests_hash]);
+    const contests_hash = sequence_order_sort(contests).map(contest => contest.crypto_hash);
+    return hash_elems([ballot_id, description_hash, ...contests_hash]);
 }
 
 // export function encrypt_ballots(
