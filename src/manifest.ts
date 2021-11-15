@@ -4,6 +4,7 @@ import {ElementModQ} from "./group";
 import {_list_eq} from "./simple_election_data";
 import {get_optional} from "./utils";
 import {Transform, Type} from "class-transformer";
+import moment from 'moment';
 
 /**
  * enumerations for the `ElectionReport` entity
@@ -689,19 +690,18 @@ export class Manifest extends CryptoHashable {
   crypto_hash(): ElementModQ {
     //TODO: date object to ISO date string
     // let st = new Date("2000-01-01T00:00:00");
-    let start_date = new Date(this.start_date.getTime() - (this.start_date.getTimezoneOffset() * 60000)).toISOString();
-    let end_date = new Date(this.end_date.getTime() - (this.end_date.getTimezoneOffset() * 60000)).toISOString();
-    // console.log("st2 is ", st2);
-    // console.log("date is ", st.toLocaleTimeString());
-    // console.log("what ", this.start_date.toUTCString());
-    // console.log("what 3", this.start_date.toISOString());
+    let start_date = moment(this.start_date).format();
+    start_date = start_date.slice(0, start_date.length - 6) + "Z";
+    let end_date = moment(this.end_date).format();
+    end_date = end_date.slice(0, end_date.length - 6) + "Z";
+
     return hash_elems([
       this.election_scope_id,
       this.type.toString(),
       // "2000-01-01T00:00:00Z",
       // "2000-01-01T00:00:00Z",
-      start_date.split('.')[0]+"Z",
-      end_date.split('.')[0]+"Z",
+      start_date,
+      end_date,
       this.name,
       this.contact_information,
       this.geopolitical_units,
