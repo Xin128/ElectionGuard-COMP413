@@ -1,0 +1,147 @@
+{
+    "election_scope_id": "dQy@rLm.bw",
+    "spec_version": "v0.95",
+    "type": "general",
+    "start_date": "1716-11-13T16:11:45.875660",
+    "end_date": "1716-11-13T16:11:45.875660",
+    "geopolitical_units": [
+        {
+            "object_id": "ff84ea42-9616-6d50-b1a6-03429700a8f0",
+            "name": "+@k.SHOp",
+            "type": "county_council",
+            "contact_information": {
+                "address_line": null,
+                "email": "Om@BLERe9.N1.SALe",
+                "phone": null,
+                "name": "Donald MARTINEZ"
+            }
+        }
+    ],
+    "parties": [
+        {
+            "object_id": "02f748da-36f4-964b-5345-bc4b9bc52cdc",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party0",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P0",
+            "color": null,
+            "logo_uri": "https://s.gOlf:7113/NN4/+d/%7C,TJ%0Di%5D/m0Wo/%3A//Pv%40yKGO~(/I,_m$+RZ/A3X34%3D("
+        },
+        {
+            "object_id": "dd8719cd-d47f-d314-d062-2d41a38e53de",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party1",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P1",
+            "color": null,
+            "logo_uri": "http://p.ceO/"
+        }
+    ],
+    "candidates": [
+        {
+            "object_id": "92a2eba8-9eb7-35e9-f089-19d69ce5d5ed",
+            "name": {
+                "text": [
+                    {
+                        "value": "Daniel KING",
+                        "language": "vr"
+                    },
+                    {
+                        "value": "Christopher GUPTA",
+                        "language": "hb"
+                    },
+                    {
+                        "value": "Christopher MARTIN",
+                        "language": "ig"
+                    }
+                ]
+            },
+            "party_id": null,
+            "image_uri": null,
+            "is_write_in": null
+        }
+    ],
+    "contests": [
+        {
+            "object_id": "057855a6-ed0d-551d-bcf6-7297fed7653c",
+            "sequence_order": 0,
+            "electoral_district_id": "ff84ea42-9616-6d50-b1a6-03429700a8f0",
+            "vote_variation": "one_of_m",
+            "number_elected": 1,
+            "votes_allowed": 1,
+            "name": "n@V.Ev.wJJblv1o2k8kEb6LiJAVdl8.cREDiT",
+            "ballot_selections": [
+                {
+                    "object_id": "c-92a2eba8-9eb7-35e9-f089-19d69ce5d5ed",
+                    "sequence_order": 0,
+                    "candidate_id": "92a2eba8-9eb7-35e9-f089-19d69ce5d5ed"
+                }
+            ],
+            "ballot_title": {
+                "text": [
+                    {
+                        "value": "L/@C.Fa66.R1U15it.Q.h.tUSHu",
+                        "language": "qa"
+                    },
+                    {
+                        "value": "SsQC@pbPrcs.J.y.s.Xn--3e0B707e",
+                        "language": "zn"
+                    }
+                ]
+            },
+            "ballot_subtitle": {
+                "text": [
+                    {
+                        "value": "NW@h.k.lInDe",
+                        "language": "az"
+                    },
+                    {
+                        "value": "V=|czB@M.bo0Blgs.bW.t.neWs",
+                        "language": "im"
+                    },
+                    {
+                        "value": "hw6$cyh@p.W.oclZvTdgRS4Q.saNDvIKcOroMaNt",
+                        "language": "yv"
+                    }
+                ]
+            }
+        }
+    ],
+    "ballot_styles": [
+        {
+            "object_id": "240b2b51-9fa6-d014-ede1-f49d074c9e00",
+            "geopolitical_unit_ids": [
+                "ff84ea42-9616-6d50-b1a6-03429700a8f0"
+            ],
+            "party_ids": [
+                "02f748da-36f4-964b-5345-bc4b9bc52cdc",
+                "dd8719cd-d47f-d314-d062-2d41a38e53de"
+            ],
+            "image_uri": "https://a.p.Art:49490/"
+        }
+    ],
+    "name": {
+        "text": [
+            {
+                "value": "KN%tiwF+^JZ-6w&4@q4Zfz1cwn.cHrIstmaS",
+                "language": "kw"
+            }
+        ]
+    },
+    "contact_information": {
+        "address_line": null,
+        "email": "RA561gfpLojFQy$0Q'B@h.BOx",
+        "phone": null,
+        "name": "Sarah MARTINEZ"
+    }
+}

@@ -1,0 +1,11 @@
+{
+        "object_id": "ballot-296102cc-4370-11ec-b979-6030d47254ba",
+        "style_id": "e443df78-9558-867f-5ba9-1faf7a024204",
+        "contests": [
+            {
+                "object_id": "f7c1bd87-4da5-e709-d471-3d60c8a70639",
+                "sequence_order": 0,
+                "ballot_selections": []
+            }
+        ]
+    }

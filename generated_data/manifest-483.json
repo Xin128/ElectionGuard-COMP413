@@ -1,0 +1,216 @@
+{
+    "election_scope_id": "3YXUPRRp7W+yx!ePp9@b.F.TienDa",
+    "spec_version": "v0.95",
+    "type": "general",
+    "start_date": "7501-07-26T02:47:52.350510",
+    "end_date": "7501-07-26T02:47:52.350510",
+    "geopolitical_units": [
+        {
+            "object_id": "284ca35e-1cab-a0bd-f6ac-40017162a6b9",
+            "name": "twW6_X@f.Tk",
+            "type": "water",
+            "contact_information": {
+                "address_line": null,
+                "email": "l@VvvG.K0.zah8gKIWh4mIosk1xnjF.Xn--CzRU2D",
+                "phone": null,
+                "name": "Margaret ANAND"
+            }
+        }
+    ],
+    "parties": [
+        {
+            "object_id": "5dbb913a-d6d8-f555-5bf1-a93ac0a16df0",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party0",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P0",
+            "color": null,
+            "logo_uri": "http://b.y.ct.H8.ltDA:33031/#%2DV"
+        },
+        {
+            "object_id": "bde2a0e8-8e6e-91d7-b793-ec1d817c5146",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party1",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P1",
+            "color": null,
+            "logo_uri": "http://U.l.g.GuiTaRS:58187/#h%43"
+        }
+    ],
+    "candidates": [
+        {
+            "object_id": "dd4e9eda-06f3-550b-f890-725838639a46",
+            "name": {
+                "text": [
+                    {
+                        "value": "Sarah JOHNSON",
+                        "language": "ft"
+                    }
+                ]
+            },
+            "party_id": "5dbb913a-d6d8-f555-5bf1-a93ac0a16df0",
+            "image_uri": "https://n.oR-xzN.cPb.j.xN--fIQs8S/%0A4%7Cp%7C.5w%0BJ)/%0C!I/#%61%8C%B1%F8%87",
+            "is_write_in": null
+        },
+        {
+            "object_id": "9f275a56-e349-cb53-b39c-7410edf01650",
+            "name": {
+                "text": [
+                    {
+                        "value": "Elizabeth GUPTA",
+                        "language": "as"
+                    }
+                ]
+            },
+            "party_id": "bde2a0e8-8e6e-91d7-b793-ec1d817c5146",
+            "image_uri": "https://yMzHgEOKu.BT/#%1E%8A%EE%AF%AF%DF%62",
+            "is_write_in": null
+        },
+        {
+            "object_id": "2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+            "name": {
+                "text": [
+                    {
+                        "value": "Rohan MILLER",
+                        "language": "pk"
+                    },
+                    {
+                        "value": "Anant HARRIS",
+                        "language": "lg"
+                    },
+                    {
+                        "value": "Lisa DAVIS",
+                        "language": "mj"
+                    }
+                ]
+            },
+            "party_id": "bde2a0e8-8e6e-91d7-b793-ec1d817c5146",
+            "image_uri": null,
+            "is_write_in": null
+        },
+        {
+            "object_id": "198bcd0f-a16e-bcf4-7703-06c5c13b1534",
+            "name": {
+                "text": [
+                    {
+                        "value": "Nancy \u0110\u1eb6NG",
+                        "language": "dd"
+                    }
+                ]
+            },
+            "party_id": "bde2a0e8-8e6e-91d7-b793-ec1d817c5146",
+            "image_uri": "https://I.A4mB6ybC7F3nY4Klu48GzYrsB.like/TCVSh*v%3A%25G%23/ex%26~b//ME%20%5Elz#%F9%FE%F7z%E4%55%7D/%07%85%2C%86%D3%5CZ",
+            "is_write_in": null
+        }
+    ],
+    "contests": [
+        {
+            "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+            "sequence_order": 0,
+            "electoral_district_id": "284ca35e-1cab-a0bd-f6ac-40017162a6b9",
+            "vote_variation": "n_of_m",
+            "number_elected": 2,
+            "votes_allowed": 2,
+            "name": "rKexuQoFl0fI@Z.wdYfy6bhx9az62nE8.Xn--fcT429k",
+            "ballot_selections": [
+                {
+                    "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                    "sequence_order": 0,
+                    "candidate_id": "dd4e9eda-06f3-550b-f890-725838639a46"
+                },
+                {
+                    "object_id": "c-9f275a56-e349-cb53-b39c-7410edf01650",
+                    "sequence_order": 1,
+                    "candidate_id": "9f275a56-e349-cb53-b39c-7410edf01650"
+                },
+                {
+                    "object_id": "c-2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+                    "sequence_order": 2,
+                    "candidate_id": "2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8"
+                },
+                {
+                    "object_id": "c-198bcd0f-a16e-bcf4-7703-06c5c13b1534",
+                    "sequence_order": 3,
+                    "candidate_id": "198bcd0f-a16e-bcf4-7703-06c5c13b1534"
+                }
+            ],
+            "ballot_title": {
+                "text": [
+                    {
+                        "value": "%8~@L.p5.eARTH",
+                        "language": "ke"
+                    },
+                    {
+                        "value": "jkFz~Ed3pE%@R.mG",
+                        "language": "xz"
+                    },
+                    {
+                        "value": "Wx/Si@MyoW0.lilLy",
+                        "language": "wa"
+                    }
+                ]
+            },
+            "ballot_subtitle": {
+                "text": [
+                    {
+                        "value": "SUAmRxg~+Lm%7~o@Mcw.ScOR",
+                        "language": "qb"
+                    },
+                    {
+                        "value": "quBwNQQJWWoR0*Yx$k13Fo3@j.LWx.IzkTyJ8k1.a.EUs",
+                        "language": "bz"
+                    },
+                    {
+                        "value": "95Y-@U.saKura",
+                        "language": "mn"
+                    }
+                ]
+            },
+            "primary_party_ids": [
+                "5dbb913a-d6d8-f555-5bf1-a93ac0a16df0",
+                "bde2a0e8-8e6e-91d7-b793-ec1d817c5146"
+            ]
+        }
+    ],
+    "ballot_styles": [
+        {
+            "object_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+            "geopolitical_unit_ids": [
+                "284ca35e-1cab-a0bd-f6ac-40017162a6b9"
+            ],
+            "party_ids": [
+                "5dbb913a-d6d8-f555-5bf1-a93ac0a16df0",
+                "bde2a0e8-8e6e-91d7-b793-ec1d817c5146"
+            ],
+            "image_uri": "http://e.n.AIrTeL:4344/"
+        }
+    ],
+    "name": {
+        "text": [
+            {
+                "value": "h@E.i.cOOkinG",
+                "language": "jh"
+            },
+            {
+                "value": "+1ZsA@NovLmtO72Z.F.DATiNG",
+                "language": "eq"
+            }
+        ]
+    },
+    "contact_information": {
+        "address_line": null,
+        "email": "&@qXg.gH",
+        "phone": null,
+        "name": "Margaret SMITH"
+    }
+}

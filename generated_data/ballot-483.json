@@ -1,0 +1,167 @@
+[
+    {
+        "object_id": "ballot-159fe17a-4408-11ec-9465-6030d47254ba",
+        "style_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+        "contests": [
+            {
+                "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+                "sequence_order": 0,
+                "ballot_selections": [
+                    {
+                        "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                        "sequence_order": 0,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-9f275a56-e349-cb53-b39c-7410edf01650",
+                        "sequence_order": 1,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-198bcd0f-a16e-bcf4-7703-06c5c13b1534",
+                        "sequence_order": 3,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "object_id": "ballot-159fe8be-4408-11ec-9465-6030d47254ba",
+        "style_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+        "contests": [
+            {
+                "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+                "sequence_order": 0,
+                "ballot_selections": [
+                    {
+                        "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                        "sequence_order": 0,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-9f275a56-e349-cb53-b39c-7410edf01650",
+                        "sequence_order": 1,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+                        "sequence_order": 2,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "object_id": "ballot-159fee18-4408-11ec-9465-6030d47254ba",
+        "style_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+        "contests": [
+            {
+                "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+                "sequence_order": 0,
+                "ballot_selections": [
+                    {
+                        "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                        "sequence_order": 0,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+                        "sequence_order": 2,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-198bcd0f-a16e-bcf4-7703-06c5c13b1534",
+                        "sequence_order": 3,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "object_id": "ballot-159ff354-4408-11ec-9465-6030d47254ba",
+        "style_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+        "contests": [
+            {
+                "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+                "sequence_order": 0,
+                "ballot_selections": [
+                    {
+                        "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                        "sequence_order": 0,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-9f275a56-e349-cb53-b39c-7410edf01650",
+                        "sequence_order": 1,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+                        "sequence_order": 2,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-198bcd0f-a16e-bcf4-7703-06c5c13b1534",
+                        "sequence_order": 3,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "object_id": "ballot-159ff868-4408-11ec-9465-6030d47254ba",
+        "style_id": "575cf7dd-f0ae-b058-eae7-d39875397757",
+        "contests": [
+            {
+                "object_id": "7dce566c-8eb9-c113-60ef-c4529d7b3425",
+                "sequence_order": 0,
+                "ballot_selections": [
+                    {
+                        "object_id": "c-dd4e9eda-06f3-550b-f890-725838639a46",
+                        "sequence_order": 0,
+                        "vote": 0,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    },
+                    {
+                        "object_id": "c-2e89c1bd-f628-41e0-c1cd-d56d1dfb20b8",
+                        "sequence_order": 2,
+                        "vote": 1,
+                        "is_placeholder_selection": true,
+                        "extended_data": null
+                    }
+                ]
+            }
+        ]
+    }
+]

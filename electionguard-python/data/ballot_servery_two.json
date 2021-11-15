@@ -1,0 +1,50 @@
+{
+    "object_id": "some-external-id-string-234",
+    "style_id": "north-dorms-ballot-style",
+    "contests": [
+      {
+        "object_id": "on-campus-servery",
+        "sequence_order": 0,
+        "ballot_selections": [
+          {
+            "object_id": "west-servery-selection",
+            "sequence_order": 0,
+            "vote": 1
+          }
+        ]
+      },
+      {
+        "object_id": "other-dining",
+        "sequence_order": 1,
+        "ballot_selections": [
+          {
+            "object_id": "htx-sammy-selection",
+            "sequence_order": 1,
+            "vote": 1
+          },
+          {
+            "object_id": "ambassador-cafe-selection",
+            "sequence_order": 2,
+            "vote": 1
+          },
+          {
+            "object_id": "local-foods-selection",
+            "sequence_order": 4,
+            "vote": 1
+          }
+        ]
+      },
+      {
+        "object_id": "north-serveries",
+        "sequence_order": 3,
+        "ballot_selections": [
+          {
+            "object_id": "west-servery-selection",
+            "sequence_order": 0,
+            "vote": 1
+          }
+        ]
+      }
+    ]
+  }
+  
