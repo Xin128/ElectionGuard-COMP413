@@ -23,7 +23,6 @@ import { InternalManifest, Manifest, Party, Candidate, GeopoliticalUnit, Contest
 // Entry point of the API, give a Ballot item, return the seed and the hash
 // Return an ErrorBallotInput in case some fields that are required in encryption in Ballot is missing
 export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptBallotOutput | ErrorBallotInput {
-    // TODO: First check if the ballot has all the fields we need
     // let validatedBallot = validateBallot(inputBallot);
     // if (validatedBallot instanceof ErrorBallotInput) return validatedBallot;
     const ballot = ballot2PlainTextBallot(inputBallot);
@@ -36,6 +35,10 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
 
+/**
+ * This function will take in a string and generate a QR code
+ * @param strs strings that will be represented in QR code
+ */
 export function getQRCode(strs:string[]):any {
     const qr = new QRCode();
     // size difference found over here: https://snyk.io/advisor/npm-package/qr-code-typescript
@@ -50,6 +53,10 @@ export function getQRCode(strs:string[]):any {
     return img;
 }
 
+/**
+ * Convert a Ballot defined in typical_ballot_data.ts to internal PlaintextBallot data structure
+ * @param ballot a ballot defined in typical_ballot_data.ts
+ */
 export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
     let ballotContests: PlaintextBallotContest[] = [];
     ballot.ballotItems.forEach((ballotItem) => {
@@ -60,11 +67,19 @@ export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
     return new PlaintextBallot(ballot.id, style_id, ballotContests);
 }
 
+/**
+ * Convert a BallotItem defined in typical_ballot_data.ts to internal PlaintextBallotContest
+ * @param ballotItem a BallotItem defined in typical_ballot_data.ts
+ */
 export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): PlaintextBallotContest {
     const selections: PlaintextBallotSelection[] = ballotItem2Selection(ballotItem);
     return new PlaintextBallotContest(ballotItem.id, ballotItem.order, selections);
 }
 
+/**
+ * Convert a BallotItem defined in typical_ballot_data.ts to a list of internal PlaintextBallotSelection
+ * @param ballotItem defined in typical_ballot_data.ts that contains a list of selections
+ */
 export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSelection[] {
     let plainTextSelections: PlaintextBallotSelection[] = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
@@ -75,6 +90,11 @@ export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSel
     return plainTextSelections;
 }
 
+/**
+ * Construct a internal CiphertextElectionContext with Ballot and InternalManifest
+ * @param ballot a ballot defined in typical_ballot_data.ts
+ * @param internalManifest an InternalManifest build by Manifest
+ */
 export function ballot2Context(ballot: Ballot, internalManifest: InternalManifest): CiphertextElectionContext {
 
     // construct the names list for candidates from ballot
@@ -96,8 +116,12 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
 }
 
 
-
-
+/**
+ * Convert a PlaintextBallot to JSON
+ * @param ballot a ballot defined in typical_ballot_data.ts
+ * @param context a context of type CiphertextElectionContext
+ * @param manifest a manifest of type Manifest
+ */
 export function ballot2JSON(ballot: PlaintextBallot, context: CiphertextElectionContext, manifest: Manifest) : any {
 
     // Is type any safe
@@ -113,7 +137,10 @@ export function ballot2JSON(ballot: PlaintextBallot, context: CiphertextElection
     return JSON.parse(JSON.stringify({seed: seed_nonce.elem.toString(), hash: final_hash.elem.toString()}));
 }
 
-
+/**
+ * Build a Ballot from a JSON defined by Aaron
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildBallot(ballot: any): Ballot {
     let contests:BallotItem[] = [];
     for(let i = 0; i < ballot.ballotItems.length; i++) {
@@ -130,7 +157,10 @@ export function buildBallot(ballot: any): Ballot {
     return electionBallot;
 }
 
-// this function builds a manifest from given ballot
+/**
+ * Construct a Manifest using JSON ballot
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildManifest(ballot: any): Manifest {
 
     // same as name of this election
@@ -161,6 +191,10 @@ export function buildManifest(ballot: any): Manifest {
     return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
 }
 
+/**
+ * Construct list of GeopoliticalUnit from ballot. We only take the precinctId and precinctName at Ballot level.
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildGeopoliticalUnit(ballot: any): GeopoliticalUnit[] {
     const object_id = ballot.precinctId;
     const name = ballot.precinctName;
@@ -169,6 +203,10 @@ export function buildGeopoliticalUnit(ballot: any): GeopoliticalUnit[] {
     return [new GeopoliticalUnit(object_id, name, type)];
 }
 
+/**
+ * Construct list of Party from ballot. We only take the partyId and partyName at Ballot level.
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildParty(ballot: any): Party[] {
     const object_id = ballot.partyId;
     const languageName = new Language(ballot.partyName[0].text, "en");
@@ -176,6 +214,12 @@ export function buildParty(ballot: any): Party[] {
     return [new Party(object_id, name)]
 }
 
+/**
+ * Construct list of Candidate from ballot. We take in BallotOption titles in every BallotItem as Candidate names. Notice
+ * this will include "Yes" and "No" if a binary choice question appears. However, since the sole purpose of this function
+ * is to provide information in hashing, the difference of actual candidates and answer choice does not matter.
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildCandidate(ballot: any): Candidate[] {
     const candidates: Candidate[] = [];
     for (let i = 0; i < ballot.ballotItems.length; i++) {
@@ -191,6 +235,10 @@ export function buildCandidate(ballot: any): Candidate[] {
     return candidates;
 }
 
+/**
+ * Construct a ContestDescription from ballot.
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildContest(ballot: any): ContestDescription[] {
     const descriptions: ContestDescription[] = [];
     for (let i = 0; i < ballot.ballotItems.length; i++) {
@@ -199,7 +247,6 @@ export function buildContest(ballot: any): ContestDescription[] {
         const electoral_district_id = ballot.precinctId;
         const vote_variation = VoteVariationType.unknown;
         // number of candidates are elected
-        //TODO: double check with Aaron on how this can be extrapolated from the
         const number_elected = 0;
         const votes_allowed = undefined;
         const name = ballot.ballotItems[i].title[0].text;
@@ -217,6 +264,10 @@ export function buildContest(ballot: any): ContestDescription[] {
     return descriptions;
 }
 
+/**
+ * Construct BallotStyle from ballot
+ * @param ballot a ballot of JSON file, currently compatible with Aaron's example
+ */
 export function buildBallotStyle(ballot: any): BallotStyle[] {
     const object_id = ballot.electionName[0].text;
     const geopolitical_unit_ids = [ballot.precinctId];
@@ -224,59 +275,59 @@ export function buildBallotStyle(ballot: any): BallotStyle[] {
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
-// Only used for testing
-export function buildFakeBallot(): Ballot {
-    const names = ['James Miller', 'Liam Garcia','Olivia Brown','Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-
-    // build a fake ballot item
-    let ballotOptions1: BallotOption[] = [];
-    let ballotOptions2: BallotOption[] = [];
-    names.forEach((name, idx) => {
-        if (idx < names.length / 2) {
-            const ballotOption = new BallotOption(name, false);
-            // console.log("ballot1 ballotoptions ", ballotOptions1);
-            ballotOptions1 = [...ballotOptions1, ballotOption];
-        } else {
-            const ballotOption = new BallotOption(name, false);
-            ballotOptions2 = [...ballotOptions2, ballotOption];
-        }
-    });
-    const contest1 = new BallotItem(ballotOptions1);
-    const contest2 = new BallotItem(ballotOptions2);
-    // hard code the selected options, the second contest doesn't select anything
-    contest1.ballotOptions[0].selected = true;
-    
-
-    // add ballotItem to electionBallot
-    // build a ballot
-    const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
-    console.log("the current ballot is ", electionBallot);
-    return electionBallot;
-}
-
-export function buildLargeFakeBallot(count: number): Ballot {
-
-    const names = ['James Miller', 'Liam Garcia', 'Olivia Brown', 'Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-    const contests: BallotItem[] = [];
-    for (let i = 0; i < count; i++) {
-        let ballotOptions1: BallotOption[] = [];
-        names.forEach((name) => {
-            const ballotOption = new BallotOption(name, false);
-            // console.log("ballot1 ballotoptions ", ballotOptions1);
-            ballotOptions1 = [...ballotOptions1, ballotOption];
-        });
-        const contest1 = new BallotItem(ballotOptions1);
-        contests.push(contest1);
-    }
-
-    // add ballotItem to electionBallot
-    // build a ballot
-    const electionBallot = new Ballot("001", "firstTest", contests);
-
-    console.log("the current ballot is ", electionBallot);
-
-    return electionBallot;
-}
+// // Only used for testing
+// export function buildFakeBallot(): Ballot {
+//     const names = ['James Miller', 'Liam Garcia','Olivia Brown','Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
+//
+//     // build a fake ballot item
+//     let ballotOptions1: BallotOption[] = [];
+//     let ballotOptions2: BallotOption[] = [];
+//     names.forEach((name, idx) => {
+//         if (idx < names.length / 2) {
+//             const ballotOption = new BallotOption(name, false);
+//             // console.log("ballot1 ballotoptions ", ballotOptions1);
+//             ballotOptions1 = [...ballotOptions1, ballotOption];
+//         } else {
+//             const ballotOption = new BallotOption(name, false);
+//             ballotOptions2 = [...ballotOptions2, ballotOption];
+//         }
+//     });
+//     const contest1 = new BallotItem(ballotOptions1);
+//     const contest2 = new BallotItem(ballotOptions2);
+//     // hard code the selected options, the second contest doesn't select anything
+//     contest1.ballotOptions[0].selected = true;
+//
+//
+//     // add ballotItem to electionBallot
+//     // build a ballot
+//     const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
+//     console.log("the current ballot is ", electionBallot);
+//     return electionBallot;
+// }
+//
+// export function buildLargeFakeBallot(count: number): Ballot {
+//
+//     const names = ['James Miller', 'Liam Garcia', 'Olivia Brown', 'Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
+//     const contests: BallotItem[] = [];
+//     for (let i = 0; i < count; i++) {
+//         let ballotOptions1: BallotOption[] = [];
+//         names.forEach((name) => {
+//             const ballotOption = new BallotOption(name, false);
+//             // console.log("ballot1 ballotoptions ", ballotOptions1);
+//             ballotOptions1 = [...ballotOptions1, ballotOption];
+//         });
+//         const contest1 = new BallotItem(ballotOptions1);
+//         contests.push(contest1);
+//     }
+//
+//     // add ballotItem to electionBallot
+//     // build a ballot
+//     const electionBallot = new Ballot("001", "firstTest", contests);
+//
+//     console.log("the current ballot is ", electionBallot);
+//
+//     return electionBallot;
+// }
 export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.electionName === undefined || ballot.electionName.length === 0) return new ErrorBallotInput(ErrorType.MissingElectionName, "Missing Election Name");
     if (ballot.partyId === undefined) return new ErrorBallotInput(ErrorType.MissingBallotPartyId, "Missing Ballot Party ID");
