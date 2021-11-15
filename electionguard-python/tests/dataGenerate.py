@@ -48,8 +48,9 @@ class TestElections(BaseTestCase):
         """
         internal_manifest = InternalManifest(manifest)
         name = str(internal_manifest.manifest_hash)[:3]
-        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(manifest, export_data_dir, 'manifest-' + name)
+        export_data_dir_with_name = os.path.join(export_data_dir, name)
+        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(manifest, export_data_dir_with_name, 'manifest')
         self.assertTrue(encrypted_manifest_to_export == None)
         ballot = ballot_factory.generate_fake_plaintext_ballots_for_election(internal_manifest, 5)
-        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(ballot, export_data_dir, 'ballot-' + name)
+        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(ballot, export_data_dir_with_name, 'ballot')
         self.assertTrue(encrypted_ballot_to_export == None)
