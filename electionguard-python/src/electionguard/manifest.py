@@ -633,8 +633,17 @@ class Manifest(CryptoHashable):
         """
         Returns a hash of the metadata components of the election
         """
-
-
+        # print("in manifest crypto hash")
+        # print(self.election_scope_id,
+        #     str(self.type.name),
+        #     to_iso_date_string(self.start_date),
+        #     to_iso_date_string(self.end_date),
+        #     self.name,
+        #     self.contact_information,
+        #     self.geopolitical_units,
+        #     self.parties,
+        #     self.contests,
+        #     self.ballot_styles)
         hash = hash_elems(
             self.election_scope_id,
             str(self.type.name),

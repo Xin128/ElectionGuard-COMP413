@@ -779,12 +779,13 @@ class CiphertextBallot(ElectionObjectBase, CryptoHashCheckable):
         """
 
         if encryption_seed != self.manifest_hash:
+            log_warning(f"encryption seed:{encryption_seed}"
+                        f"manifest_hash {self.manifest_hash}")
+
             log_warning(
                 (
                     f"mismatching ballot hash: {self.object_id} expected({str(encryption_seed)}), "
                     f"actual({str(self.manifest_hash)})"
-                    f"expected type({type(encryption_seed)})"
-                    f"actual type({type(self.manifest_hash)})"
                 )
             )
             return False

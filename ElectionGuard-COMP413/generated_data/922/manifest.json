@@ -1,0 +1,142 @@
+{
+    "election_scope_id": "S01U5'=&wgmm$H1AS*W1@jZJP5Z.Mj.z7N515tC0.Y.Xn--jvr189m",
+    "spec_version": "v0.95",
+    "type": "general",
+    "start_date": "1999-01-01T01:01:01.786688",
+    "end_date": "1999-01-01T01:01:01.786688",
+    "geopolitical_units": [
+        {
+            "object_id": "6a82e76e-478e-71b5-d0b4-73f0dc142934",
+            "name": "u^uvZ7@vz.VC.NTt",
+            "type": "split_precinct",
+            "contact_information": {
+                "address_line": null,
+                "email": [
+                    {
+                        "annotation": "ba",
+                        "value": "1@Y.l.COm"
+                    }
+                ],
+                "phone": null,
+                "name": "Nancy HILL"
+            }
+        }
+    ],
+    "parties": [
+        {
+            "object_id": "e4816b29-85cb-3be9-c7d7-f4e538f619d9",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party0",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P0",
+            "color": null,
+            "logo_uri": "http://Or.Icu:9655/%60t.%3A%0Az%7Be//MK2ee%5D/A%5E6m/CsfFWQh/B%20B/%25(/%22X3%226nG%0C5%5BTp%22%26uPE9MlGz1tsdR/S%3De%20A3e%7BK/#%B0%CF"
+        }
+    ],
+    "candidates": [
+        {
+            "object_id": "c0417382-ea56-3d05-ac50-7c8ffd28566c",
+            "name": {
+                "text": [
+                    {
+                        "value": "Mary JOHNSON",
+                        "language": "xe"
+                    },
+                    {
+                        "value": "Anthony WHITE",
+                        "language": "vc"
+                    },
+                    {
+                        "value": "David WILSON",
+                        "language": "wz"
+                    }
+                ]
+            },
+            "party_id": null,
+            "image_uri": null,
+            "is_write_in": null
+        }
+    ],
+    "contests": [
+        {
+            "object_id": "a226adfb-e1df-82ad-e0a1-d678fda4fa94",
+            "sequence_order": 0,
+            "electoral_district_id": "6a82e76e-478e-71b5-d0b4-73f0dc142934",
+            "vote_variation": "one_of_m",
+            "number_elected": 1,
+            "votes_allowed": 1,
+            "name": "10@P1A2l1RIsl3K.DNp",
+            "ballot_selections": [
+                {
+                    "object_id": "c-c0417382-ea56-3d05-ac50-7c8ffd28566c",
+                    "sequence_order": 0,
+                    "candidate_id": "c0417382-ea56-3d05-ac50-7c8ffd28566c"
+                }
+            ],
+            "ballot_title": {
+                "text": [
+                    {
+                        "value": "0@V9.U.DNP",
+                        "language": "pc"
+                    },
+                    {
+                        "value": "N7@A0110.D.anz",
+                        "language": "ab"
+                    },
+                    {
+                        "value": "24CA@H.Dmv14Ap3ecMeK2.A3Bj82.cLUB",
+                        "language": "cb"
+                    }
+                ]
+            },
+            "ballot_subtitle": {
+                "text": [
+                    {
+                        "value": "0@Bd02.AC",
+                        "language": "aa"
+                    }
+                ]
+            }
+        }
+    ],
+    "ballot_styles": [
+        {
+            "object_id": "97f6f1f3-42f8-08e2-cf68-3dcd660834cd",
+            "geopolitical_unit_ids": [
+                "6a82e76e-478e-71b5-d0b4-73f0dc142934"
+            ],
+            "party_ids": [
+                "e4816b29-85cb-3be9-c7d7-f4e538f619d9"
+            ],
+            "image_uri": "https://l.daD:362/%600)l33$6%0Bs19/5S/"
+        }
+    ],
+    "name": {
+        "text": [
+            {
+                "value": "311@B.A.N63E.A01oz6ZRy.aIg",
+                "language": "cb"
+            },
+            {
+                "value": "#AYOhH@pgiK-ExD.TJMaxX",
+                "language": "ep"
+            }
+        ]
+    },
+    "contact_information": {
+        "address_line": null,
+        "email": [
+            {
+                "annotation": "bf",
+                "value": "100@u.COM"
+            }
+        ],
+        "phone": null,
+        "name": "James WILSON"
+    }
+}

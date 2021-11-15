@@ -1,0 +1,214 @@
+{
+    "election_scope_id": "_j^mxsi{p'mxsD2B@e.On.wi2.NQHhmI9ibqweJ5diu7FVT.beT",
+    "spec_version": "v0.95",
+    "type": "general",
+    "start_date": "0837-02-07T07:34:20.837511",
+    "end_date": "0837-02-07T07:34:20.837511",
+    "geopolitical_units": [
+        {
+            "object_id": "cd8934c0-998e-c5da-9c1f-5adc46da45a4",
+            "name": "EEFqP*@C.sHOpPINg",
+            "type": "village",
+            "contact_information": {
+                "address_line": null,
+                "email": [
+                    {
+                        "annotation": "qa",
+                        "value": "m7Zq@F.AM"
+                    }
+                ],
+                "phone": null,
+                "name": "Jennifer SCOTT"
+            }
+        }
+    ],
+    "parties": [
+        {
+            "object_id": "85c75c37-49f9-35d3-1682-ffc374282d7b",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party0",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P0",
+            "color": null,
+            "logo_uri": "https://YIsjm.nRw:5501///o+/O%0A%0C%09r/J%5B/pxn(%3AZ%0D/7Cw37w%25/%0B%7D%7Cu/z#%A2%B3%D2%B3%28X%B0"
+        },
+        {
+            "object_id": "dd5500a4-9d9e-e14e-d720-9e2cce52ed69",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party1",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P1",
+            "color": null,
+            "logo_uri": "https://E.UMzVqf6n1.STOckhOlM:27486/"
+        },
+        {
+            "object_id": "97dcb03f-889f-4962-6532-062fe0dcedcf",
+            "name": {
+                "text": [
+                    {
+                        "value": "Party2",
+                        "language": "en"
+                    }
+                ]
+            },
+            "abbreviation": "P2",
+            "color": null,
+            "logo_uri": "https://TzJeUb.pHarmacY/%0A%0DL%7C"
+        }
+    ],
+    "candidates": [
+        {
+            "object_id": "0158240c-9e45-5e00-df47-4311d0c33b12",
+            "name": {
+                "text": [
+                    {
+                        "value": "Karen O'CONNOR",
+                        "language": "jo"
+                    }
+                ]
+            },
+            "party_id": null,
+            "image_uri": "https://M0.Ci/#%3B%C1%82%E5%DF%3B%83n'%B0",
+            "is_write_in": null
+        },
+        {
+            "object_id": "06525ab9-4d8c-1947-d09a-aa98de9ee2a5",
+            "name": {
+                "text": [
+                    {
+                        "value": "Rohan THOMPSON",
+                        "language": "ts"
+                    },
+                    {
+                        "value": "Barbara HERNANDEZ",
+                        "language": "am"
+                    },
+                    {
+                        "value": "B\u00f6\u00f0m\u00f3\u00f0ur GUPTA",
+                        "language": "kt"
+                    }
+                ]
+            },
+            "party_id": null,
+            "image_uri": null,
+            "is_write_in": null
+        },
+        {
+            "object_id": "ec851441-0ad2-e708-2acd-0e33e49bf39d",
+            "name": {
+                "text": [
+                    {
+                        "value": "John HALL",
+                        "language": "rh"
+                    },
+                    {
+                        "value": "Mary ANAND",
+                        "language": "zs"
+                    }
+                ]
+            },
+            "party_id": null,
+            "image_uri": "https://Pe.xRYWTGNy8LMi8sx2Lv.a.LIMIted:41287/2miH%25A/%0AU%3CO/m%0AUU%3F/)hbwPKo//%22p09U9%40a0%3C%5D%7C!~14#%3A%A8%6E%0E%BD%9D%0A",
+            "is_write_in": null
+        }
+    ],
+    "contests": [
+        {
+            "object_id": "a0f42fbf-b8c6-f3e0-5976-4aa40e988f94",
+            "sequence_order": 0,
+            "electoral_district_id": "cd8934c0-998e-c5da-9c1f-5adc46da45a4",
+            "vote_variation": "one_of_m",
+            "number_elected": 1,
+            "votes_allowed": 1,
+            "name": "b8@KbRcM.Ms",
+            "ballot_selections": [
+                {
+                    "object_id": "c-0158240c-9e45-5e00-df47-4311d0c33b12",
+                    "sequence_order": 0,
+                    "candidate_id": "0158240c-9e45-5e00-df47-4311d0c33b12"
+                },
+                {
+                    "object_id": "c-06525ab9-4d8c-1947-d09a-aa98de9ee2a5",
+                    "sequence_order": 1,
+                    "candidate_id": "06525ab9-4d8c-1947-d09a-aa98de9ee2a5"
+                },
+                {
+                    "object_id": "c-ec851441-0ad2-e708-2acd-0e33e49bf39d",
+                    "sequence_order": 2,
+                    "candidate_id": "ec851441-0ad2-e708-2acd-0e33e49bf39d"
+                }
+            ],
+            "ballot_title": {
+                "text": [
+                    {
+                        "value": "8Em@eRUcI1GQd.sWMD.wC7.YhUDXx7g0NkUmxx9.p.gKVUz.VIVa",
+                        "language": "am"
+                    }
+                ]
+            },
+            "ballot_subtitle": {
+                "text": [
+                    {
+                        "value": "l'wm@Xcz.ablE",
+                        "language": "ef"
+                    },
+                    {
+                        "value": "m{y5&@U.caRTIer",
+                        "language": "kw"
+                    },
+                    {
+                        "value": "xn5Cba@P.S.tRavELERSiNsURaNce",
+                        "language": "cq"
+                    }
+                ]
+            }
+        }
+    ],
+    "ballot_styles": [
+        {
+            "object_id": "c658ce1c-bb37-f5be-85e3-79603c71aac1",
+            "geopolitical_unit_ids": [
+                "cd8934c0-998e-c5da-9c1f-5adc46da45a4"
+            ],
+            "party_ids": [
+                "85c75c37-49f9-35d3-1682-ffc374282d7b",
+                "dd5500a4-9d9e-e14e-d720-9e2cce52ed69",
+                "97dcb03f-889f-4962-6532-062fe0dcedcf"
+            ],
+            "image_uri": "http://J.x.Nq.SAlon/#%5D%ED%20w%F5"
+        }
+    ],
+    "name": {
+        "text": [
+            {
+                "value": "j|7arua@e.Gent",
+                "language": "ah"
+            },
+            {
+                "value": "1/@RQNYw2iaMdVj.g.CFa",
+                "language": "yz"
+            }
+        ]
+    },
+    "contact_information": {
+        "address_line": null,
+        "email": [
+            {
+                "annotation": "cv",
+                "value": "/@xw.v.U516d7.k82U0DmGu2TqPa.tf"
+            }
+        ],
+        "phone": null,
+        "name": "Camille STEELE-LOY"
+    }
+}

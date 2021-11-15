@@ -96,7 +96,6 @@ def _recursive_replace(object, type_: Type, replace: Callable[[Any], Any]):
     """Iterate through object to replace."""
     if isinstance(object, dict):
         for key, item in object.items():
-            # print("key", key, "item", item)
             if isinstance(item, (dict, list)):
                 object[key] = _recursive_replace(item, type_, replace)
             elif key == 'timestamp':

@@ -83,9 +83,10 @@ class ElectionFactory:
         """Get simple manifest from json file."""
         return self._get_manifest_from_file(self.simple_election_manifest_file_name)
 
-    def get_simple_manifest_from_file_self_defined_name(self) -> Manifest:
+    def get_simple_manifest_from_file_self_defined_directory(self, directoy:str, manifest_filename:str) -> Manifest:
         """Get simple manifest from json file."""
-        return self._get_manifest_from_file(self.simple_election_manifest_file_name)
+        return self._get_manifest_from_file_self_defined_directory(directoy, manifest_filename)
+
     @staticmethod
     def get_hamilton_manifest_from_file() -> Manifest:
         """Get Hamilton County manifest from json file."""

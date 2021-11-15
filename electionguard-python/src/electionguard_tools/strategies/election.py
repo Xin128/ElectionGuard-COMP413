@@ -182,7 +182,7 @@ def contact_infos(draw: _DrawType):
     :param draw: Hidden argument, used by Hypothesis.
     """
     # empty lists for email and phone, for now
-    return ContactInformation(None, draw(emails()), None, draw(human_names()))
+    return ContactInformation(None, [draw(annotated_emails())], None, draw(human_names()))
 
 
 @composite
@@ -202,6 +202,9 @@ def two_letter_codes(draw: _DrawType, min_size=2, max_size=2):
         )
     )
 
+@composite
+def annotated_emails(draw: _DrawType):
+    return AnnotatedString(draw(two_letter_codes()), draw(emails()))
 
 @composite
 def languages(draw: _DrawType):
@@ -501,7 +504,7 @@ def contest_descriptions(
     return draw(
         one_of(
             referendum_contest_descriptions(sequence_order, geo_units),
-            candidate_contest_descriptions(sequence_order, party_list, geo_units),
+            # candidate_contest_descriptions(sequence_order, party_list, geo_units),
         )
     )
 
