@@ -31,7 +31,9 @@ import fs from 'fs';
 describe("TestDeserialization", () => {
 
   test('testConvertJsonFileToObj', () => {
-
+    if (!fs.existsSync('encrypted_data/' )){
+      fs.mkdirSync('encrypted_data/');
+    }
    fs.readdirSync('generated_data').forEach(ballotNum => {
     // const encryped_ballot = encrypt_ballot(undefined, undefined, undefined, undefined, undefined);
     // let ballotNum = `106`;

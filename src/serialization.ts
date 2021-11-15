@@ -671,7 +671,6 @@ export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
 }
 
 export function hex_to_bigint(numstr: string): bigint {
-  console.log("numstr: " + numstr + "\n");
   return BigInt("0x" + numstr);
 }
 
