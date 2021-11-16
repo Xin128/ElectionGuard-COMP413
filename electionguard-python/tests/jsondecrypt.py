@@ -19,42 +19,30 @@ from electionguard.election import (
     CiphertextElectionContext,
     make_ciphertext_election_context,
 )
-
-
-import electionguard_tools.factories.ballot_factory as BallotFactory
-import electionguard_tools.factories.election_factory as ElectionFactory
 from electionguard.manifest import InternalManifest
 from electionguard.logs import log_warning, log_info
+import electionguard_tools.factories.ballot_factory as BallotFactory
+import electionguard_tools.factories.election_factory as ElectionFactory
 import os
 
 election_factory = ElectionFactory.ElectionFactory()
 ballot_factory = BallotFactory.BallotFactory()
 
 keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
-election = election_factory.get_simple_manifest_from_file()
-# internal_manifest, context = election_factory.get_fake_ciphertext_election(
-#     election, keypair.public_key
-# )
-
-# data = ballot_factory.get_simple_ballot_from_file()
-
-device = election_factory.get_encryption_device()
-
 encypted_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'encrypted_data')
 generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'generated_data')
+
 if not os.path.exists(os.path.join(encypted_file_dir)):
     os.makedirs(encypted_file_dir)
     exit()
+
 for ballotNum in os.listdir(encypted_file_dir):
-    # if ballotNum != '330':
-    #     continue
     encypted_file_dir_with_ballotNum = os.path.join(encypted_file_dir, ballotNum)
     generated_data_dir_with_ballotNum = os.path.join(generated_file_dir, ballotNum)
     for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
         subject = ballot_factory.get_ciphertext_ballot_from_file(encypted_file_dir_with_ballotNum, ballot_filename)
         manifest = election_factory.get_simple_manifest_from_file_self_defined_directory(generated_data_dir_with_ballotNum, "manifest.json")
         internal_manifest = InternalManifest(manifest)
-
         context = make_ciphertext_election_context(
             number_of_guardians=1,
             quorum=1,
@@ -70,8 +58,6 @@ for ballotNum in os.listdir(encypted_file_dir):
             keypair.secret_key,
             remove_placeholders=False,
         )
-        if result_from_key == None:
-            log_warning(f"Unable To Decrypt for Manifest: {ballotNum}")
 
         result_from_nonce = decrypt_ballot_with_nonce(
             subject,
@@ -88,5 +74,7 @@ for ballotNum in os.listdir(encypted_file_dir):
             subject.nonce,
             remove_placeholders=False,
         )
+        if result_from_key == None or result_from_nonce == None or result_from_nonce_seed == None:
+            log_warning(f"Unable To Decrypt for Manifest: {ballotNum}")
         print('------------------------ Successfully Decrypt: ' + ballot_filename + ' ---------------------------')
         print(result_from_key)
