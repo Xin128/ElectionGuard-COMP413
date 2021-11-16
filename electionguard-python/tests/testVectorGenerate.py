@@ -32,13 +32,15 @@ from electionguard.group import (
     ONE_MOD_Q,
     mult_p,
     g_pow_p,
-    TWO_MOD_Q
+    TWO_MOD_Q,
 )
 
 ballot_factory = BallotFactory.BallotFactory()
 election_factory = ElectionFactory.ElectionFactory()
 # SEED = election_factory.get_encryption_device().get_hash()
-SEED = ElementModQ(88136692332113344175662474900446441286169260372780056734314948839391938984061)
+SEED = ElementModQ(
+    88136692332113344175662474900446441286169260372780056734314948839391938984061
+)
 
 keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
 election = election_factory.get_simple_manifest_from_file()
@@ -49,11 +51,15 @@ nonce_seed = ElementModQ(40358)
 
 import os
 import os
-export_data_dir = os.path.join(os.path.dirname(os.getcwd()), 'generated_data')
+
+export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_test_inputs")
 if not os.path.exists(os.path.join(export_data_dir)):
     os.makedirs(export_data_dir)
+
+
 class TestElections(BaseTestCase):
     """Election hypothesis encryption tests"""
+
     @settings(
         deadline=timedelta(milliseconds=10000),
         suppress_health_check=[HealthCheck.too_slow],
@@ -70,7 +76,9 @@ class TestElections(BaseTestCase):
         name = str(internal_manifest.manifest_hash)[:3]
         print("export data directory", export_data_dir)
         print("manifest is ", manifest)
-        ballots = ballot_factory.generate_fake_plaintext_ballots_for_election(internal_manifest, 5)
+        ballots = ballot_factory.generate_fake_plaintext_ballots_for_election(
+            internal_manifest, 5
+        )
         test_vectors = []
         self.assertTrue(len(test_vectors) == 0)
 
@@ -88,4 +96,6 @@ class TestElections(BaseTestCase):
             test["output"] = str(result_from_seed.crypto_hash)
             test_vectors.append(test)
         print("rest vectors ", test_vectors)
-        test_output = ballot_factory.export_ballot_to_file(test_vectors, export_data_dir, 'testcases-' + name)
+        test_output = ballot_factory.export_ballot_to_file(
+            test_vectors, export_data_dir, "testcases"
+        )
