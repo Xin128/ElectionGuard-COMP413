@@ -519,9 +519,7 @@ class  CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
         # Verify that the contest ciphertext matches the elgamal accumulation of all selections
         if self.ciphertext_accumulation.pad != computed_ciphertext_accumulation.pad and self.ciphertext_accumulation.data != computed_ciphertext_accumulation.data:
             log_warning(
-                # f"self.ciphertext_accumulation.pad: {self.ciphertext_accumulation.pad}  and computed_ciphertext_accumulation.pad: {computed_ciphertext_accumulation.pad}\n"
-                # f"and self.ciphertext_accumulation.data {self.ciphertext_accumulation.data} and computed_ciphertext_accumulation.data {computed_ciphertext_accumulation.data}"
-                f"ciphertext does not equal elgamal accumulation for : {self.object_id}\n"
+               f"ciphertext does not equal elgamal accumulation for : {self.object_id}\n"
                 f"expected{self.ciphertext_accumulation} actual {computed_ciphertext_accumulation}"
             )
             return False
