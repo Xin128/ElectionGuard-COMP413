@@ -95,9 +95,9 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   get_optional(document.getElementById("step_4")).className = "step current";
   get_optional(document.getElementById("screen_2")).style.display = "none";
   get_optional(document.getElementById("screen_4")).style.display = "contents";
-  alert("Downloading Encrypted Ballot! qwq");
+  // alert("Downloading Encrypted Ballot! ");
   //Download an encrypted ballot json file.
-  downloadJson("encrpted_ballot");
+  // downloadJson("encrpted_ballot");
 
 
 });
