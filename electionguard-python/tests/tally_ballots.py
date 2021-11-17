@@ -47,16 +47,18 @@ generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_data"
 
 def _decrypt_with_secret(
     tally: CiphertextTally, secret_key: ElementModQ
-) -> Dict[str, int]:
+) -> Dict[str, Dict[str, int]]:
     """
     Demonstrates how to decrypt a tally with a known secret key
     """
-    plaintext_selections: Dict[str, int] = {}
-    for _, contest in tally.contests.items():
+    plaintext_selections: Dict[str, Dict[str, int]] = {}
+    for contest_id, contest in tally.contests.items():
+        plaintext_selections[contest_id] = {}
         for object_id, selection in contest.selections.items():
             plaintext_tally = selection.ciphertext.decrypt(secret_key)
-            plaintext_selections[object_id] = plaintext_tally
+            plaintext_selections[contest_id][object_id] = plaintext_tally
     return plaintext_selections
+
 if not os.path.exists(os.path.join(encypted_file_dir)):
     os.makedirs(encypted_file_dir)
     exit()
