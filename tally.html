@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Election Tally</title>
+        <style>
+            html,
+            body {
+              min-height: 100%;
+            }
+            body,
+            div,
+            form,
+            input,
+            p {
+              padding: 0;
+              margin: 0;
+              outline: none;
+              font-family: Arial, sans-serif;
+              color: #666;
+              line-height: 22px;
+            }
+            h1 {
+              font-weight: 400;
+            }
+            h4 {
+              margin-bottom: 0;
+            }
+            hr {
+              margin: 20px 0;
+            }
+            span.required {
+              color: red;
+            }
+            th,
+            td {
+              width: 10%;
+              vertical-align: unset;
+              line-height: 20px;
+              font-size: 18px;
+              font-weight: 400;
+              word-break: break-all;
+              height: 20px;
+            }
+            table {
+              width: 83%;
+              height:"300";
+            }
+            button {
+              width: 150px;
+              padding: 10px;
+              border: none;
+              border-radius: 5px;
+              background: #095484;
+              font-size: 16px;
+              color: #fff;
+              cursor: pointer;
+            }
+            button:hover {
+              background: #0666a3;
+            }
+            .btn {
+                text-align: center;
+            }
+            .logo {
+                width: 60px;
+                width: 60px;
+                display:inline;
+                vertical-align: middle;
+            }
+            .pageheaderdiv1{
+                background: #0666a3;
+                height: 60px;
+                padding: 10px;
+            }
+            .title{
+                color: white;
+                margin-left: 10px;
+                font-size: 26px;
+                display:inline;
+                vertical-align: middle;
+            }
+            .headline {
+                background: #4D9321;
+                color: #fff;
+                text-align: center;
+            }
+            .headline2 {
+                background: #ABD5AB;
+                color: #000;
+                text-align: center;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="pageheaderdiv1">
+            <img class = "logo" src="https://pbs.twimg.com/profile_images/293749148/dapperdan_400x400.png">
+            <h1 class="title">
+                Election Tally
+            </h1>
+        </div>
+        <div class="btn">
+            <h1></h1>
+            <h1></h1>
+        </div>
+        <table border="10" align="center" cellpadding="10" cellspacing="10">
+            <tr class = "headline">
+                <td colspan="6" >Tally Result</td>
+            </tr>
+            <tr>
+                <td class = "headline2">Ballot State</td>
+                <td class = "headline2">Type</td>
+                <td class = "headline">Contest 1</td>
+                <td class = "headline">Contest 2</td>
+                <td class = "headline">Contest 3</td>
+                <td class = "headline2">Proof</td>
+            </tr>
+            <tr>
+                <td rowspan="2">Cast Ballots</td>
+                <td>Encrypted</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Decrypted Tally</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td rowspan="2">Spoiled Ballots</td>
+                <td>Encrypted</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>                
+                <td>Decrypted Tally</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td rowspan="2">Unknown Ballots</td>
+                <td>Encrypted</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>                
+                <td>Decrypted Tally</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="btn">
+            <h1></h1>
+            <button type="button" id="get">GET TALLY</button>
+            <h1></h1>
+        </div>
+    </body>
+</html>
