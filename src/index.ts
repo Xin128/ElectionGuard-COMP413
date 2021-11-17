@@ -3,6 +3,7 @@ import {encryptBallot, getQRCode, buildBallot, buildManifest} from "./API/APIUti
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './AaronBallot/super_complex_ballot.json';
+import {CiphertextBallot} from "./simple_election_data";
 
 function downloadJson(exportName: string){
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
@@ -14,6 +15,27 @@ function downloadJson(exportName: string){
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
 }
+
+function submitCiphertextBallot(voterId: string){
+  const realBallot = buildBallot(ballot);
+  const realManifest = buildManifest(ballot);
+  const result = encryptBallot(realBallot, realManifest);
+  if (result instanceof ErrorBallotInput) {
+    console.log("error input!")
+    return;
+  }
+
+  fetch(" https://771c-168-5-180-237.ngrok.io/receive/"+voterId, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(realBallot, null, '\t')
+  }).then(res => {
+    console.log("Request complete! response:", res);
+  });
+}
+
+
 
 get_optional(document.getElementById("prev2")).addEventListener("click", function () {
   get_optional(document.getElementById("step_1")).className = "step current";
@@ -97,8 +119,10 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   get_optional(document.getElementById("screen_4")).style.display = "contents";
   alert("Downloading Encrypted Ballot! qwq");
   //Download an encrypted ballot json file.
-  downloadJson("encrpted_ballot");
-
+  // downloadJson("encrpted_ballot");
+  let voterId = Math.floor(Math.random() * 100).toString();
+  console.log("Generated random voterID: " + voterId);
+  submitCiphertextBallot(voterId);
 
 });
 
