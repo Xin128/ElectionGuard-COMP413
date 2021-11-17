@@ -13,6 +13,7 @@ import { Ballot, BallotItem, BallotOption, EncryptBallotOutput, ErrorBallotInput
 import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
 import { InternalManifest, Manifest, Party, Candidate, GeopoliticalUnit, ContestDescription, BallotStyle, ElectionType, ReportingUnitType, InternationalizedText, Language, VoteVariationType, SelectionDescription} from "../manifest"
+import {encrypt_compatible_testing_demo} from "../serialization";
 
 /**
  * Ballot ==> Whole Election 
@@ -32,6 +33,8 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+    const cipheredBallot: string = encrypt_compatible_testing_demo(encrypted_ballot);
+    console.log(cipheredBallot);
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
 
@@ -275,59 +278,7 @@ export function buildBallotStyle(ballot: any): BallotStyle[] {
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
-// // Only used for testing
-// export function buildFakeBallot(): Ballot {
-//     const names = ['James Miller', 'Liam Garcia','Olivia Brown','Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-//
-//     // build a fake ballot item
-//     let ballotOptions1: BallotOption[] = [];
-//     let ballotOptions2: BallotOption[] = [];
-//     names.forEach((name, idx) => {
-//         if (idx < names.length / 2) {
-//             const ballotOption = new BallotOption(name, false);
-//             // console.log("ballot1 ballotoptions ", ballotOptions1);
-//             ballotOptions1 = [...ballotOptions1, ballotOption];
-//         } else {
-//             const ballotOption = new BallotOption(name, false);
-//             ballotOptions2 = [...ballotOptions2, ballotOption];
-//         }
-//     });
-//     const contest1 = new BallotItem(ballotOptions1);
-//     const contest2 = new BallotItem(ballotOptions2);
-//     // hard code the selected options, the second contest doesn't select anything
-//     contest1.ballotOptions[0].selected = true;
-//
-//
-//     // add ballotItem to electionBallot
-//     // build a ballot
-//     const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
-//     console.log("the current ballot is ", electionBallot);
-//     return electionBallot;
-// }
-//
-// export function buildLargeFakeBallot(count: number): Ballot {
-//
-//     const names = ['James Miller', 'Liam Garcia', 'Olivia Brown', 'Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-//     const contests: BallotItem[] = [];
-//     for (let i = 0; i < count; i++) {
-//         let ballotOptions1: BallotOption[] = [];
-//         names.forEach((name) => {
-//             const ballotOption = new BallotOption(name, false);
-//             // console.log("ballot1 ballotoptions ", ballotOptions1);
-//             ballotOptions1 = [...ballotOptions1, ballotOption];
-//         });
-//         const contest1 = new BallotItem(ballotOptions1);
-//         contests.push(contest1);
-//     }
-//
-//     // add ballotItem to electionBallot
-//     // build a ballot
-//     const electionBallot = new Ballot("001", "firstTest", contests);
-//
-//     console.log("the current ballot is ", electionBallot);
-//
-//     return electionBallot;
-// }
+
 export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.electionName === undefined || ballot.electionName.length === 0) return new ErrorBallotInput(ErrorType.MissingElectionName, "Missing Election Name");
     if (ballot.partyId === undefined) return new ErrorBallotInput(ErrorType.MissingBallotPartyId, "Missing Ballot Party ID");
