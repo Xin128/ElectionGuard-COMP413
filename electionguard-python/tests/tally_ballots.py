@@ -100,38 +100,3 @@ for ballotNum in os.listdir(encypted_file_dir):
     decrypted_tallies = _decrypt_with_secret(result, keypair.secret_key)
     print("decrypted_tallies!!!!!!")
     print(decrypted_tallies)
-
-# from electionguard_tools.factories.election_factory import ElectionFactory
-# from electionguard.encrypt import encrypt_ballot
-#
-# election_factory = ElectionFactory()
-# ballot_factory = BallotFactory.BallotFactory()
-# keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
-# secret_key = TWO_MOD_P
-# election = election_factory.get_simple_manifest_from_file()
-# internal_manifest, context = election_factory.get_fake_ciphertext_election(
-#     election, keypair.public_key
-# )
-# ballots = ballot_factory.get_simple_ballots_from_file()
-#
-#
-# # encrypt each ballot
-# store = DataStore()
-# encryption_seed = ElectionFactory.get_encryption_device().get_hash()
-# print(len(ballots))
-# for ballot in ballots:
-#     print("what the f")
-#     encrypted_ballot = encrypt_ballot(
-#         ballot, internal_manifest, context, encryption_seed
-#     )
-#     encryption_seed = encrypted_ballot.code
-#     # add to the ballot store
-#     store.set(
-#         encrypted_ballot.object_id,
-#         from_ciphertext_ballot(encrypted_ballot, BallotBoxState.CAST),
-#     )
-# # act
-# result = tally_ballots(store, internal_manifest, context)
-# decrypted_tallies = _decrypt_with_secret(result, keypair.secret_key)
-# print("decrypted_tallies!!!!!!")
-# print(decrypted_tallies)
