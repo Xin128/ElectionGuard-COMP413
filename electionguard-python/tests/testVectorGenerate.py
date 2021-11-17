@@ -52,7 +52,11 @@ nonce_seed = ElementModQ(40358)
 import os
 import os
 
+<<<<<<< HEAD
 export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_data")
+=======
+export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_test_inputs")
+>>>>>>> be368273d16030efa9fd98326c23d7242a812a3c
 if not os.path.exists(os.path.join(export_data_dir)):
     os.makedirs(export_data_dir)
 
