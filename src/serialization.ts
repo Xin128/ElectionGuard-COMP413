@@ -663,7 +663,7 @@ export function hex_to_bigint(numstr: string): bigint {
   return BigInt("0x" + numstr);
 }
 
-const deserialize_toHex_banlist:string[] = ["timestamp"];
+export const deserialize_toHex_banlist:string[] = ["timestamp"];
 
 export function encrypt_compatible_testing_demo(encrypted_ballot: CiphertextBallot): string{
   return JSON.stringify(encrypted_ballot, (key, value) => {

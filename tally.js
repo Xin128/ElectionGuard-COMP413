@@ -1,0 +1,2 @@
+from 'tally.json' import *;
+

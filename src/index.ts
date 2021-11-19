@@ -3,7 +3,17 @@ import {encryptBallot, getQRCode, buildBallot, buildManifest} from "./API/APIUti
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './AaronBallot/super_complex_ballot.json';
-import {CiphertextBallot} from "./simple_election_data";
+// import {CiphertextBallot} from "./simple_election_data";
+import * as ballot from './DemoBallot/demo_ballot_schema.json'
+
+export function download(content, fileName, contentType) {
+  var a = document.createElement("a");
+  var file = new Blob([content], {type: contentType});
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}
+
 
 function downloadJson(exportName: string){
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
@@ -79,15 +89,50 @@ get_optional(document.getElementById("next1")).addEventListener("click", functio
 
 get_optional(document.getElementById("next2")).addEventListener("click", function () {
   if(document.querySelector('input[name="choice"]')){
-    document.querySelectorAll('input[name="choice"]').forEach((elem) => {
-      elem.setAttribute('disabled', "true");
-    });
+    // document.querySelectorAll('input[name="choice"]').forEach((elem) => {
+    //   elem.setAttribute('disabled', "true");
+    // });
+
+    // console.log(document.querySelectorAll('input[name="choice"]')[2].checked)
+    const question1 = document.querySelectorAll('input[name="choice"]')
+    for (let i = 0; i < ballot.ballotItems[0].ballotOptions.length; i++) {
+      ballot.ballotItems[0].ballotOptions[i].selected = question1[i].checked;
+    }
   }
   if(document.querySelector('input[name="secondary"]')){
-    document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
-      elem.setAttribute('disabled', "true");
-    });
+    // document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
+    //   elem.setAttribute('disabled', "true");
+    // });
+    const question2 = document.querySelectorAll('input[name="secondary"]')
+    for (let i = 0; i < ballot.ballotItems[1].ballotOptions.length; i++) {
+      ballot.ballotItems[1].ballotOptions[i].selected = question2[i].checked;
+    }
   }
+  if(document.querySelector('input[name="tertiary"]')){
+    // document.querySelectorAll('input[name="tertiary"]').forEach((elem) => {
+    //   elem.setAttribute('disabled', "true");
+    // });
+
+    const question3 = document.querySelectorAll('input[name="tertiary"]')
+    for (let i = 0; i < ballot.ballotItems[2].ballotOptions.length; i++) {
+      ballot.ballotItems[2].ballotOptions[i].selected = question3[i].checked;
+    }
+  }
+  if(document.querySelector('input[name="quaternary"]')){
+    // document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
+    //   elem.setAttribute('disabled', "true");
+    // });
+
+
+    const question4 = document.querySelectorAll('input[name="quaternary"]')
+    for (let i = 0; i < ballot.ballotItems[3].ballotOptions.length; i++) {
+      ballot.ballotItems[3].ballotOptions[i].selected = question4[i].checked;
+    }
+  }
+
+  // console.log(JSON.stringify(ballot, null, "\t"), 'ballot.json', 'text/plain')
+
+
   get_optional(document.getElementById("step_2")).className = "step done";
   get_optional(document.getElementById("step_3")).className = "step current";
   get_optional(document.getElementById("review-btn")).style.display = "none";
@@ -102,8 +147,15 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   const realBallot = buildBallot(ballot);
   console.log('buildManifest');
   const realManifest = buildManifest(ballot);
+
+  // console.log(JSON.stringify(realBallot, null, "\t"))
+  // console.log(JSON.stringify(realManifest, null, "\t"))
+  // download(JSON.stringify(realBallot, null, "\t"), 'realBallot.json', 'text/plain');
+  // download(JSON.stringify(realManifest, null, "\t"), 'manifest.json', 'text/plain');
+
   console.log(realBallot)
   console.log(realManifest)
+
   // const fakeBallot = buildFakeBallot();
   const result = encryptBallot(realBallot, realManifest);
   if (result instanceof ErrorBallotInput) {
@@ -120,9 +172,11 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   // alert("Downloading Encrypted Ballot! ");
   //Download an encrypted ballot json file.
   // downloadJson("encrpted_ballot");
-  let voterId = Math.floor(Math.random() * 100).toString();
-  console.log("Generated random voterID: " + voterId);
-  submitCiphertextBallot(voterId);
+
+
+  // const voterId = Math.floor(Math.random() * 100).toString();
+  // console.log("Generated random voterID: " + voterId);
+  // submitCiphertextBallot(voterId);
 
 
 });
