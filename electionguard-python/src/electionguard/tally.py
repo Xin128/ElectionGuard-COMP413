@@ -261,6 +261,7 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         """
         Append a collection of Ballots to the tally and recalculate
         """
+        print("scheduler is none in batch append", scheduler is None)
         cast_ballot_selections: Dict[
             SELECTION_ID, Dict[BALLOT_ID, ElGamalCiphertext]
         ] = {}
@@ -327,7 +328,7 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         """
         Add a cast ballot to the tally, synchronously
         """
-
+        print("scheduler is none ", scheduler is None)
         # iterate through the contests and elgamal add
         for contest in ballot.contests:
             # This should never happen since the ballot is validated against the election metadata
@@ -391,19 +392,22 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         scheduler: Optional[Scheduler] = None,
     ) -> bool:
 
-        result_set: List[Tuple[SELECTION_ID, ElGamalCiphertext]]
-        if not scheduler:
-            scheduler = Scheduler()
-        result_set = scheduler.schedule(
-            self._accumulate,
-            [
-                (selection_id, selections)
-                for (
-                    selection_id,
-                    selections,
-                ) in ciphertext_selections_by_selection_id.items()
-            ],
-        )
+        result_set: List[Tuple[SELECTION_ID, ElGamalCiphertext]] = []
+        # if not scheduler:
+        #     scheduler = Scheduler()
+        # result_set = scheduler.schedule(
+        #     self._accumulate,
+        #     [
+        #         (selection_id, selections)
+        #         for (
+        #             selection_id,
+        #             selections,
+        #         ) in ciphertext_selections_by_selection_id.items()
+        #     ],
+        # )
+
+        for (selection_id, selections) in ciphertext_selections_by_selection_id.items():
+            result_set.append(self._accumulate(selection_id, selections))
 
         result_dict = {
             selection_id: ciphertext for (selection_id, ciphertext) in result_set
@@ -430,7 +434,7 @@ def tally_ballot(
             f"tally ballots error tallying unknown state for ballot {ballot.object_id}"
         )
         return None
-
+    print("inside add tally!!!!!!!!!!!!!!!!!")
     if tally.append(ballot):
         return tally
 

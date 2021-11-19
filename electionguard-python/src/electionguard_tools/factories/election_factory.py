@@ -77,15 +77,21 @@ class AllPrivateElectionData:
 class ElectionFactory:
     """Factory to create elections."""
 
-    simple_election_manifest_file_name = "manifestOnly-235.json"
+    # need to comment this back
+    # simple_election_manifest_file_name = "manifestOnly-235.json"
+    simple_election_manifest_file_name = "election_manifest_simple.json"
 
     def get_simple_manifest_from_file(self) -> Manifest:
         """Get simple manifest from json file."""
         return self._get_manifest_from_file(self.simple_election_manifest_file_name)
 
-    def get_simple_manifest_from_file_self_defined_directory(self, directoy:str, manifest_filename:str) -> Manifest:
+    def get_simple_manifest_from_file_self_defined_directory(
+        self, directoy: str, manifest_filename: str
+    ) -> Manifest:
         """Get simple manifest from json file."""
-        return self._get_manifest_from_file_self_defined_directory(directoy, manifest_filename)
+        return self._get_manifest_from_file_self_defined_directory(
+            directoy, manifest_filename
+        )
 
     @staticmethod
     def get_hamilton_manifest_from_file() -> Manifest:
@@ -250,7 +256,9 @@ class ElectionFactory:
         return from_file_to_dataclass(Manifest, os.path.join(data, filename))
 
     @staticmethod
-    def _get_manifest_from_file_self_defined_directory(directory, filename: str) -> Manifest:
+    def _get_manifest_from_file_self_defined_directory(
+        directory, filename: str
+    ) -> Manifest:
         return from_file_to_dataclass(Manifest, os.path.join(directory, filename))
 
     @staticmethod

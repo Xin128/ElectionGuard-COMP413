@@ -30,7 +30,6 @@ from electionguard.group import (
     ONE_MOD_Q,
     mult_p,
     g_pow_p,
-
 )
 from electionguard.manifest import (
     ContestDescription,
@@ -522,7 +521,9 @@ class TestDecryptWithSecrets(BaseTestCase):
         # encrypted_subject_to_export =  ballot_factory.export_ballot_to_file(subject, 'pyout_two_contest')
 
         # EXPORT FILE TO JSON
-        subject = ballot_factory.get_ciphertext_ballot_from_file('encrypted_ballot.json')
+        subject = ballot_factory.get_ciphertext_ballot_from_file(
+            "encrypted_ballot.json"
+        )
 
         self.assertIsNotNone(subject)
         result_from_key = decrypt_ballot_with_secret(
@@ -534,19 +535,31 @@ class TestDecryptWithSecrets(BaseTestCase):
             remove_placeholders=False,
         )
         # decrypted_subject_to_export = ballot_factory.export_ballot_to_file(result_from_key, 'output/decrypted_ballot_5')
-        print('----------------------------------------------------------------------------')
+        print(
+            "----------------------------------------------------------------------------"
+        )
         print("DATA BELOW:")
         print(data)
-        print('----------------------------------------------------------------------------')
+        print(
+            "----------------------------------------------------------------------------"
+        )
         print
-        print('----------------------------------------------------------------------------')
+        print(
+            "----------------------------------------------------------------------------"
+        )
         print("ENCRYPTED_RESULT BELOW:")
         print(subject)
-        print('----------------------------------------------------------------------------')
-        print('----------------------------------------------------------------------------')
+        print(
+            "----------------------------------------------------------------------------"
+        )
+        print(
+            "----------------------------------------------------------------------------"
+        )
         print("DECRPTED_RESULT BELOW:")
         print(result_from_key)
-        print('----------------------------------------------------------------------------')
+        print(
+            "----------------------------------------------------------------------------"
+        )
 
         result_from_nonce = decrypt_ballot_with_nonce(
             subject,
@@ -563,7 +576,6 @@ class TestDecryptWithSecrets(BaseTestCase):
             subject.nonce,
             remove_placeholders=False,
         )
-
 
         # Assert
         self.assertIsNotNone(result_from_key)

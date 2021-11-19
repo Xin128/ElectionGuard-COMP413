@@ -19,6 +19,7 @@ from electionguard.tally import CiphertextTally, tally_ballots, tally_ballot
 
 
 from electionguard_tools.strategies.election import (
+    election_descriptions,
     elections_and_ballots,
     ELECTIONS_AND_BALLOTS_TUPLE_TYPE,
 )
@@ -32,15 +33,89 @@ from electionguard.group import (
     ONE_MOD_Q,
     mult_p,
     g_pow_p,
-
 )
 import electionguard_tools.factories.ballot_factory as BallotFactory
+from electionguard.manifest import InternalManifest
+from electionguard.manifest import Manifest
+from electionguard.election import (
+    CiphertextElectionContext,
+    make_ciphertext_election_context,
+)
+import os
 
 election_factory = ElectionFactory()
 ballot_factory = BallotFactory.BallotFactory()
 
+
 class TestTally(BaseTestCase):
     """Tally tests"""
+
+    def test_tally_ts(
+            self
+    ):
+        # Arrange
+        # (
+        #     _election_description,
+        #     internal_manifest,
+        #     ballots,
+        #     secret_key,
+        #     context,
+        # ) = everything
+        keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
+        # secret_key = TWO_MOD_P
+        # election = election_factory.get_simple_manifest_from_file()
+        # internal_manifest, context = election_factory.get_fake_ciphertext_election(
+        #     election, keypair.public_key
+        # )
+        # ballots = ballot_factory.get_simple_ballots_from_file()
+        #
+        # # Tally the plaintext ballots for comparison later
+        # plaintext_tallies = accumulate_plaintext_ballots(ballots)
+        # print("plaintext tallies ", plaintext_tallies)
+
+        # encrypt each ballot
+        store = DataStore()
+        encypted_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'encrypted_data')
+        generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'generated_data')
+        ballotNum = "159"
+        encypted_file_dir_with_ballotNum = os.path.join(encypted_file_dir, ballotNum)
+        generated_data_dir_with_ballotNum = os.path.join(generated_file_dir, ballotNum)
+        manifest = election_factory.get_simple_manifest_from_file_self_defined_directory(generated_data_dir_with_ballotNum, "manifest.json")
+        internal_manifest = InternalManifest(manifest)
+        context = make_ciphertext_election_context(
+            number_of_guardians=1,
+            quorum=1,
+            elgamal_public_key=keypair.public_key,
+            commitment_hash=ElementModQ(2),
+            manifest_hash=manifest.crypto_hash(),
+        )
+        # print("manifest hash in test tally is ", manifest.crypto_hash())
+        for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
+            print("ballot file name is ", ballot_filename)
+            subject = ballot_factory.get_ciphertext_ballot_from_file(encypted_file_dir_with_ballotNum, ballot_filename)
+            print("encrypted ballot type is ", type(subject))
+            # add to the ballot store
+            store.set(
+                subject.object_id,
+                from_ciphertext_ballot(subject, BallotBoxState.CAST),
+            )
+
+        print("finish encrypting all the ballots!!!!!!")
+        export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "tally_outputs")
+        print("nothing should be called after this line!!!!")
+        # act
+        result = tally_ballots(store, internal_manifest, context)
+        # print("result is ", result)
+        decrypted_subject_to_export = ballot_factory.export_ballot_to_file(
+            result, export_data_dir, "tally_output"
+        )
+        self.assertIsNotNone(result)
+
+        # Assert
+        decrypted_tallies = self._decrypt_with_secret(result, keypair.secret_key)
+        print("decrypted_tally")
+        print(decrypted_tallies)
+        # # self.assertEqual(plaintext_tallies, decrypted_tallies)
 
     # @settings(
     #     deadline=timedelta(milliseconds=10000),
@@ -51,8 +126,8 @@ class TestTally(BaseTestCase):
     # )
     # @given(integers(2, 5).flatmap(lambda n: elections_and_ballots(3)))
     def test_tally_cast_ballots_accumulates_valid_tally(
-        self,
-         # everything: ELECTIONS_AND_BALLOTS_TUPLE_TYPE
+        self
+        # everything: ELECTIONS_AND_BALLOTS_TUPLE_TYPE
     ):
         # Arrange
         # (
@@ -70,9 +145,9 @@ class TestTally(BaseTestCase):
         )
         ballots = ballot_factory.get_simple_ballots_from_file()
 
-
         # Tally the plaintext ballots for comparison later
         plaintext_tallies = accumulate_plaintext_ballots(ballots)
+        print("plaintext tallies ", plaintext_tallies)
 
         # encrypt each ballot
         store = DataStore()
@@ -83,15 +158,22 @@ class TestTally(BaseTestCase):
             )
             encryption_seed = encrypted_ballot.code
             self.assertIsNotNone(encrypted_ballot)
+            # print("encrypted ballot is ", encrypted_ballot)
             # add to the ballot store
             store.set(
                 encrypted_ballot.object_id,
                 from_ciphertext_ballot(encrypted_ballot, BallotBoxState.CAST),
             )
 
+        print("finish encrypting all the ballots!!!!!!")
+        export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "tally_outputs")
+
         # act
         result = tally_ballots(store, internal_manifest, context)
-        decrypted_subject_to_export = ballot_factory.export_ballot_to_file(result, 'sample_encryption')
+        # print("result is ", result)
+        decrypted_subject_to_export = ballot_factory.export_ballot_to_file(
+            result, export_data_dir, "sample_tally_result"
+        )
         self.assertIsNotNone(result)
 
         # Assert
@@ -109,8 +191,8 @@ class TestTally(BaseTestCase):
     # )
     # @given(integers(1, 3).flatmap(lambda n: elections_and_ballots(3)))
     def test_tally_spoiled_ballots_accumulates_valid_tally(
-        self
-            # , everything: ELECTIONS_AND_BALLOTS_TUPLE_TYPE
+        self,
+        # , everything: ELECTIONS_AND_BALLOTS_TUPLE_TYPE
     ):
         # # Arrange
         # (

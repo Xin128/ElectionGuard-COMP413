@@ -28,8 +28,10 @@ import electionguard_tools.factories.ballot_factory as BallotFactory
 import electionguard_tools.factories.election_factory as ElectionFactory
 from electionguard.manifest import InternalManifest
 import random
+
 ballot_factory = BallotFactory.BallotFactory()
 election_factory = ElectionFactory.ElectionFactory()
+
 
 class TestElections(BaseTestCase):
     """Election hypothesis encryption tests"""
@@ -46,10 +48,16 @@ class TestElections(BaseTestCase):
         print("start")
         internal_manifest = InternalManifest(manifest)
         name = str(internal_manifest.manifest_hash)[:3]
-        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(manifest, 'manifest/manifestOnly-' + name)
+        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(
+            manifest, "manifest/manifestOnly-" + name
+        )
         self.assertTrue(encrypted_manifest_to_export == None)
-        ballot = ballot_factory.generate_fake_plaintext_ballots_for_election(internal_manifest, 5)
-        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(ballot, 'manifest/ballotOnly-' + name)
+        ballot = ballot_factory.generate_fake_plaintext_ballots_for_election(
+            internal_manifest, 5
+        )
+        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(
+            ballot, "manifest/ballotOnly-" + name
+        )
         self.assertTrue(encrypted_ballot_to_export == None)
 
     @settings(
