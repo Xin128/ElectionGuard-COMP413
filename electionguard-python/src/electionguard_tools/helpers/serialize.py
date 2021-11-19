@@ -30,6 +30,47 @@ from electionguard.group import (
 
 T = TypeVar("T")
 
+# Color and abbreviation can both be of type hex but should not be converted
+STR_KEYS = [
+    "color",
+    "abbreviation",
+    "is_write_in",
+    "style_id",
+    "usage",
+    "object_id",
+    "style_id",
+    "spec_version",
+    "name",
+    "type",
+]
+
+ElementModP_KEYS = [
+    "pad",
+    "public_key",
+    "proof_zero_pad",
+    "proof_one_pad",
+    "proof_zero_data",
+    "proof_one_data",
+    "pad",
+    "data",
+]
+ElementModQ_KEYS = [
+    "nonce",
+    "crypto_hash",
+    "response",
+    "manifest_hash",
+    "code_seed",
+    "base_hash",
+    "code",
+    "description_hash",
+    "challenge",
+    "proof_zero_challenge",
+    "proof_one_challenge",
+    "proof_zero_response",
+    "proof_one_response",
+]
+BOOLEAN_KEYS = ["is_placeholder_selection"]
+INT_KEYS = ["timestamp"]
 
 def construct_path(
     target_file_name: str,
@@ -39,6 +80,21 @@ def construct_path(
     """Construct path from file name, path, and extension."""
     target_file = f"{target_file_name}.{target_file_extension}"
     return os.path.join(target_path, target_file)
+
+def to_file(
+    data: Any,
+    target_file_name: str,
+    target_path: Optional[Path] = None,
+    target_file_extension="json",
+) -> None:
+    """Serialize object to file (defaultly json)."""
+    if not os.path.exists(target_path):
+        os.makedirs(target_path)
+
+    with open(
+        construct_path(target_file_name, target_path, target_file_extension), "w"
+    ) as outfile:
+        json.dump(data, outfile, indent=4, default=custom_encoder)
 
 
 def from_raw(type_: Type[T], obj: Any) -> T:
@@ -59,6 +115,14 @@ def from_file_to_dataclass(dataclass_type_: Type[T], path: Union[str, Path]) -> 
         data = custom_decoder(data)
     return parse_obj_as(dataclass_type_, data)
 
+def from_file_to_dataclass_ciphertext(
+    dataclass_type_: Type[T], path: Union[str, Path]
+) -> T:
+    """Deserialize file into a ciphertext."""
+    with open(path, "r") as json_file:
+        data = json.load(json_file)
+        data = custom_elementModQ_decoder(data)
+    return parse_obj_as(dataclass_type_, data)
 
 def from_list_in_file_to_dataclass(
     dataclass_type_: Type[T], path: Union[str, Path]
@@ -69,74 +133,17 @@ def from_list_in_file_to_dataclass(
         data = custom_decoder(data)
     return cast(dataclass_type_, parse_obj_as(List[dataclass_type_], data))
 
-
-def from_file_to_dataclass_ciphertext(
-    dataclass_type_: Type[T], path: Union[str, Path]
-) -> T:
-    """Deserialize file as dataclass type."""
-    with open(path, "r") as json_file:
-        data = json.load(json_file)
-        data = custom_decoder_ciphertext(data)
-    return parse_obj_as(dataclass_type_, data)
-
-
-def to_file(
-    data: Any,
-    target_file_name: str,
-    target_path: Optional[Path] = None,
-    target_file_extension="json",
-) -> None:
-    """Serialize object to file (defaultly json)."""
-    if not os.path.exists(target_path):
-        os.makedirs(target_path)
-
-    with open(
-        construct_path(target_file_name, target_path, target_file_extension), "w"
-    ) as outfile:
-        json.dump(data, outfile, indent=4, default=custom_encoder)
-
-
-# Color and abbreviation can both be of type hex but should not be converted
-banlist = [
-    "color",
-    "abbreviation",
-    "is_write_in",
-    "style_id",
-    "usage",
-    "object_id",
-    "style_id",
-    "spec_version",
-    "name",
-    "type",
-]
-
-elementModPList = [
-    "pad",
-    "public_key",
-    "proof_zero_pad",
-    "proof_one_pad",
-    "proof_zero_data",
-    "proof_one_data",
-    "pad",
-    "data",
-]
-elementModQList = [
-    "nonce",
-    "crypto_hash",
-    "response",
-    "manifest_hash",
-    "code_seed",
-    "base_hash",
-    "code",
-    "description_hash",
-    "challenge",
-    "proof_zero_challenge",
-    "proof_one_challenge",
-    "proof_zero_response",
-    "proof_one_response",
-]
-booleanList = ["is_placeholder_selection"]
-
+def replace_elements_from_key(key: str, item: Any) -> Any:
+    if key in INT_KEYS:
+        return int(item)
+    elif key in BOOLEAN_KEYS:
+        return False if item == "00" else True
+    elif key in ElementModP_KEYS:
+        return ElementModP(item)
+    elif key in ElementModQ_KEYS:
+        return ElementModQ(item)
+    else:
+        return item
 
 def _recursive_replace(object, type_: Type, replace: Callable[[Any], Any]):
     """Iterate through object to replace."""
@@ -144,18 +151,8 @@ def _recursive_replace(object, type_: Type, replace: Callable[[Any], Any]):
         for key, item in object.items():
             if isinstance(item, (dict, list)):
                 object[key] = _recursive_replace(item, type_, replace)
-            elif key == "timestamp":
-                object[key] = int(item)
-            elif key in booleanList:
-                object[key] = False if item == "00" else True
-            elif key in elementModPList:
-                # object[key] = int_to_p(int(item))
-                object[key] = ElementModP(item)
-            elif key in elementModQList:
-
-                object[key] = ElementModQ(item)
             else:
-                object[key] = item
+                object[key] = replace_elements_from_key(key, item)
 
     if isinstance(object, list):
         for index, item in enumerate(object):
@@ -204,16 +201,21 @@ def _get_int_decoder() -> Callable[[Any], Any]:
         return safe_hex_to_int
     return lambda x: x
 
-
-def _get_elementModQ_decoder() -> Callable[[Any], Any]:
-    return lambda x: hex_to_q(x)
-
-
 def custom_decoder(obj: Any) -> Any:
     """Integer decoder to convert json stored int back to int representations."""
     return _recursive_replace(obj, str, _get_int_decoder())
 
+def _get_elementModQ_decoder() -> Callable[[Any], Any]:
+    def safe_hex_to_ElementModQ(input: str) -> Union[ElementModQ, str]:
+        try:
+            return hex_to_q(input)
+        except ValueError:
+            return input
 
-def custom_decoder_ciphertext(obj: Any) -> Any:
-    """Integer decoder to convert json stored int back to int representations."""
+    if OPTION is NumberEncodeOption.Hex:
+        return safe_hex_to_ElementModQ
+    return lambda x: x
+
+def custom_elementModQ_decoder(obj: Any) -> Any:
+    """ElementModQ decoder to convert json stored int back to ElementModQ representations."""
     return _recursive_replace(obj, str, _get_elementModQ_decoder())

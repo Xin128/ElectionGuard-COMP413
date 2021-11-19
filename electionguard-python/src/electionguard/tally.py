@@ -164,7 +164,6 @@ class CiphertextTallyContest(OrderedObjectBase):
         if not use_selection:
             log_warning(f"add cannot accumulate for missing selection {key}")
             return key, None
-
         return key, selection_tally.elgamal_accumulate(use_selection.ciphertext)
 
 
@@ -261,7 +260,6 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         """
         Append a collection of Ballots to the tally and recalculate
         """
-        print("scheduler is none in batch append", scheduler is None)
         cast_ballot_selections: Dict[
             SELECTION_ID, Dict[BALLOT_ID, ElGamalCiphertext]
         ] = {}
@@ -286,9 +284,9 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
                 # just append the spoiled ballots
                 elif ballot_value.state == BallotBoxState.SPOILED:
                     self._add_spoiled(ballot_value)
-
         # cache the cast ballot id's so they are not double counted
-        if self._execute_accumulate(cast_ballot_selections, scheduler):
+        # if self._execute_accumulate(cast_ballot_selections, scheduler):
+        if self._execute_accumulate_without_scheduler(cast_ballot_selections):
             for ballot in ballots:
                 # get the value of the dict
                 ballot_value = ballot[1]
@@ -328,7 +326,7 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         """
         Add a cast ballot to the tally, synchronously
         """
-        print("scheduler is none ", scheduler is None)
+
         # iterate through the contests and elgamal add
         for contest in ballot.contests:
             # This should never happen since the ballot is validated against the election metadata
@@ -391,23 +389,42 @@ class CiphertextTally(ElectionObjectBase, Container, Sized):
         ],
         scheduler: Optional[Scheduler] = None,
     ) -> bool:
+        result_set: List[Tuple[SELECTION_ID, ElGamalCiphertext]]
+        if not scheduler:
+            scheduler = Scheduler()
+        result_set = scheduler.schedule(
+            self._accumulate,
+            [
+                (selection_id, selections)
+                for (
+                    selection_id,
+                    selections,
+                ) in ciphertext_selections_by_selection_id.items()
+            ],
+        )
 
+        result_dict = {
+            selection_id: ciphertext for (selection_id, ciphertext) in result_set
+        }
+
+        for contest in self.contests.values():
+            for selection_id, selection in contest.selections.items():
+                if selection_id in result_dict:
+                    selection.elgamal_accumulate(result_dict[selection_id])
+
+        return True
+
+    def _execute_accumulate_without_scheduler(
+        self,
+        ciphertext_selections_by_selection_id: Dict[
+            str, Dict[BALLOT_ID, ElGamalCiphertext]
+        ]
+    ) -> bool:
         result_set: List[Tuple[SELECTION_ID, ElGamalCiphertext]] = []
-        # if not scheduler:
-        #     scheduler = Scheduler()
-        # result_set = scheduler.schedule(
-        #     self._accumulate,
-        #     [
-        #         (selection_id, selections)
-        #         for (
-        #             selection_id,
-        #             selections,
-        #         ) in ciphertext_selections_by_selection_id.items()
-        #     ],
-        # )
 
-        for (selection_id, selections) in ciphertext_selections_by_selection_id.items():
-            result_set.append(self._accumulate(selection_id, selections))
+        for (selection_id,selections) in ciphertext_selections_by_selection_id.items():
+            result_set.append(self._accumulate(
+                selection_id, selections))
 
         result_dict = {
             selection_id: ciphertext for (selection_id, ciphertext) in result_set
@@ -434,7 +451,7 @@ def tally_ballot(
             f"tally ballots error tallying unknown state for ballot {ballot.object_id}"
         )
         return None
-    print("inside add tally!!!!!!!!!!!!!!!!!")
+
     if tally.append(ballot):
         return tally
 

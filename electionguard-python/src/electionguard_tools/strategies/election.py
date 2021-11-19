@@ -181,9 +181,11 @@ def contact_infos(draw: _DrawType):
     Generates a `ContactInformation` object.
     :param draw: Hidden argument, used by Hypothesis.
     """
-    # empty lists for email and phone, for now
     return ContactInformation(
-        None, [draw(annotated_emails())], None, draw(human_names())
+        None,
+        draw(lists(annotated_emails(), min_size=1, max_size=3)),
+        None,
+        draw(human_names()),
     )
 
 
@@ -207,6 +209,11 @@ def two_letter_codes(draw: _DrawType, min_size=2, max_size=2):
 
 @composite
 def annotated_emails(draw: _DrawType):
+    """
+    Generates a `Email` object with an arbitrary two-letter string as annotation and an
+    email format string as value.
+    :param draw: Hidden argument, used by Hypothesis.
+    """
     return AnnotatedString(draw(two_letter_codes()), draw(emails()))
 
 
