@@ -1,5 +1,5 @@
 cd electionguard-python
-poetry run python -m pytest -s tests/testVectorGenerate.py
+poetry run python tests/testVectorGenerate.py
 cd ../
 cp -r generated_test_inputs ElectionGuard-COMP413/generated_test_inputs
 cd ElectionGuard-COMP413
