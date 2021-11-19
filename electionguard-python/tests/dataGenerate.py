@@ -25,13 +25,17 @@ from electionguard_tools.helpers.tally_accumulate import accumulate_plaintext_ba
 import electionguard_tools.factories.ballot_factory as BallotFactory
 import electionguard_tools.factories.election_factory as ElectionFactory
 from electionguard.manifest import InternalManifest
+
 ballot_factory = BallotFactory.BallotFactory()
 election_factory = ElectionFactory.ElectionFactory()
 import os
 import os
-export_data_dir = os.path.join(os.path.dirname(os.getcwd()), 'generated_data')
+
+export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_data")
 if not os.path.exists(os.path.join(export_data_dir)):
     os.makedirs(export_data_dir)
+
+
 class TestElections(BaseTestCase):
     """Election hypothesis encryption tests"""
 
@@ -49,8 +53,14 @@ class TestElections(BaseTestCase):
         internal_manifest = InternalManifest(manifest)
         name = str(internal_manifest.manifest_hash)[:3]
         export_data_dir_with_name = os.path.join(export_data_dir, name)
-        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(manifest, export_data_dir_with_name, 'manifest')
+        encrypted_manifest_to_export = ballot_factory.export_ballot_to_file(
+            manifest, export_data_dir_with_name, "manifest"
+        )
         self.assertTrue(encrypted_manifest_to_export == None)
-        ballot = ballot_factory.generate_fake_plaintext_ballots_for_election(internal_manifest, 5)
-        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(ballot, export_data_dir_with_name, 'ballot')
+        ballot = ballot_factory.generate_fake_plaintext_ballots_for_election(
+            internal_manifest, 5
+        )
+        encrypted_ballot_to_export = ballot_factory.export_ballot_to_file(
+            ballot, export_data_dir_with_name, "ballot"
+        )
         self.assertTrue(encrypted_ballot_to_export == None)

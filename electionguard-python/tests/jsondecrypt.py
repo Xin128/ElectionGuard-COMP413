@@ -13,7 +13,6 @@ from electionguard.group import (
     ONE_MOD_Q,
     mult_p,
     g_pow_p,
-
 )
 from electionguard.election import (
     CiphertextElectionContext,
@@ -29,19 +28,27 @@ election_factory = ElectionFactory.ElectionFactory()
 ballot_factory = BallotFactory.BallotFactory()
 
 keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
-encypted_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'encrypted_data')
-generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), 'generated_data')
+encypted_file_dir = os.path.join(os.path.dirname(os.getcwd()), "encrypted_data")
+generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_data")
 
 if not os.path.exists(os.path.join(encypted_file_dir)):
     os.makedirs(encypted_file_dir)
     exit()
 
 for ballotNum in os.listdir(encypted_file_dir):
+    if ballotNum == '.DS_Store':
+        continue
     encypted_file_dir_with_ballotNum = os.path.join(encypted_file_dir, ballotNum)
     generated_data_dir_with_ballotNum = os.path.join(generated_file_dir, ballotNum)
     for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
-        subject = ballot_factory.get_ciphertext_ballot_from_file(encypted_file_dir_with_ballotNum, ballot_filename)
-        manifest = election_factory.get_simple_manifest_from_file_self_defined_directory(generated_data_dir_with_ballotNum, "manifest.json")
+        subject = ballot_factory.get_ciphertext_ballot_from_file(
+            encypted_file_dir_with_ballotNum, ballot_filename
+        )
+        manifest = (
+            election_factory.get_simple_manifest_from_file_self_defined_directory(
+                generated_data_dir_with_ballotNum, "manifest.json"
+            )
+        )
         internal_manifest = InternalManifest(manifest)
         context = make_ciphertext_election_context(
             number_of_guardians=1,
@@ -74,7 +81,15 @@ for ballotNum in os.listdir(encypted_file_dir):
             subject.nonce,
             remove_placeholders=False,
         )
-        if result_from_key == None or result_from_nonce == None or result_from_nonce_seed == None:
+        if (
+            result_from_key == None
+            or result_from_nonce == None
+            or result_from_nonce_seed == None
+        ):
             log_warning(f"Unable To Decrypt for Manifest: {ballotNum}")
-        print('------------------------ Successfully Decrypt: ' + ballot_filename + ' ---------------------------')
+        print(
+            "------------------------ Successfully Decrypt: "
+            + ballot_filename
+            + " ---------------------------"
+        )
         print(result_from_key)
