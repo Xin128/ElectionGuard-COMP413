@@ -85,13 +85,15 @@ describe("TestDeserialization", () => {
     console.log(internal_manifest.manifest_hash);
   });
 
-  test('testConvertTestVectorsJsonFileToObj', () => {
-    let testFolder = `generated_test_inputs`;
+  test('testTestVectors', () => {
+    let testFolder = `generated_test_inputs_ts`;
     fs.readdirSync(testFolder).forEach(file => {
-      const path2TestVector = testFolder + "\\" + file;
-      console.log("path2TestVector is ", path2TestVector);
-      const encryptInputs: EncryptInput[] = from_test_file_to_valid_inputs(path2TestVector);
-      for (let input of encryptInputs) {
+      if (file !== testFolder) {
+        console.log("filename is ", file);
+        const path2TestVector = testFolder + "\\" + file;
+//         console.log("path2TestVector is ", path2TestVector);
+        const encryptInputs: EncryptInput[] = from_test_file_to_valid_inputs(path2TestVector);
+        for (let input of encryptInputs) {
           // console.log("encrypt input manifest is ", input.manifest);
           // console.log("encrypt input ballot is ", input.plaintextBallot);
           // console.log("encrypt input output is ", input.output);
@@ -106,11 +108,15 @@ describe("TestDeserialization", () => {
           undefined);
           // console.log("internal manifest is ", internal_manifest);
           // console.log("input nounce is ", inputs.nonce);
+          console.log("manifest hash in ts is ", internal_manifest.manifest.crypto_hash());
           const encryption_seed = new ElementModQ(BigInt('88136692332113344175662474900446441286169260372780056734314948839391938984061'));
           const encrypted_ballot = get_optional(encrypt_ballot(input.plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce)));
           // console.log("encrypted ballot crypto hash is ", get_optional(encrypted_ballot).crypto_hash);
           expect(encrypted_ballot.crypto_hash.equals(input.output)).toBe(true);
+        }
       }
+
+
     });
 
   });
@@ -135,11 +141,13 @@ describe("TestDeserialization", () => {
     }
   });
 
-  test('testReadDirectory', () => {
-    let folderName = `generated_test_inputs`;
-    fs.readdirSync(folderName).forEach((file) => {
-      console.log("filename is ", file)
-      console.log("path is ", folderName + "\\" + file);
-    })
-  })
-});
+//   test('testReadDirectory', () => {
+//     let folderName = `generated_test_inputs`;
+//     fs.readdirSync(folderName).forEach((file) => {
+//       if (file !== folderName) {
+//         console.log("filename is ", file)
+//         let path2TestVector = folderName + "\\" + file;
+//         console.log("path is ", path2TestVector);
+//       }
+//     });
+  });

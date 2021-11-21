@@ -1,6 +1,6 @@
 cd electionguard-python
-poetry run python tests/testVectorGenerate.py
+poetry run python -m pytest -s tests/testVectorGenerate.py -k test_vector_generate
 cd ../
-cp -r generated_test_inputs ElectionGuard-COMP413/generated_test_inputs
+cp -r generated_test_inputs/. ElectionGuard-COMP413/generated_test_inputs_ts
 cd ElectionGuard-COMP413
-yarn test src/serialization.test.ts -t testConvertTestVectorsJsonFileToObj
+yarn test src/serialization.test.ts -t testTestVectors
