@@ -7,6 +7,7 @@ import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
 import fs from 'fs';
+import { ElementModQ } from "./group";
 
 const json_string = "{\n" +
   "    \"object_id\": \"some-external-id-string-123\",\n" +
@@ -610,6 +611,11 @@ export const manifest_json = `{
 }
 `
 
+export type EncryptInput = {
+  plaintextBallot: PlaintextBallot,
+  manifest: Manifest,
+  output: ElementModQ
+}
 
 const numberList: string[] = ["timestamp", "sequence_order"];
 const booleanList: string[] = ["is_placeholder_selection"];
@@ -668,6 +674,19 @@ export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
   const data = fs.readFileSync(manifest_JSON, "utf8");
   const result = JSON.parse(data);
   return plainToClass(Manifest, result as Manifest);
+}
+
+export function from_test_file_to_valid_inputs(path: string): EncryptInput[] {
+  const data = fs.readFileSync(path, "utf8");
+  const result = JSON.parse(data);
+  let encryptInputs = [];
+  for (let res of result) {
+    let manifest = plainToClass(Manifest, res.input.manifest as Manifest);
+    let ballot = plainToClass(PlaintextBallot, res.input.ballot as PlaintextBallot);
+    // console.log("output hash is ", res.output);
+    encryptInputs.push({plaintextBallot: ballot, manifest: manifest, output: new ElementModQ(res.output)});
+  }
+  return encryptInputs;
 }
 
 export function hex_to_bigint(numstr: string): bigint {

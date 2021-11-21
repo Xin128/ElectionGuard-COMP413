@@ -391,7 +391,7 @@ class CiphertextContest(OrderedObjectBase):
 
 
 @dataclass(unsafe_hash=True)
-class  CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
+class CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
     """
     A CiphertextBallotContest represents the selections made by a voter for a specific ContestDescription
 
@@ -517,11 +517,13 @@ class  CiphertextBallotContest(OrderedObjectBase, CryptoHashCheckable):
         computed_ciphertext_accumulation = self.elgamal_accumulate()
 
         # Verify that the contest ciphertext matches the elgamal accumulation of all selections
-        if self.ciphertext_accumulation.pad != computed_ciphertext_accumulation.pad and self.ciphertext_accumulation.data != computed_ciphertext_accumulation.data:
+        if (
+            self.ciphertext_accumulation.pad != computed_ciphertext_accumulation.pad
+            and self.ciphertext_accumulation.data
+            != computed_ciphertext_accumulation.data
+        ):
             log_warning(
-                # f"self.ciphertext_accumulation.pad: {self.ciphertext_accumulation.pad}  and computed_ciphertext_accumulation.pad: {computed_ciphertext_accumulation.pad}\n"
-                # f"and self.ciphertext_accumulation.data {self.ciphertext_accumulation.data} and computed_ciphertext_accumulation.data {computed_ciphertext_accumulation.data}"
-                f"ciphertext does not equal elgamal accumulation for : {self.object_id}\n"
+               f"ciphertext does not equal elgamal accumulation for : {self.object_id}\n"
                 f"expected{self.ciphertext_accumulation} actual {computed_ciphertext_accumulation}"
             )
             return False
@@ -596,7 +598,6 @@ def make_ciphertext_ballot_contest(
         crypto_hash = _ciphertext_ballot_context_crypto_hash(
             object_id, ballot_selections, description_hash
         )
-
 
     aggregate = _ciphertext_ballot_contest_aggregate_nonce(object_id, ballot_selections)
     elgamal_accumulation = _ciphertext_ballot_elgamal_accumulate(ballot_selections)
@@ -779,8 +780,10 @@ class CiphertextBallot(ElectionObjectBase, CryptoHashCheckable):
         """
 
         if encryption_seed != self.manifest_hash:
-            log_warning(f"encryption seed:{encryption_seed}"
-                        f"manifest_hash {self.manifest_hash}")
+            log_warning(
+                f"encryption seed:{encryption_seed}"
+                f"manifest_hash {self.manifest_hash}"
+            )
 
             log_warning(
                 (

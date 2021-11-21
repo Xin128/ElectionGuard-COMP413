@@ -73,6 +73,7 @@ SEED = election_factory.get_encryption_device().get_hash()
 
 class TestEncrypt(BaseTestCase):
     """Encryption tests"""
+
     def test_encrypt_simple_selection_succeeds(self):
         # Arrange
         keypair = elgamal_keypair_from_secret(int_to_q(2))
@@ -563,17 +564,17 @@ class TestEncrypt(BaseTestCase):
         subject = election_factory.get_fake_ballot(internal_manifest)
         self.assertTrue(subject.is_valid(internal_manifest.ballot_styles[0].object_id))
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print('SUBJECT:', subject)
+        print("SUBJECT:", subject)
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print('INTERNAL MANIFEST', internal_manifest)
+        print("INTERNAL MANIFEST", internal_manifest)
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print('context', context)
+        print("context", context)
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print('SEED', SEED)
+        print("SEED", SEED)
         # Act
-        subject = PlaintextBallot('xin001', 'some-ballot-style-id',[])
+        subject = PlaintextBallot("xin001", "some-ballot-style-id", [])
         print("???????????????")
-        print('new subject:', subject)
+        print("new subject:", subject)
         result = encrypt_ballot(subject, internal_manifest, context, SEED)
         print("=====================================================")
         print("result:", result)

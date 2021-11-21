@@ -438,7 +438,7 @@ def encrypt_ballot(
 
     # Generate a random master nonce to use for the contest and selection nonce's on the ballot
     # random_master_nonce = get_or_else_optional_func(nonce, lambda: rand_q())
-    random_master_nonce = ElementModQ('9DA6')
+    random_master_nonce = ElementModQ("9DA6")
     # Include a representation of the election and the external Id in the nonce's used
     # to derive other nonce values on the ballot
 
@@ -447,7 +447,6 @@ def encrypt_ballot(
         ballot.object_id,
         random_master_nonce,
     )
-
 
     encrypted_contests = encrypt_ballot_contests(
         ballot, internal_manifest, context, nonce_seed
