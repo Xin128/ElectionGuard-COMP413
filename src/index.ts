@@ -1,10 +1,14 @@
 import {get_optional} from "./utils";
-import {encryptBallot, getQRCode, buildBallot, buildManifest} from "./API/APIUtils";
+import {encryptBallot, getQRCode, buildBallot, buildManifest, encryptBallot_ballotOut} from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './AaronBallot/super_complex_ballot.json';
 // import {CiphertextBallot} from "./simple_election_data";
 import * as ballot from './DemoBallot/demo_ballot_schema.json'
+import {Cipher} from "crypto";
+import {CiphertextBallot} from "./simple_election_data";
+import {encrypt_compatible_testing_demo} from "./serialization";
+import {Manifest} from "./manifest";
 
 export function download(content, fileName, contentType) {
   var a = document.createElement("a");
@@ -26,25 +30,29 @@ function downloadJson(exportName: string){
   downloadAnchorNode.remove();
 }
 
-function submitCiphertextBallot(voterId: string){
-  const realBallot = buildBallot(ballot);
-  const realManifest = buildManifest(ballot);
-  const result = encryptBallot(realBallot, realManifest);
-  if (result instanceof ErrorBallotInput) {
-    console.log("error input!")
-    return;
-  }
-
-  fetch(" https://771c-168-5-180-237.ngrok.io/receive/"+voterId, {
+function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBallot){
+  fetch("https://d8f9-128-42-114-225.ngrok.io" + "/receive/" +voterId, {
     method: "POST",
     mode: "no-cors",
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(realBallot, null, '\t')
+
+    body: encrypt_compatible_testing_demo(get_optional(encryptedBallot))
   }).then(res => {
     console.log("Request complete! response:", res);
   });
 }
 
+function submitManifest(voterId: string, manifest: Manifest){
+  fetch("https://d8f9-128-42-114-225.ngrok.io" + "/receive/" +voterId, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {'Content-Type': 'application/json'},
+
+    body: encrypt_compatible_testing_demo(get_optional(encryptedBallot))
+  }).then(res => {
+    console.log("Request complete! response:", res);
+  });
+}
 
 
 get_optional(document.getElementById("prev2")).addEventListener("click", function () {
@@ -174,9 +182,10 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   // downloadJson("encrpted_ballot");
 
 
-  // const voterId = Math.floor(Math.random() * 100).toString();
-  // console.log("Generated random voterID: " + voterId);
-  // submitCiphertextBallot(voterId);
+  const voterId = Math.floor(Math.random() * 100).toString();
+  console.log("Generated random voterID: " + voterId);
+  const encryptedballot = encryptBallot_ballotOut(realBallot, realManifest);
+  submitCiphertextBallot(voterId, encryptedballot);
 
 
 });

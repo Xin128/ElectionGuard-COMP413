@@ -16,11 +16,27 @@ import { InternalManifest, Manifest, Party, Candidate, GeopoliticalUnit, Contest
 import {download} from "../index";
 import {deserialize_toHex_banlist} from "../serialization";
 /**
- * Ballot ==> Whole Election 
+ * Ballot ==> Whole Election
  * BallotItem ==> A single question on the ballot
  * BallotOption ==> A single option on a question
  */
 
+// Give a Ballot item, return the ciphertext ballot
+export function encryptBallot_ballotOut(inputBallot: Ballot,
+                                        manifest: Manifest):  CiphertextBallot{
+  const ballot = ballot2PlainTextBallot(inputBallot);
+  const internalManifest: InternalManifest = new InternalManifest(manifest);
+  const context = ballot2Context(inputBallot, internalManifest);
+  const seed_nonce:ElementModQ = elements_mod_q_no_zero();
+  const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+
+  const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+  return encrypted_ballot;
+}
+
+export function cipherTextBallot_to_EncryptBallotOutput(encrypted_ballot: CiphertextBallot, seed_nonce:ElementModQ) {
+  return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+}
 // Entry point of the API, give a Ballot item, return the seed and the hash
 // Return an ErrorBallotInput in case some fields that are required in encryption in Ballot is missing
 export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptBallotOutput | ErrorBallotInput {
@@ -298,7 +314,7 @@ export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.precinctId === undefined) return new ErrorBallotInput(ErrorType.MissingPrecintId, "Missing Precint ID");
     if (ballot.id === undefined) return new ErrorBallotInput(ErrorType.MissingBallotId, "Missing Ballot ID");
     if (ballot.ballotItems === undefined || ballot.ballotItems.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotItems, "Missing BallotItems");
-    
+
     ballot.ballotItems.forEach((ballotItem) => {
         if (ballotItem.ballotOptions === undefined || ballotItem.ballotOptions.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotOptions, "Missing BallotOptions");
         ballotItem.ballotOptions.forEach((ballotOption) => {
