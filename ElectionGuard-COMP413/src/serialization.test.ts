@@ -6,15 +6,9 @@ import {
   encrypt_compatible_testing_demo,
   from_file_to_class,
   from_file_to_class_manifest,
-  from_file_to_PlaintextBallot,
-  // object_log,
-  simple_ballot_json,
-  manifest_json,
-  export2File,
   from_file_to_PlaintextBallots,
-  object_log,
   from_test_file_to_valid_inputs,
-  EncryptInput, // hex_to_bigint
+  EncryptInput
 } from "./serialization";
 import {
   make_ciphertext_election_context,
@@ -26,6 +20,7 @@ import fs from 'fs';
 
 describe("TestDeserialization", () => {
 
+  // Test encryption with decryption
   test('testConvertJsonFileToObj', () => {
     if (!fs.existsSync('encrypted_data/' )){
       fs.mkdirSync('encrypted_data/');
@@ -55,14 +50,13 @@ describe("TestDeserialization", () => {
    });
   });
 
-  test('testConvertManifestJsonFileToObj', () => {
-    const readin_manifest = from_file_to_class_manifest(manifest_json);
-    const internal_manifest = new InternalManifest(readin_manifest);
-    console.log(internal_manifest.manifest_hash);
-  });
-
+  // Test encryption with given test vectors
   test('testTestVectors', () => {
     let testFolder = `generated_test_inputs_ts`;
+    if (!fs.existsSync(testFolder)){
+      fs.mkdirSync(testFolder);
+    }
+    
     fs.readdirSync(testFolder).forEach(file => {
       if (file !== testFolder) {
         const path2TestVector = testFolder + "\\" + file;
