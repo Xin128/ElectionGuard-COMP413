@@ -2,6 +2,9 @@
 
 CODE_COVERAGE ?= 90
 OS ?= $(shell python -c 'import platform; print(platform.system())')
+ifeq ($(OS), Linux)
+PKG_MGR ?= $(shell python -c 'import subprocess as sub; print(next(filter(None, (sub.getstatusoutput(f"command -v {pm}")[0] == 0 and pm for pm in ["apt-get", "pacman"])), "undefined"))')
+endif
 IS_64_BIT ?= $(shell python -c 'from sys import maxsize; print(maxsize > 2**32)')
 SAMPLE_BALLOT_COUNT ?= 5
 SAMPLE_BALLOT_SPOIL_RATE ?= 50
@@ -11,10 +14,12 @@ all: environment install build validate auto-lint coverage
 environment:
 	@echo 🔧 ENVIRONMENT SETUP
 	alias python=python3.9
+	alias pip=pip3.9
 	make install-gmp
 	python -m pip install -U pip
+	alias pip=pip3.9
 	pip3 install 'poetry==1.1.10'
-	poetry config virtualenvs.in-project true 
+	poetry config virtualenvs.in-project true
 	poetry install
 	@echo 🚨 Be sure to add poetry to PATH
 
@@ -25,11 +30,11 @@ install:
 build:
 	@echo 🔨 BUILD
 	poetry build
-	poetry install 
+	poetry install
 
 openssl-fix:
 	export LDFLAGS=-L/usr/local/opt/openssl/lib
-	export CPPFLAGS=-I/usr/local/opt/openssl/include 
+	export CPPFLAGS=-I/usr/local/opt/openssl/include
 
 install-gmp:
 	@echo 📦 Install gmp
@@ -55,13 +60,19 @@ install-gmp-mac:
 
 install-gmp-linux:
 	@echo 🐧 LINUX INSTALL
+ifeq ($(PKG_MGR), apt-get)
 	sudo apt-get install libgmp-dev
 	sudo apt-get install libmpfr-dev
 	sudo apt-get install libmpc-dev
+else ifeq ($(PKG_MGR), pacman)
+	sudo pacman -S gmp
+else ifeq ($(PKG_MGR), undefined)
+	@echo "We could not install GMP automatically for your Linux distribution. Please, install GMP manually."
+endif
 
 install-gmp-windows:
 	@echo 🏁 WINDOWS INSTALL
-	@echo 🚨 Ensure pyproject.toml has been modified to include appropriate local gmpy2 package 🚨 
+	@echo 🚨 Ensure pyproject.toml has been modified to include appropriate local gmpy2 package 🚨
 # install module with local gmpy2 package
 ifeq ($(IS_64_BIT), True)
 	@echo 64 bit system detected
@@ -93,8 +104,8 @@ auto-lint:
 	@echo Reformatting using Black
 	poetry run black .
 	make lint
-	
-validate: 
+
+validate:
 	@echo ✅ VALIDATE
 	@poetry run python -c 'import electionguard; print(electionguard.__package__ + " successfully imported")'
 
@@ -111,7 +122,7 @@ integration-tests:
 	@echo ✅ INTEGRATION TESTS
 	poetry run pytest tests/integration
 
-test: 
+test:
 	@echo ✅ ALL TESTS
 	make unit-tests
 	make property-tests
@@ -151,27 +162,25 @@ install-mkdocs:
 	pip install mkdocs-jupyter
 
 docs-serve:
-	mkdocs serve
+	poetry run mkdocs serve
 
 docs-build:
-	mkdocs build
+	poetry run mkdocs build
 
 docs-deploy:
 	@echo 🚀 DEPLOY to Github Pages
-	mkdocs gh-deploy --force
+	poetry run mkdocs gh-deploy --force
 
 docs-deploy-ci:
 	@echo 🚀 DEPLOY to Github Pages
-	pip install mkdocs
-	mkdocs gh-deploy --force
+	poetry run mkdocs gh-deploy --force
 
 dependency-graph:
 	poetry run pydeps --noshow --max-bacon 2 -o dependency-graph.svg src/electionguard
 
 dependency-graph-ci:
 	sudo apt install graphviz
-	pip install pydeps
-	pydeps --noshow --max-bacon 2 -o dependency-graph.svg src/electionguard
+	poetry run pydeps --noshow --max-bacon 2 -o dependency-graph.svg src/electionguard
 
 # Sample Data
 generate-sample-data:
@@ -192,12 +201,12 @@ publish-test-ci:
 	@echo 🚀 PUBLISH TEST
 	poetry publish --repository testpypi --username __token__ --password $(TEST_PYPI_TOKEN)
 
-publish-validate:	
+publish-validate:
 	@echo ✅ VALIDATE
 	python3 -m pip install --no-deps electionguard
 	python3 -c 'import electionguard'
 
-publish-validate-test:	
+publish-validate-test:
 	@echo ✅ VALIDATE
 	python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps electionguard
 	python3 -c 'import electionguard'
@@ -208,3 +217,16 @@ release-zip-ci:
 	mv dist electionguard
 	mv dependency-graph.svg electionguard
 	zip -r electionguard.zip electionguard
+
+release-notes:
+	@echo 📝 GENERATE RELEASE NOTES
+	export MILESTONE_NUM=$(cat $GITHUB_EVENT_PATH | jq '.milestone.number')
+	export MILESTONE_URL=$(cat $GITHUB_EVENT_PATH | jq '.milestone.url')
+	export MILESTONE_TITLE=$(cat $GITHUB_EVENT_PATH | jq '.milestone.title')
+	export MILESTONE_DESCRIPTION=$(cat $GITHUB_EVENT_PATH | jq '.milestone.description')
+	touch release_notes.md
+	echo "# $MILESTONE_TITLE" >> release_notes.md
+	echo "$MILESTONE_DESCRIPTION" >> release_notes.md
+	echo -en "\n" >> release_notes.md
+	echo "## Issues" >> release_notes.md
+	curl "${GITHUB_API_URL}/${GITHUB_REPOSITORY}/issues?milestone=${MILESTONE_NUM}&state=all" | jq '.[].title' | while read i; do echo "[$i]($MILESTONE_URL)" >> release_notes.md; done

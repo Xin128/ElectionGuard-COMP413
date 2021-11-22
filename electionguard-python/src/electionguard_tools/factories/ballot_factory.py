@@ -28,7 +28,7 @@ from electionguard_tools.helpers.serialize import (
     from_file_to_dataclass,
     from_list_in_file_to_dataclass,
     to_file,
-    from_file_to_dataclass_ciphertext
+    from_file_to_dataclass_ciphertext,
 )
 
 
@@ -41,7 +41,7 @@ data = os.path.realpath(os.path.join(__file__, "../../../../data"))
 class BallotFactory:
     """Factory to create ballots"""
 
-    simple_ballot_filename = "ballotOnly-235.json"
+    simple_ballot_filename = "ballot_in_simple.json"
     simple_ballots_filename = "plaintext_ballots_simple.json"
 
     @staticmethod
@@ -156,21 +156,31 @@ class BallotFactory:
         return from_list_in_file_to_dataclass(
             PlaintextBallot, os.path.join(data, filename)
         )
+
     @staticmethod
     def export_ballot_to_file(data, filename):
-        return to_file(data, filename, "/Users/xinhao/Downloads/Fall_2022/COMP_413/codebase/electionguard-python/tests")
+        return to_file(
+            data,
+            filename,
+            "/Users/xinhao/Downloads/Fall_2022/COMP_413/codebase/electionguard-python/tests",
+        )
 
     @staticmethod
     def export_ballot_to_file(data, directory, filename):
         return to_file(data, filename, directory)
 
     @staticmethod
-    def get_ciphertext_ballot_from_file(filename: str) -> PlaintextBallot:
-        return from_file_to_dataclass_ciphertext(CiphertextBallot, "../../../tests/generated_data/"+filename)
+    def get_ciphertext_ballot_from_file(filename: str) -> CiphertextBallot:
+        return from_file_to_dataclass_ciphertext(
+            CiphertextBallot, "../../../tests/generated_data/" + filename
+        )
 
     @staticmethod
-    def get_ciphertext_ballot_from_file(directory, filename: str) -> PlaintextBallot:
-        return from_file_to_dataclass_ciphertext(CiphertextBallot, directory + '/' + filename)
+    def get_ciphertext_ballot_from_file(directory, filename: str) -> CiphertextBallot:
+        return from_file_to_dataclass_ciphertext(
+            CiphertextBallot, directory + "/" + filename
+        )
+
 
 @composite
 def get_selection_well_formed(

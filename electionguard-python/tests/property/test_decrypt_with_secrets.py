@@ -514,16 +514,15 @@ class TestDecryptWithSecrets(BaseTestCase):
         data = ballot_factory.get_simple_ballot_from_file()
         print("ballot data")
         # # #
-        # device = election_factory.get_encryption_device()
-        # operator = EncryptionMediator(internal_manifest, context, device)
-        # # # # Act
-        # subject = operator.encrypt(data)
-        # encrypted_subject_to_export =  ballot_factory.export_ballot_to_file(subject, 'pyout_two_contest')
+        device = election_factory.get_encryption_device()
+        operator = EncryptionMediator(internal_manifest, context, device)
+        # # # Act
+        subject = operator.encrypt(data)
 
         # EXPORT FILE TO JSON
-        subject = ballot_factory.get_ciphertext_ballot_from_file(
-            "encrypted_ballot.json"
-        )
+        # subject = ballot_factory.get_ciphertext_ballot_from_file(
+        #     "encrypted_ballot.json"
+        # )
 
         self.assertIsNotNone(subject)
         result_from_key = decrypt_ballot_with_secret(
