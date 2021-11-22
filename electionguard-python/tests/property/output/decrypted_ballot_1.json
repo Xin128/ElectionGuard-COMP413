@@ -1,0 +1,54 @@
+{
+    "object_id": "some-external-id-string-123",
+    "style_id": "jefferson-county-ballot-style",
+    "contests": [
+        {
+            "object_id": "justice-supreme-court",
+            "sequence_order": "00",
+            "ballot_selections": [
+                {
+                    "object_id": "john-adams-selection",
+                    "sequence_order": "00",
+                    "vote": "01",
+                    "is_placeholder_selection": "00",
+                    "extended_data": null
+                },
+                {
+                    "object_id": "benjamin-franklin-selection",
+                    "sequence_order": "01",
+                    "vote": "00",
+                    "is_placeholder_selection": "00",
+                    "extended_data": null
+                },
+                {
+                    "object_id": "john-hancock-selection",
+                    "sequence_order": "02",
+                    "vote": "00",
+                    "is_placeholder_selection": "00",
+                    "extended_data": null
+                },
+                {
+                    "object_id": "write-in-selection",
+                    "sequence_order": "03",
+                    "vote": "01",
+                    "is_placeholder_selection": "00",
+                    "extended_data": null
+                },
+                {
+                    "object_id": "justice-supreme-court-4-placeholder",
+                    "sequence_order": "04",
+                    "vote": "00",
+                    "is_placeholder_selection": "01",
+                    "extended_data": null
+                },
+                {
+                    "object_id": "justice-supreme-court-5-placeholder",
+                    "sequence_order": "05",
+                    "vote": "00",
+                    "is_placeholder_selection": "01",
+                    "extended_data": null
+                }
+            ]
+        }
+    ]
+}

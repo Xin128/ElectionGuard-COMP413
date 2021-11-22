@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {CiphertextBallot,
+<<<<<<< HEAD
   // CiphertextBallotContest,
   PlaintextBallot} from "./simple_election_data";
 import {plainToClass} from "class-transformer";
 import {Manifest} from "./manifest";
 // import {ElementModP, ElementModQ} from "./group";
 // import {ProofUsage} from "./chaum_pedersen";
+=======
+  PlaintextBallot} from "./simple_election_data";
+import {plainToClass} from "class-transformer";
+import {Manifest} from "./manifest";
+import fs from 'fs';
+import { ElementModQ } from "./group";
+>>>>>>> origin/Xin-Yanyu-Pipeline
 
 const json_string = "{\n" +
   "    \"object_id\": \"some-external-id-string-123\",\n" +
@@ -191,6 +199,7 @@ const json_string = "{\n" +
   "    \"nonce\": \"9DA6\"\n" +
   "}";
 
+<<<<<<< HEAD
 export const simple_ballot_json = `
   {
     "object_id": "some-external-id-string-123",
@@ -610,6 +619,13 @@ export const manifest_json = `{
 `
 
 
+=======
+export type EncryptInput = {
+  plaintextBallot: PlaintextBallot,
+  manifest: Manifest,
+  output: ElementModQ
+}
+>>>>>>> origin/Xin-Yanyu-Pipeline
 
 const numberList: string[] = ["timestamp", "sequence_order"];
 const booleanList: string[] = ["is_placeholder_selection"];
@@ -653,6 +669,7 @@ export function from_file_to_PlaintextBallot(jsonString: string): PlaintextBallo
   );
   return plainToClass(PlaintextBallot, result as PlaintextBallot);
 }
+<<<<<<< HEAD
 export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
   const result = JSON.parse(manifest_JSON);
   return plainToClass(Manifest, result as Manifest);
@@ -660,6 +677,38 @@ export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
 
 export function hex_to_bigint(numstr: string): bigint {
   console.log("numstr: " + numstr + "\n");
+=======
+
+export function from_file_to_PlaintextBallots(path: string): PlaintextBallot[] {
+  let ballots: PlaintextBallot[] = [];
+  const dataJson = fs.readFileSync(path, "utf8");
+  const data = JSON.parse(dataJson);
+  for (let ballot of data) {
+    ballots.push(from_file_to_PlaintextBallot(JSON.stringify(ballot)));
+  }
+  return ballots;
+}
+
+export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
+  const data = fs.readFileSync(manifest_JSON, "utf8");
+  const result = JSON.parse(data);
+  return plainToClass(Manifest, result as Manifest);
+}
+
+export function from_test_file_to_valid_inputs(path: string): EncryptInput[] {
+  const data = fs.readFileSync(path, "utf8");
+  const result = JSON.parse(data);
+  let encryptInputs = [];
+  for (let res of result) {
+    let manifest = plainToClass(Manifest, res.input.manifest as Manifest);
+    let ballot = plainToClass(PlaintextBallot, res.input.ballot as PlaintextBallot);
+    encryptInputs.push({plaintextBallot: ballot, manifest: manifest, output: new ElementModQ(res.output)});
+  }
+  return encryptInputs;
+}
+
+export function hex_to_bigint(numstr: string): bigint {
+>>>>>>> origin/Xin-Yanyu-Pipeline
   return BigInt("0x" + numstr);
 }
 
@@ -686,7 +735,11 @@ export function object_log(object_to_log: any): string{
   return JSON.stringify(object_to_log, (key, value) => {
     key;
     if (typeof value === "bigint") {
+<<<<<<< HEAD
       return value.toString();
+=======
+      return value.toString(10);
+>>>>>>> origin/Xin-Yanyu-Pipeline
     }
     // else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
     //   return value.toString(16);

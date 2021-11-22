@@ -4,13 +4,21 @@ import {ElementModQ} from "./group";
 import {_list_eq} from "./simple_election_data";
 import {get_optional} from "./utils";
 import {Transform, Type} from "class-transformer";
+<<<<<<< HEAD
+=======
+import moment from 'moment';
+>>>>>>> origin/Xin-Yanyu-Pipeline
 
 /**
  * enumerations for the `ElectionReport` entity
  * see: https://developers.google.com/elections-data/reference/election-type
  */
 
+<<<<<<< HEAD
 export enum ElectionType{
+=======
+enum ElectionType{
+>>>>>>> origin/Xin-Yanyu-Pipeline
   unknown = "unknown",
   general = "general",
   partisan_primary_closed = "partisan_primary_closed",
@@ -25,7 +33,11 @@ export enum ElectionType{
  * Enumeration for the type of geopolitical unit
  * see: https://developers.google.com/elections-data/reference/reporting-unit-type
  */
+<<<<<<< HEAD
 export enum ReportingUnitType{
+=======
+enum ReportingUnitType{
+>>>>>>> origin/Xin-Yanyu-Pipeline
   unknown = "unknown",
   ballot_batch = "ballot_batch",
   ballot_style_area = "ballot_style_area",
@@ -61,7 +73,11 @@ export enum ReportingUnitType{
  * Enumeration for contest algorithm or rules in the `Contest` entity
  * see: https://developers.google.com/elections-data/reference/vote-variation
  */
+<<<<<<< HEAD
 export enum VoteVariationType {
+=======
+enum VoteVariationType {
+>>>>>>> origin/Xin-Yanyu-Pipeline
   unknown = "unknown",
   one_of_m = "one_of_m",
   approval = "approval",
@@ -123,7 +139,11 @@ export class Language extends CryptoHashable {
  * Data entity used to represent multi-national text. Use when text on a ballot contains multi-national text.
  * See: https://developers.google.com/elections-data/reference/internationalized-text
  */
+<<<<<<< HEAD
 export class InternationalizedText extends CryptoHashable {
+=======
+class InternationalizedText extends CryptoHashable {
+>>>>>>> origin/Xin-Yanyu-Pipeline
   @Type(()=>Language)
   text: Language[] = [];
 
@@ -688,11 +708,27 @@ export class Manifest extends CryptoHashable {
 
   crypto_hash(): ElementModQ {
     //TODO: date object to ISO date string
+<<<<<<< HEAD
     return hash_elems([
       this.election_scope_id,
       this.type.toString(),
       this.start_date.toISOString().split('.')[0]+"Z",
       this.end_date.toISOString().split('.')[0]+"Z",
+=======
+    // let st = new Date("2000-01-01T00:00:00");
+    let start_date = moment(this.start_date).format();
+    start_date = start_date.slice(0, start_date.length - 6) + "Z";
+    let end_date = moment(this.end_date).format();
+    end_date = end_date.slice(0, end_date.length - 6) + "Z";
+
+    return hash_elems([
+      this.election_scope_id,
+      this.type.toString(),
+      // "2000-01-01T00:00:00Z",
+      // "2000-01-01T00:00:00Z",
+      start_date,
+      end_date,
+>>>>>>> origin/Xin-Yanyu-Pipeline
       this.name,
       this.contact_information,
       this.geopolitical_units,

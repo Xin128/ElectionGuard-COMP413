@@ -1,0 +1,38 @@
+{
+    "object_id": "some-external-id-string-123",
+    "style_id": "rice-university-ballot-style",
+    "contests": [
+      {
+        "object_id": "on-campus-servery",
+        "sequence_order": 0,
+        "ballot_selections": [
+          {
+            "object_id": "baker-kitchen-selection",
+            "sequence_order": 2,
+            "vote": 1
+          }
+        ]
+      },
+      {
+        "object_id": "other-dining",
+        "sequence_order": 1,
+        "ballot_selections": [
+          {
+            "object_id": "local-foods-selection",
+            "sequence_order": 4,
+            "vote": 1
+          },
+          {
+            "object_id": "write-in-selection",
+            "sequence_order": 6,
+            "vote": 1,
+            "extended_data": {
+              "value": "Sweet Paris",
+              "length": 11
+            }
+          }
+        ]
+      }
+    ]
+  }
+  
