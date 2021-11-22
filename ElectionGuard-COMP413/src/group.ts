@@ -100,13 +100,8 @@ class ElementModQ {
     }
 
     toJSON():string {
-<<<<<<< HEAD
-        return this.elem.toString(16).toUpperCase();
-        // return this.elem.toString().toUpperCase();
-=======
         // return this.elem.toString().toUpperCase();
         return this.elem.toString(16).toUpperCase();
->>>>>>> origin/Xin-Yanyu-Pipeline
 
     }
 
