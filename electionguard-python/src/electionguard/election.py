@@ -98,7 +98,6 @@ def make_ciphertext_election_context(
         manifest_hash,
     )
 
-
     crypto_extended_base_hash = hash_elems(crypto_base_hash, commitment_hash)
     return CiphertextElectionContext(
         number_of_guardians,
