@@ -12,7 +12,22 @@ import { get_optional } from "../utils";
 import { Ballot, BallotItem, BallotOption, EncryptBallotOutput, ErrorBallotInput, ErrorType} from "./typical_ballot_data";
 import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
-import { InternalManifest, Manifest, Party, Candidate, GeopoliticalUnit, ContestDescription, BallotStyle, ElectionType, ReportingUnitType, InternationalizedText, Language, VoteVariationType, SelectionDescription} from "../manifest"
+import {
+    InternalManifest,
+    Manifest,
+    Party,
+    Candidate,
+    GeopoliticalUnit,
+    ContestDescription,
+    BallotStyle,
+    ElectionType,
+    ReportingUnitType,
+    InternationalizedText,
+    Language,
+    VoteVariationType,
+    SelectionDescription,
+    ContactInformation, AnnotatedString
+} from "../manifest"
 import {download} from "../index";
 import {deserialize_toHex_banlist} from "../serialization";
 /**
@@ -34,17 +49,17 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
 
-    // download(JSON.stringify(encrypted_ballot, (key, value) => {
-    //     if (typeof value === "bigint") {
-    //         return value.toString();
-    //     }
-    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-    //         return value.toString(16);
-    //     } else if (typeof value === "boolean") {
-    //         return value == false ? "00" : "01";
-    //     }
-    //     return value;
-    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
+    download(JSON.stringify(encrypted_ballot, (key, value) => {
+        if (typeof value === "bigint") {
+            return value.toString();
+        }
+        else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+            return value.toString(10);
+        } else if (typeof value === "boolean") {
+            return value == false ? "00" : "01";
+        }
+        return value;
+    }, '\t'), 'encrypted_ballot.json', 'text/plain');
 
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
@@ -193,8 +208,16 @@ export function buildManifest(ballot: any): Manifest {
     let contests: ContestDescription[] = [];
     let ballot_styles: BallotStyle[] = [];
 
+    const language : Language = new Language(ballot.electionName[0].text, 'en');
+    const interText: InternationalizedText = new InternationalizedText([language]);
     // same as name of this election
-    const name = ballot.electionName[0].text;
+    const name = interText;
+
+    const emailAnnotation : AnnotatedString = new AnnotatedString("office", "a@b.c");
+    const phoneAnnotation : AnnotatedString = new AnnotatedString("office", "111-111-1111");
+    const contactInfo : ContactInformation = new ContactInformation(["6100 Main St, Houston, TX"], [emailAnnotation], [phoneAnnotation], "Rice University");
+
+
 
     geopolitical_units = buildGeopoliticalUnit(ballot);
     parties = buildParty(ballot);
@@ -202,7 +225,7 @@ export function buildManifest(ballot: any): Manifest {
     contests = buildContest(ballot);
     ballot_styles = buildBallotStyle(ballot);
 
-    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
+    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contactInfo);
 }
 
 /**
@@ -262,7 +285,7 @@ export function buildContest(ballot: any): ContestDescription[] {
         const vote_variation = VoteVariationType.unknown;
         // number of candidates are elected
         const number_elected = 0;
-        const votes_allowed = undefined;
+        const votes_allowed = 1;
         const name = ballot.ballotItems[i].title[0].text;
         const ballot_selections: SelectionDescription[] = [];
         for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {

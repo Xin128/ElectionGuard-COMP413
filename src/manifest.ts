@@ -81,7 +81,7 @@ export enum VoteVariationType {
  * Use this as a type for character strings
  * See: https://developers.google.com/elections-data/reference/annotated-string
  */
-class AnnotatedString extends CryptoHashable {
+export class AnnotatedString extends CryptoHashable {
   annotation = "";
   value = "";
 
