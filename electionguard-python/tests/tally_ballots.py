@@ -81,8 +81,6 @@ if not os.path.exists(os.path.join(encypted_file_dir)):
     exit()
 
 for ballotNum in os.listdir(encypted_file_dir):
-    # if ballotNum != "000":
-    #     continue
     if ballotNum == '.DS_Store':
         continue
     print("================ballot_num:" + ballotNum + "==================")
@@ -128,11 +126,6 @@ for ballotNum in os.listdir(encypted_file_dir):
     decrypted_tallies_json = ballot_factory.export_ballot_to_file(
         output, export_data_dir, "tally_output"
     )
-
-    print("decrypted_tallies!!!!!!")
-    print(decrypted_tallies)
-    print("decrypted_tallies readable!!!")
-    print(decrypted_tallies_formated)
     print("final output is")
     print(output)
     print("================Successfully tallied ballot " + ballotNum + "==================")
