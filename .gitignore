@@ -4,5 +4,6 @@ generated_test_inputs/
 ElectionGuard-COMP413/encrypted_data
 ElectionGuard-COMP413/generated_data
 ElectionGuard-COMP413/generated_test_inputs_ts/
+electionguard-python/tests/testTally.py
 .DS_Store
 node_modules
