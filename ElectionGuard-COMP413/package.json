@@ -15,7 +15,9 @@
   "browser": {
     "crypto": "crypto-browserify",
     "assert": "assert-browserify",
-    "stream": "stream-browserify"
+    "stream": "stream-browserify",
+    "fs": "brfs",
+    "path": "path-browserify"
   },
   "bin": {
     "my-cli-tool": "./dist/esbuild/cli.js"
@@ -52,13 +54,15 @@
   "dependencies": {
     "assert-browserify": "^2.0.0",
     "bigint-mod-arith": "^3.0.1",
+    "brfs": "^2.0.2",
     "buffer": "^6.0.3",
     "class-transformer": "^0.4.0",
     "crypto-browserify": "^3.12.0",
     "events": "^3.3.0",
     "fs": "^0.0.1-security",
-    "qrcode-generator-ts": "^0.0.4",
     "moment": "^2.29.1",
+    "path-browserify": "^1.0.1",
+    "qrcode-generator-ts": "^0.0.4",
     "reflect-metadata": "^0.1.13",
     "stream-browserify": "^3.0.0"
   }

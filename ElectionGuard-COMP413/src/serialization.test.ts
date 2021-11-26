@@ -16,7 +16,7 @@ import {
 import { ElementModQ,ElementModP } from "./group";
 
 import {InternalManifest} from "./manifest";
-import fs from 'fs';
+import * as fs from "fs";
 
 describe("TestDeserialization", () => {
 
@@ -39,7 +39,7 @@ describe("TestDeserialization", () => {
       undefined);
     const encryption_seed = new ElementModQ(BigInt('88136692332113344175662474900446441286169260372780056734314948839391938984061'));
     let idx = 0;
-    for (let plaintextBallot of plaintextBallots) {
+    for (const plaintextBallot of plaintextBallots) {
       const encrypted_ballot = encrypt_ballot(plaintextBallot, internal_manifest, context, encryption_seed, get_optional(inputs.nonce));
       if (!fs.existsSync('encrypted_data/' + ballotNum)){
         fs.mkdirSync('encrypted_data/' + ballotNum);
@@ -52,7 +52,7 @@ describe("TestDeserialization", () => {
 
   // Test encryption with given test vectors
   test('testTestVectors', () => {
-    let testFolder = `generated_test_inputs_ts`;
+    const testFolder = `generated_test_inputs_ts`;
     if (!fs.existsSync(testFolder)){
       fs.mkdirSync(testFolder);
     }
@@ -61,7 +61,7 @@ describe("TestDeserialization", () => {
       if (file !== testFolder) {
         const path2TestVector = testFolder + "\\" + file;
         const encryptInputs: EncryptInput[] = from_test_file_to_valid_inputs(path2TestVector);
-        for (let input of encryptInputs) {
+        for (const input of encryptInputs) {
           const inputs = from_file_to_class();
           const internal_manifest = new InternalManifest(input.manifest);
           const context = make_ciphertext_election_context(

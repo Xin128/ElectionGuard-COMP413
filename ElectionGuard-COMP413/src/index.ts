@@ -2,17 +2,13 @@ import {get_optional} from "./utils";
 import {encryptBallot, getQRCode, buildBallot, buildManifest, encryptBallot_ballotOut} from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 import encryptedBallot from "./encrypted_result_hex.json";
-import * as ballot from './AaronBallot/super_complex_ballot.json';
-// import {CiphertextBallot} from "./simple_election_data";
 import * as ballot from './DemoBallot/demo_ballot_schema.json'
-import {Cipher} from "crypto";
 import {CiphertextBallot} from "./simple_election_data";
-import {encrypt_compatible_testing_demo} from "./serialization";
-import {Manifest} from "./manifest";
+import {serialize_compatible_CiphertextBallot} from "./serialization_browser";
 
 export function download(content:any, fileName:string, contentType:string) {
-  var a = document.createElement("a");
-  var file = new Blob([content], {type: contentType});
+  const a = document.createElement("a");
+  const file = new Blob([content], {type: contentType});
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
@@ -30,13 +26,16 @@ function downloadJson(exportName: string){
   downloadAnchorNode.remove();
 }
 
+
+
+
 function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBallot){
-  fetch("https://6f14-168-5-135-5.ngrok.io" + "/receive/" +voterId, {
+  fetch("https://d9a2-168-5-135-5.ngrok.io" + "/receive/" +voterId, {
     method: "POST",
     mode: "no-cors",
     headers: {'Content-Type': 'application/json'},
 
-    body: encrypt_compatible_testing_demo(get_optional(encryptedBallot))
+    body: serialize_compatible_CiphertextBallot(get_optional(encryptedBallot))
   }).then(res => {
     console.log("Request complete! response:", res);
   });

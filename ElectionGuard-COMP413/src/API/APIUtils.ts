@@ -29,7 +29,7 @@ import {
     ContactInformation, AnnotatedString
 } from "../manifest"
 import {download} from "../index";
-import {deserialize_toHex_banlist} from "../serialization";
+import {deserialize_toHex_banlist} from "../serialization_browser";
 /**
  * Ballot ==> Whole Election
  * BallotItem ==> A single question on the ballot

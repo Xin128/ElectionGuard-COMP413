@@ -11,7 +11,7 @@ import moment from 'moment';
  * see: https://developers.google.com/elections-data/reference/election-type
  */
 
-enum ElectionType{
+export enum ElectionType{
   unknown = "unknown",
   general = "general",
   partisan_primary_closed = "partisan_primary_closed",
@@ -26,7 +26,7 @@ enum ElectionType{
  * Enumeration for the type of geopolitical unit
  * see: https://developers.google.com/elections-data/reference/reporting-unit-type
  */
-enum ReportingUnitType{
+export enum ReportingUnitType{
   unknown = "unknown",
   ballot_batch = "ballot_batch",
   ballot_style_area = "ballot_style_area",
@@ -62,7 +62,7 @@ enum ReportingUnitType{
  * Enumeration for contest algorithm or rules in the `Contest` entity
  * see: https://developers.google.com/elections-data/reference/vote-variation
  */
-enum VoteVariationType {
+export enum VoteVariationType {
   unknown = "unknown",
   one_of_m = "one_of_m",
   approval = "approval",
@@ -124,7 +124,7 @@ export class Language extends CryptoHashable {
  * Data entity used to represent multi-national text. Use when text on a ballot contains multi-national text.
  * See: https://developers.google.com/elections-data/reference/internationalized-text
  */
-class InternationalizedText extends CryptoHashable {
+export class InternationalizedText extends CryptoHashable {
   @Type(()=>Language)
   text: Language[] = [];
 
