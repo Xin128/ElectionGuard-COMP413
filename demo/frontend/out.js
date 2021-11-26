@@ -31680,6 +31680,16 @@
     const seed_nonce = elements_mod_q_no_zero();
     const encryption_seed = new ElementModQ2(20343378051997977e60);
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+    download(JSON.stringify(encrypted_ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	"), "encrypted_ballot.json", "text/plain");
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   }
   function getQRCode(strs) {
@@ -31749,13 +31759,18 @@
     let candidates = [];
     let contests = [];
     let ballot_styles = [];
-    const name = ballot.electionName[0].text;
+    const language = new Language(ballot.electionName[0].text, "en");
+    const interText = new InternationalizedText([language]);
+    const name = interText;
+    const emailAnnotation = new AnnotatedString("office", "a@b.c");
+    const phoneAnnotation = new AnnotatedString("office", "111-111-1111");
+    const contactInfo = new ContactInformation(["6100 Main St, Houston, TX"], [emailAnnotation], [phoneAnnotation], "Rice University");
     geopolitical_units = buildGeopoliticalUnit(ballot);
     parties = buildParty(ballot);
     candidates = buildCandidate(ballot);
     contests = buildContest(ballot);
     ballot_styles = buildBallotStyle(ballot);
-    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
+    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contactInfo);
   }
   function buildGeopoliticalUnit(ballot) {
     const object_id = ballot.precinctId;
@@ -31790,7 +31805,7 @@
       const electoral_district_id = ballot.precinctId;
       const vote_variation = VoteVariationType.unknown;
       const number_elected = 0;
-      const votes_allowed = void 0;
+      const votes_allowed = 1;
       const name = ballot.ballotItems[i].title[0].text;
       const ballot_selections = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
@@ -32777,7 +32792,7 @@
     a.click();
   }
   function submitCiphertextBallot(voterId, encryptedBallot) {
-    fetch("https://d8f9-128-42-114-225.ngrok.io/receive/" + voterId, {
+    fetch("https://6f14-168-5-135-5.ngrok.io/receive/" + voterId, {
       method: "POST",
       mode: "no-cors",
       headers: {"Content-Type": "application/json"},
@@ -32860,6 +32875,12 @@
     const realBallot = buildBallot(demo_ballot_schema_exports);
     console.log("buildManifest");
     const realManifest = buildManifest(demo_ballot_schema_exports);
+    const json_plain_ballot = JSON.stringify(realBallot, null, "	");
+    const json_manifest = JSON.stringify(realManifest, null, "	");
+    console.log(json_manifest);
+    console.log(json_plain_ballot);
+    download(json_manifest, "manifest.json", "text/plain");
+    download(json_plain_ballot, "plaintextballot.json", "text/plain");
     console.log(realBallot);
     console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);

@@ -31,7 +31,7 @@ function downloadJson(exportName: string){
 }
 
 function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBallot){
-  fetch("https://d8f9-128-42-114-225.ngrok.io" + "/receive/" +voterId, {
+  fetch("https://6f14-168-5-135-5.ngrok.io" + "/receive/" +voterId, {
     method: "POST",
     mode: "no-cors",
     headers: {'Content-Type': 'application/json'},
@@ -42,17 +42,17 @@ function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBall
   });
 }
 
-function submitManifest(voterId: string, manifest: Manifest){
-  fetch("https://d8f9-128-42-114-225.ngrok.io" + "/receive/" +voterId, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {'Content-Type': 'application/json'},
-
-    body: encrypt_compatible_testing_demo(get_optional(encryptedBallot))
-  }).then(res => {
-    console.log("Request complete! response:", res);
-  });
-}
+// function submitManifest(voterId: string, manifest: Manifest){
+//   fetch("https://6f14-168-5-135-5.ngrok.io" + "/receive/" +voterId, {
+//     method: "POST",
+//     mode: "no-cors",
+//     headers: {'Content-Type': 'application/json'},
+//
+//     body: encrypt_compatible_testing_demo(get_optional(encryptedBallot))
+//   }).then(res => {
+//     console.log("Request complete! response:", res);
+//   });
+// }
 
 
 get_optional(document.getElementById("prev2")).addEventListener("click", function () {
