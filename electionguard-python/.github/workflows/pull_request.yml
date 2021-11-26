@@ -1,0 +1,99 @@
+name: Validate Pull Request
+
+on:
+  push:
+    branches: [main, "integration/**", "releases/**"]
+  pull_request:
+    branches: [main, "integration/**", "releases/**"]
+  repository_dispatch:
+    types: [pull_request]
+  schedule:
+    - cron: "30 23 * * 1" # 2330 UTC Every Monday
+
+env:
+  PYTHON_VERSION: 3.9
+  POETRY_PATH: "$HOME/.poetry/bin"
+
+jobs:
+  code_analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["python"]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Change Directory
+        run: cd ${{ github.workspace }}
+      - name: Setup Environment
+        run: make environment
+      - name: Add Poetry Path
+        run: echo ${{ env.POETRY_PATH }} >> $GITHUB_PATH
+      - name: Install Dependencies
+        run: make install
+      - name: Lint
+        run: make lint
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
+  linux_check:
+    name: Linux Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Change Directory
+        run: cd ${{ github.workspace }}
+      - name: Setup Environment
+        run: make environment
+      - name: Add Poetry Path
+        run: echo ${{ env.POETRY_PATH }} >> $GITHUB_PATH
+      - name: Install Dependencies
+        run: make install
+      - name: Build
+        run: make build validate
+      - name: Full Test Suite & Coverage
+        run: make coverage
+
+  mac_check:
+    name: MacOS Check
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Change Directory
+        run: cd ${{ github.workspace }}
+      - name: Setup Environment
+        run: make environment
+      - name: Add Poetry Path
+        run: echo ${{ env.POETRY_PATH }} >> $GITHUB_PATH
+      - name: Install Dependencies
+        run: make install
+      - name: Build
+        run: make build validate
+      - name: Integration Tests
+        run: make test-integration
