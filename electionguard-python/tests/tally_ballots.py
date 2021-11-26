@@ -24,6 +24,7 @@ from electionguard.election import (
     CiphertextElectionContext,
     make_ciphertext_election_context,
 )
+from electionguard.manifest import Manifest
 from electionguard.manifest import InternalManifest
 from electionguard.logs import log_warning, log_info
 import electionguard_tools.factories.ballot_factory as BallotFactory
@@ -43,7 +44,9 @@ ballot_factory = BallotFactory.BallotFactory()
 keypair = ElGamalKeyPair(TWO_MOD_P, g_pow_p(TWO_MOD_P))
 encypted_file_dir = os.path.join(os.path.dirname(os.getcwd()), "encrypted_data")
 generated_file_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_data")
-
+export_data_dir = os.path.join(os.path.dirname(os.getcwd()), "generated_tally_res")
+if not os.path.exists(os.path.join(export_data_dir)):
+    os.makedirs(export_data_dir)
 
 def _decrypt_with_secret(
     tally: CiphertextTally, secret_key: ElementModQ
@@ -58,6 +61,20 @@ def _decrypt_with_secret(
             plaintext_tally = selection.ciphertext.decrypt(secret_key)
             plaintext_selections[contest_id][object_id] = plaintext_tally
     return plaintext_selections
+
+def convert_2_readable(decrypted_tallies: Dict[str, Dict[str, int]], manifest: Manifest) -> Dict[str, Dict[str, int]]:
+    contest_id_2_name = {}
+    selection_id_2_name = {}
+    for contest in manifest.contests:
+        contest_id_2_name[contest.object_id] = contest.name
+        for selection in contest.ballot_selections:
+            selection_id_2_name[selection.object_id] = selection.candidate_id
+    result: Dict[str, Dict[str, int]] = {}
+    for contest_id, selections_dict in decrypted_tallies.items():
+        result[contest_id_2_name[contest_id]] = {}
+        for selection_id, selection_num in selections_dict.items():
+            result[contest_id_2_name[contest_id]][selection_id_2_name[selection_id]] = selection_num
+    return result
 
 if not os.path.exists(os.path.join(encypted_file_dir)):
     os.makedirs(encypted_file_dir)
@@ -84,10 +101,12 @@ for ballotNum in os.listdir(encypted_file_dir):
         manifest_hash=manifest.crypto_hash(),
     )
     store = DataStore()
+    ballot_id_2_hash = {}
     for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
         subject = ballot_factory.get_ciphertext_ballot_from_file(
             encypted_file_dir_with_ballotNum, ballot_filename
         )
+        ballot_id_2_hash[subject.code] = subject.crypto_hash
         ballotsList.append(subject)
 
     time.sleep(3)
@@ -100,5 +119,13 @@ for ballotNum in os.listdir(encypted_file_dir):
 
     result = tally_ballots(store, internal_manifest, context)
     decrypted_tallies = _decrypt_with_secret(result, keypair.secret_key)
-    print("decrypted_tallies!!!!!!")
-    print(decrypted_tallies)
+    decrypted_tallies_formated = convert_2_readable(decrypted_tallies, manifest)
+    output = {}
+    output["tally_result"] = decrypted_tallies_formated
+    output["ballot_hash"] = ballot_id_2_hash
+    decrypted_tallies_json = ballot_factory.export_ballot_to_file(
+        output, export_data_dir, "tally_output"
+    )
+    print("final output is")
+    print(output)
+    print("================Successfully tallied ballot " + ballotNum + "==================")
