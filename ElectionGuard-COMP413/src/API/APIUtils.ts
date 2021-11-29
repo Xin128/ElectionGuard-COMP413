@@ -42,8 +42,8 @@ export function encryptBallot_ballotOut(inputBallot: Ballot,
   const ballot = ballot2PlainTextBallot(inputBallot);
   const internalManifest: InternalManifest = new InternalManifest(manifest);
   const context = ballot2Context(inputBallot, internalManifest);
-  const seed_nonce:ElementModQ = elements_mod_q_no_zero();
-  const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+  const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
+  const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
 
   const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
   return encrypted_ballot;
@@ -60,11 +60,16 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     const ballot = ballot2PlainTextBallot(inputBallot);
     const internalManifest: InternalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce:ElementModQ = elements_mod_q_no_zero();
-    const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+    const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
+    const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-
+    console.log("plaintextballot");
+    console.log(ballot);
+    console.log("encrypted_ballot");
+    console.log(encrypted_ballot);
+    console.log("internal manifest");
+    console.log(internalManifest)
     download(JSON.stringify(encrypted_ballot, (key, value) => {
         if (typeof value === "bigint") {
             return value.toString();
@@ -154,9 +159,6 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
     const commitment_hash: ElementModQ = new ElementModQ(2);
     const manifest_hash: ElementModQ = internalManifest.manifest.crypto_hash();
     const extended_data = undefined;
-
-
-
     return make_ciphertext_election_context(number_of_guardians, quorum, elgamal_public_key, commitment_hash, manifest_hash, extended_data);
 }
 
@@ -170,9 +172,9 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
 export function ballot2JSON(ballot: PlaintextBallot, context: CiphertextElectionContext, manifest: Manifest) : any {
 
     // Is type any safe
-    const seed_nonce:ElementModQ = elements_mod_q_no_zero();
+    const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
     const internalManifest: InternalManifest = new InternalManifest(manifest);
-    const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+    const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballots: CiphertextBallot[] = [get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce))];
     let final_hash = new ElementModQ(0n);
     encrypted_ballots.forEach(eBallot => {
