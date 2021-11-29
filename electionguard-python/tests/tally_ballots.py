@@ -101,12 +101,12 @@ for ballotNum in os.listdir(encypted_file_dir):
         manifest_hash=manifest.crypto_hash(),
     )
     store = DataStore()
-    ballot_id_2_hash = {}
+    ballot_id_2_hash = []
     for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
         subject = ballot_factory.get_ciphertext_ballot_from_file(
             encypted_file_dir_with_ballotNum, ballot_filename
         )
-        ballot_id_2_hash[subject.code] = subject.crypto_hash
+        ballot_id_2_hash.append({subject.code: subject.crypto_hash})
         ballotsList.append(subject)
 
     time.sleep(3)
