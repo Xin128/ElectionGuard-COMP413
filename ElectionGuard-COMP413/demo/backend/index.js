@@ -32,7 +32,7 @@ app.post('/receive/:voterId', function(req, res) {
   let body = '';
   let voterId = req.params.voterId;
   console.log("receive: "+voterId);
-  let filePath = path.join(__dirname, '../public/receivedCipherTextBallot_'+voterId+'.txt');
+  let filePath = path.join(__dirname, '../../../encrypted_data/000/receivedCipherTextBallot_'+voterId+'.txt');
   console.log(filePath);
   req.on('data', function(data) {
     body += data;

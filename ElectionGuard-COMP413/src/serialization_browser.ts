@@ -254,7 +254,7 @@ export function serialize_compatible_CiphertextBallot(encrypted_ballot: Cipherte
       return value.toString();
     }
     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-      return value.toString(16);
+      return value.toString(10);
     } else if (typeof value === "boolean") {
       return value == false ? "00" : "01";
     }

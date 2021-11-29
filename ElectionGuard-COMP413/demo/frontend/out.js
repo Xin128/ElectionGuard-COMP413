@@ -40227,7 +40227,7 @@
       if (typeof value === "bigint") {
         return value.toString();
       } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(16);
+        return value.toString(10);
       } else if (typeof value === "boolean") {
         return value == false ? "00" : "01";
       }
@@ -41364,7 +41364,7 @@
     a.click();
   }
   function submitCiphertextBallot(voterId, encryptedBallot) {
-    fetch("https://d9a2-168-5-135-5.ngrok.io/receive/" + voterId, {
+    fetch("https://3167-168-5-33-132.ngrok.io/receive/" + voterId, {
       method: "POST",
       mode: "no-cors",
       headers: {"Content-Type": "application/json"},

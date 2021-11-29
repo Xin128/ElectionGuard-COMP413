@@ -1,7 +1,7 @@
 import {get_optional} from "./utils";
 import {encryptBallot, getQRCode, buildBallot, buildManifest, encryptBallot_ballotOut} from "./API/APIUtils";
 import { ErrorBallotInput } from "./API/typical_ballot_data";
-import encryptedBallot from "./encrypted_result_hex.json";
+// import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './DemoBallot/demo_ballot_schema.json'
 import {CiphertextBallot} from "./simple_election_data";
 import {serialize_compatible_CiphertextBallot} from "./serialization_browser";
@@ -15,22 +15,22 @@ export function download(content:any, fileName:string, contentType:string) {
 }
 
 
-function downloadJson(exportName: string){
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
-    JSON.stringify(encryptedBallot, null, '\t'));
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href",     dataStr);
-  downloadAnchorNode.setAttribute("download", exportName + ".json");
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-}
+// function downloadJson(exportName: string){
+//   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
+//     JSON.stringify(encryptedBallot, null, '\t'));
+//   const downloadAnchorNode = document.createElement('a');
+//   downloadAnchorNode.setAttribute("href",     dataStr);
+//   downloadAnchorNode.setAttribute("download", exportName + ".json");
+//   document.body.appendChild(downloadAnchorNode); // required for firefox
+//   downloadAnchorNode.click();
+//   downloadAnchorNode.remove();
+// }
 
 
 
 
 function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBallot){
-  fetch("https://d9a2-168-5-135-5.ngrok.io" + "/receive/" +voterId, {
+  fetch("https://3167-168-5-33-132.ngrok.io" + "/receive/" +voterId, {
     method: "POST",
     mode: "no-cors",
     headers: {'Content-Type': 'application/json'},
