@@ -37549,17 +37549,6 @@
   }
 
   // src/groupUtils.ts
-  var elements_mod_q_no_zero = () => {
-    return int_to_q_unchecked(getRandomIntExclusive(Q));
-  };
-  var getRandomIntExclusive = (range) => {
-    const rand = [];
-    let digits = range.toString().length / 9 + 2 | 0;
-    while (digits--) {
-      rand.push(("" + (Math.random() * 1e9 | 0)).padStart(9, "0"));
-    }
-    return BigInt(rand.join("")) % range;
-  };
   var bnToHex = (bn) => {
     bn = BigInt(bn);
     const pos = true;
@@ -40227,7 +40216,7 @@
       if (typeof value === "bigint") {
         return value.toString();
       } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(16);
+        return value.toString(10);
       } else if (typeof value === "boolean") {
         return value == false ? "00" : "01";
       }
@@ -40240,8 +40229,8 @@
     const ballot = ballot2PlainTextBallot(inputBallot);
     const internalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce = elements_mod_q_no_zero();
-    const encryption_seed = new ElementModQ2(20343378051997977e60);
+    const seed_nonce = new ElementModQ2(BigInt("40358"));
+    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
     return encrypted_ballot;
   }
@@ -40249,9 +40238,15 @@
     const ballot = ballot2PlainTextBallot(inputBallot);
     const internalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce = elements_mod_q_no_zero();
-    const encryption_seed = new ElementModQ2(20343378051997977e60);
+    const seed_nonce = new ElementModQ2(BigInt("40358"));
+    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+    console.log("plaintextballot");
+    console.log(ballot);
+    console.log("encrypted_ballot");
+    console.log(encrypted_ballot);
+    console.log("internal manifest");
+    console.log(internalManifest);
     download(JSON.stringify(encrypted_ballot, (key, value) => {
       if (typeof value === "bigint") {
         return value.toString();
@@ -40448,7 +40443,7 @@
   var text1 = [
     {
       languageID: "en",
-      text: "DECEMBER, 3, 2021"
+      text: "January, 1, 2000"
     }
   ];
   var text2 = [
@@ -41364,7 +41359,7 @@
     a.click();
   }
   function submitCiphertextBallot(voterId, encryptedBallot) {
-    fetch("https://d9a2-168-5-135-5.ngrok.io/receive/" + voterId, {
+    fetch("https://f069-168-5-58-228.ngrok.io/receive/" + voterId, {
       method: "POST",
       mode: "no-cors",
       headers: {"Content-Type": "application/json"},
