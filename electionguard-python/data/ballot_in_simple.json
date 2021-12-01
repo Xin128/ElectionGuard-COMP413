@@ -1,0 +1,36 @@
+{
+  "object_id": "some-external-id-string-123",
+  "style_id": "jefferson-county-ballot-style",
+  "contests": [
+    {
+      "object_id": "justice-supreme-court",
+      "sequence_order": 0,
+      "ballot_selections": [
+        {
+          "object_id": "john-adams-selection",
+          "sequence_order": 0,
+          "vote": 1
+        },
+        {
+          "object_id": "write-in-selection",
+          "sequence_order": 3,
+          "vote": 1,
+          "extended_data": {
+            "value": "Susan B. Anthony",
+            "length": 16
+          }
+        }
+      ]
+    },
+    { "object_id": "referendum-pineapple",
+      "sequence_order": 1,
+      "ballot_selections": [
+            {
+                "object_id": "referendum-pineapple-affirmative-selection",
+                "sequence_order": 0,
+                "vote": 1
+              }
+        ]
+    }
+  ]
+}
