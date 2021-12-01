@@ -40252,7 +40252,7 @@
       }
       return value;
     }, "	"), "encrypted_ballot.json", "text/plain");
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
   }
   function getQRCode(strs) {
     const qr = new import_qrcode_generator_ts.QRCode();
