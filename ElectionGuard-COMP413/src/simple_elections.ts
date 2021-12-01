@@ -32,11 +32,11 @@ import {get_optional} from "./utils";
 import {
     hash_elems } from "./hash"
 import { ContestDescription, ContestDescriptionWithPlaceholders, InternalManifest, SelectionDescription } from "./manifest"
-import {
-  from_file_to_class,
-  // from_file_to_PlaintextBallot,
-  // object_log
-} from "./serialization";
+// import {
+//   // from_file_to_class,
+//   // from_file_to_PlaintextBallot,
+//   // object_log
+// } from "./serialization";
 import {sequence_order_sort} from "./election_object_base";
 import { Nonces } from "./nonces";
 import { elgamal_encrypt } from "./elgamal";
@@ -237,8 +237,8 @@ export function encrypt_ballot(ballot: PlaintextBallot,
     (CiphertextBallot | null | undefined) {
     should_verify_proofs;
 
-    const inputs = from_file_to_class();
-    const nonce_seed = hash_elems([internal_manifest.manifest_hash, ballot.object_id, inputs.nonce]);
+    // const inputs = from_file_to_class();
+    const nonce_seed = hash_elems([internal_manifest.manifest_hash, ballot.object_id, nonce]);
     // pass & todo: change to internal_manifest.manifest_hash
 
     const encrypted_contests = get_optional(encrypt_ballot_contests(

@@ -12,27 +12,93 @@ import { get_optional } from "../utils";
 import { Ballot, BallotItem, BallotOption, EncryptBallotOutput, ErrorBallotInput, ErrorType} from "./typical_ballot_data";
 import {QRCode, ErrorCorrectLevel} from "qrcode-generator-ts";
 
-import { InternalManifest, Manifest, Party, Candidate, GeopoliticalUnit, ContestDescription, BallotStyle, ElectionType, ReportingUnitType, InternationalizedText, Language, VoteVariationType, SelectionDescription} from "../manifest"
-
+import {
+    InternalManifest,
+    Manifest,
+    Party,
+    Candidate,
+    GeopoliticalUnit,
+    ContestDescription,
+    BallotStyle,
+    ElectionType,
+    ReportingUnitType,
+    InternationalizedText,
+    Language,
+    VoteVariationType,
+    SelectionDescription,
+    ContactInformation, AnnotatedString
+} from "../manifest"
+import {download} from "../index";
+import {deserialize_toHex_banlist} from "../serialization_browser";
 /**
- * Ballot ==> Whole Election 
+ * Ballot ==> Whole Election
  * BallotItem ==> A single question on the ballot
  * BallotOption ==> A single option on a question
  */
 
+// Give a Ballot item, return the ciphertext ballot
+export function encryptBallot_ballotOut(inputBallot: Ballot,
+                                        manifest: Manifest):  CiphertextBallot{
+  const ballot = ballot2PlainTextBallot(inputBallot);
+  const internalManifest: InternalManifest = new InternalManifest(manifest);
+  const context = ballot2Context(inputBallot, internalManifest);
+  const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
+  const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
+  // console.log("before encrypt_ballot!")
+  // console.log(ballot);
+  const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+  return encrypted_ballot;
+}
+
+export function cipherTextBallot_to_EncryptBallotOutput(encrypted_ballot: CiphertextBallot, seed_nonce:ElementModQ) {
+  return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+}
 // Entry point of the API, give a Ballot item, return the seed and the hash
 // Return an ErrorBallotInput in case some fields that are required in encryption in Ballot is missing
 export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptBallotOutput | ErrorBallotInput {
     // let validatedBallot = validateBallot(inputBallot);
     // if (validatedBallot instanceof ErrorBallotInput) return validatedBallot;
     const ballot = ballot2PlainTextBallot(inputBallot);
+    // console.log(ballot);
     const internalManifest: InternalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce:ElementModQ = elements_mod_q_no_zero();
-    const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+    const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
+    const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    // console.log("plaintextballot");
+    // console.log(ballot);
+    // console.log("encrypted_ballot");
+    // console.log(encrypted_ballot);
+    // console.log("internal manifest");
+    // console.log(internalManifest)
+
+    // download(JSON.stringify(ballot, (key, value) => {
+    //     if (typeof value === "bigint") {
+    //         return value.toString();
+    //     }
+    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //         return value.toString(10);
+    //     } else if (typeof value === "boolean") {
+    //         return value == false ? "00" : "01";
+    //     }
+    //     return value;
+    // }, '\t'), 'plaintext_ballot.json', 'text/plain');
+
+    // download(JSON.stringify(encrypted_ballot, (key, value) => {
+    //     if (typeof value === "bigint") {
+    //         return value.toString();
+    //     }
+    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //         return value.toString(10);
+    //     } else if (typeof value === "boolean") {
+    //         return value == false ? "00" : "01";
+    //     }
+    //     return value;
+    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
+
+
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
 }
 
 /**
@@ -42,7 +108,7 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
 export function getQRCode(strs:string[]):any {
     const qr = new QRCode();
     // size difference found over here: https://snyk.io/advisor/npm-package/qr-code-typescript
-    qr.setTypeNumber(8);
+    qr.setTypeNumber(9);
     qr.setErrorCorrectLevel(ErrorCorrectLevel.L);
     strs.forEach((str) => qr.addData(str));
     qr.make();
@@ -59,6 +125,10 @@ export function getQRCode(strs:string[]):any {
  */
 export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
     let ballotContests: PlaintextBallotContest[] = [];
+    for (let k = 0; k < ballot.ballotItems.length; k++) {
+        console.log(ballot.ballotItems[k]);
+    }
+
     ballot.ballotItems.forEach((ballotItem) => {
         ballotContests = [...ballotContests, ballotItem2PlainTextBallotContest(ballotItem)];
     });
@@ -73,6 +143,7 @@ export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
  */
 export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): PlaintextBallotContest {
     const selections: PlaintextBallotSelection[] = ballotItem2Selection(ballotItem);
+
     return new PlaintextBallotContest(ballotItem.id, ballotItem.order, selections);
 }
 
@@ -83,9 +154,10 @@ export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): Plain
 export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSelection[] {
     let plainTextSelections: PlaintextBallotSelection[] = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
-        // MISSING: Candidate name from ballotOption
-        // what would be the correct field for the selection? Ours assume a candidate name
-        plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
+        if (ballotOption.selected) {
+            plainTextSelections = [new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
+        }
+        // plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
     });
     return plainTextSelections;
 }
@@ -100,7 +172,9 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
     // construct the names list for candidates from ballot
     const names: Set<string> = new Set();
     ballot.ballotItems.forEach((ballotItem) => {
-        ballotItem.ballotOptions.forEach((ballotOption) => names.add(ballotOption.title[0].text));
+        ballotItem.ballotOptions.forEach((ballotOption) => {
+            names.add(ballotOption.object_id);
+        });
     });
 
     const number_of_guardians = 1;
@@ -109,9 +183,6 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
     const commitment_hash: ElementModQ = new ElementModQ(2);
     const manifest_hash: ElementModQ = internalManifest.manifest.crypto_hash();
     const extended_data = undefined;
-
-
-
     return make_ciphertext_election_context(number_of_guardians, quorum, elgamal_public_key, commitment_hash, manifest_hash, extended_data);
 }
 
@@ -125,9 +196,9 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
 export function ballot2JSON(ballot: PlaintextBallot, context: CiphertextElectionContext, manifest: Manifest) : any {
 
     // Is type any safe
-    const seed_nonce:ElementModQ = elements_mod_q_no_zero();
+    const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
     const internalManifest: InternalManifest = new InternalManifest(manifest);
-    const encryption_seed: ElementModQ = new ElementModQ(20343378051997977565960425890866293516410954491475728746271781721241589089163);
+    const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballots: CiphertextBallot[] = [get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce))];
     let final_hash = new ElementModQ(0n);
     encrypted_ballots.forEach(eBallot => {
@@ -146,13 +217,14 @@ export function buildBallot(ballot: any): Ballot {
     for(let i = 0; i < ballot.ballotItems.length; i++) {
         let ballotOptions: BallotOption[] = [];
         for(let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected);
+            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].id, ballot.ballotItems[i].ballotOptions[j].selected,  ballot.ballotItems[i].ballotOptions[j].order);
             ballotOptions = [...ballotOptions, ballotOption];
         }
-        const contest: BallotItem = new BallotItem(ballotOptions);
+        const contest: BallotItem = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
         contests = [...contests, contest];
     }
-    const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
+    const electionBallot = new Ballot(makeId(15), ballot.electionName[0].text, contests);
+    // print(electionBallot)
 
     return electionBallot;
 }
@@ -161,17 +233,17 @@ export function buildBallot(ballot: any): Ballot {
  * Construct a Manifest using JSON ballot
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildManifest(ballot: any): Manifest {
+export function buildManifest(manifest: any): Manifest {
 
     // same as name of this election
-    const election_scope_id: string = ballot.electionName[0].text;
+    const election_scope_id: string = manifest.election_scope_id;
     // we do not have spec version in our code
-    const spec_version = "spec_version";
+    const spec_version = manifest.spec_version;
     // we do not have the election type from the ballot
     const type: ElectionType = ElectionType.unknown;
     // we assume start date and end date are the same since we only have start date from the ballot
-    const start_date: Date = new Date(ballot.text1[0].text);
-    const end_date: Date = new Date(ballot.text1[0].text);
+    const start_date: Date = manifest.start_date;
+    const end_date: Date = manifest.end_date;
 
     let geopolitical_units: GeopoliticalUnit[] = [];
     let parties: Party[] = [];
@@ -179,25 +251,33 @@ export function buildManifest(ballot: any): Manifest {
     let contests: ContestDescription[] = [];
     let ballot_styles: BallotStyle[] = [];
 
+    const language : Language = new Language(manifest.name.text[0].value, 'en');
+    const interText: InternationalizedText = new InternationalizedText([language]);
     // same as name of this election
-    const name = ballot.electionName[0].text;
+    const name = interText;
 
-    geopolitical_units = buildGeopoliticalUnit(ballot);
-    parties = buildParty(ballot);
-    candidates = buildCandidate(ballot);
-    contests = buildContest(ballot);
-    ballot_styles = buildBallotStyle(ballot);
+    const emailAnnotation : AnnotatedString = new AnnotatedString("office", "a@b.c");
+    const phoneAnnotation : AnnotatedString = new AnnotatedString("office", "111-111-1111");
+    const contactInfo : ContactInformation = new ContactInformation(["6100 Main St, Houston, TX"], [emailAnnotation], [phoneAnnotation], "Rice University");
 
-    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
+
+
+    geopolitical_units = buildGeopoliticalUnit(manifest);
+    parties = buildParty(manifest);
+    candidates = buildCandidate(manifest);
+    contests = buildContest(manifest);
+    ballot_styles = buildBallotStyle(manifest);
+
+    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contactInfo);
 }
 
 /**
  * Construct list of GeopoliticalUnit from ballot. We only take the precinctId and precinctName at Ballot level.
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildGeopoliticalUnit(ballot: any): GeopoliticalUnit[] {
-    const object_id = ballot.precinctId;
-    const name = ballot.precinctName;
+export function buildGeopoliticalUnit(manifest: any): GeopoliticalUnit[] {
+    const object_id = manifest.geopolitical_units[0].object_id;
+    const name = manifest.geopolitical_units[0].name;
     const type : ReportingUnitType = ReportingUnitType.precinct;
 
     return [new GeopoliticalUnit(object_id, name, type)];
@@ -207,9 +287,9 @@ export function buildGeopoliticalUnit(ballot: any): GeopoliticalUnit[] {
  * Construct list of Party from ballot. We only take the partyId and partyName at Ballot level.
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildParty(ballot: any): Party[] {
-    const object_id = ballot.partyId;
-    const languageName = new Language(ballot.partyName[0].text, "en");
+export function buildParty(manifest: any): Party[] {
+    const object_id = manifest.parties[0].object_id;
+    const languageName = new Language(manifest.parties[0].name.text[0].value, "en");
     const name = new InternationalizedText([languageName]);
     return [new Party(object_id, name)]
 }
@@ -220,17 +300,16 @@ export function buildParty(ballot: any): Party[] {
  * is to provide information in hashing, the difference of actual candidates and answer choice does not matter.
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildCandidate(ballot: any): Candidate[] {
+export function buildCandidate(manifest: any): Candidate[] {
     const candidates: Candidate[] = [];
-    for (let i = 0; i < ballot.ballotItems.length; i++) {
-        for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-            // we do not have candidate id, object_id same as candidate name
-            const object_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
-            const candidateName = new Language(ballot.ballotItems[i].ballotOptions[j].title[0].text, "en");
-            const name = new InternationalizedText([candidateName]);
-            const candidate = new Candidate(object_id, name);
-            candidates.push(candidate);
-        }
+    for (let i = 0; i < manifest.candidates.length; i++) {
+        // we do not have candidate id, object_id same as candidate name
+        const object_id = manifest.candidates[i].object_id;
+        const candidateName = new Language(manifest.candidates[i].name.text[0].value, "en");
+        const name = new InternationalizedText([candidateName]);
+        const candidate = new Candidate(object_id, name);
+        candidates.push(candidate);
+
     }
     return candidates;
 }
@@ -239,22 +318,22 @@ export function buildCandidate(ballot: any): Candidate[] {
  * Construct a ContestDescription from ballot.
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildContest(ballot: any): ContestDescription[] {
+export function buildContest(manifest: any): ContestDescription[] {
     const descriptions: ContestDescription[] = [];
-    for (let i = 0; i < ballot.ballotItems.length; i++) {
-        const object_id = ballot.ballotItems[i].id;
-        const sequence_order = ballot.ballotItems[i].order;
-        const electoral_district_id = ballot.precinctId;
+    for (let i = 0; i < manifest.contests.length; i++) {
+        const object_id = manifest.contests[i].object_id;
+        const sequence_order = manifest.contests[i].sequence_order;
+        const electoral_district_id = manifest.contests[i].electoral_district_id;
         const vote_variation = VoteVariationType.unknown;
         // number of candidates are elected
-        const number_elected = 0;
-        const votes_allowed = undefined;
-        const name = ballot.ballotItems[i].title[0].text;
+        const number_elected = manifest.contests[i].number_elected;
+        const votes_allowed = manifest.contests[i].votes_allowed;
+        const name = manifest.contests[i].name;
         const ballot_selections: SelectionDescription[] = [];
-        for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-            const option_object_id = ballot.ballotItems[i].ballotOptions[j].id;
-            const option_sequence_order = ballot.ballotItems[i].ballotOptions[j].order;
-            const option_candidate_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
+        for (let j = 0; j < manifest.contests[i].ballot_selections.length; j++) {
+            const option_object_id = manifest.contests[i].ballot_selections[j].object_id;
+            const option_sequence_order = manifest.contests[i].ballot_selections[j].sequence_order;
+            const option_candidate_id = manifest.contests[i].ballot_selections[j].candidate_id;
             const selection = new SelectionDescription(option_object_id, option_sequence_order, option_candidate_id);
             ballot_selections.push(selection);
         }
@@ -268,66 +347,24 @@ export function buildContest(ballot: any): ContestDescription[] {
  * Construct BallotStyle from ballot
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
-export function buildBallotStyle(ballot: any): BallotStyle[] {
-    const object_id = ballot.electionName[0].text;
-    const geopolitical_unit_ids = [ballot.precinctId];
-    const party_ids = [ballot.partyId];
+export function buildBallotStyle(manifest: any): BallotStyle[] {
+    const object_id = manifest.ballot_styles[0].object_id;
+    const geopolitical_unit_ids = [manifest.ballot_styles[0].geopolitical_unit_ids[0]];
+    const party_ids = [manifest.ballot_styles[0].party_ids[0]];
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
-// // Only used for testing
-// export function buildFakeBallot(): Ballot {
-//     const names = ['James Miller', 'Liam Garcia','Olivia Brown','Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-//
-//     // build a fake ballot item
-//     let ballotOptions1: BallotOption[] = [];
-//     let ballotOptions2: BallotOption[] = [];
-//     names.forEach((name, idx) => {
-//         if (idx < names.length / 2) {
-//             const ballotOption = new BallotOption(name, false);
-//             // console.log("ballot1 ballotoptions ", ballotOptions1);
-//             ballotOptions1 = [...ballotOptions1, ballotOption];
-//         } else {
-//             const ballotOption = new BallotOption(name, false);
-//             ballotOptions2 = [...ballotOptions2, ballotOption];
-//         }
-//     });
-//     const contest1 = new BallotItem(ballotOptions1);
-//     const contest2 = new BallotItem(ballotOptions2);
-//     // hard code the selected options, the second contest doesn't select anything
-//     contest1.ballotOptions[0].selected = true;
-//
-//
-//     // add ballotItem to electionBallot
-//     // build a ballot
-//     const electionBallot = new Ballot("001", "firstTest", [contest1, contest2]);
-//     console.log("the current ballot is ", electionBallot);
-//     return electionBallot;
-// }
-//
-// export function buildLargeFakeBallot(count: number): Ballot {
-//
-//     const names = ['James Miller', 'Liam Garcia', 'Olivia Brown', 'Charlotte Li', 'Ava Nguyen', 'Mizu Sawa', 'Park Shu', 'Van Darkholme', 'Wang Jo Jo', 'Ted Budd'];
-//     const contests: BallotItem[] = [];
-//     for (let i = 0; i < count; i++) {
-//         let ballotOptions1: BallotOption[] = [];
-//         names.forEach((name) => {
-//             const ballotOption = new BallotOption(name, false);
-//             // console.log("ballot1 ballotoptions ", ballotOptions1);
-//             ballotOptions1 = [...ballotOptions1, ballotOption];
-//         });
-//         const contest1 = new BallotItem(ballotOptions1);
-//         contests.push(contest1);
-//     }
-//
-//     // add ballotItem to electionBallot
-//     // build a ballot
-//     const electionBallot = new Ballot("001", "firstTest", contests);
-//
-//     console.log("the current ballot is ", electionBallot);
-//
-//     return electionBallot;
-// }
+export function makeId(length: number) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
+
 export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.electionName === undefined || ballot.electionName.length === 0) return new ErrorBallotInput(ErrorType.MissingElectionName, "Missing Election Name");
     if (ballot.partyId === undefined) return new ErrorBallotInput(ErrorType.MissingBallotPartyId, "Missing Ballot Party ID");
@@ -336,7 +373,7 @@ export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.precinctId === undefined) return new ErrorBallotInput(ErrorType.MissingPrecintId, "Missing Precint ID");
     if (ballot.id === undefined) return new ErrorBallotInput(ErrorType.MissingBallotId, "Missing Ballot ID");
     if (ballot.ballotItems === undefined || ballot.ballotItems.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotItems, "Missing BallotItems");
-    
+
     ballot.ballotItems.forEach((ballotItem) => {
         if (ballotItem.ballotOptions === undefined || ballotItem.ballotOptions.length === 0) return new ErrorBallotInput(ErrorType.MissingBallotOptions, "Missing BallotOptions");
         ballotItem.ballotOptions.forEach((ballotOption) => {
