@@ -39701,7 +39701,9 @@
     }
   };
   var BallotItem = class {
-    constructor(ballotOptions) {
+    constructor(ballotId, order, ballotOptions) {
+      this.id = ballotId;
+      this.order = order;
       this.ballotOptions = ballotOptions;
     }
   };
@@ -39712,10 +39714,12 @@
     BallotItemType2[BallotItemType2["Office_RankedChoice"] = 10] = "Office_RankedChoice";
   })(BallotItemType || (BallotItemType = {}));
   var BallotOption = class {
-    constructor(candidateName, selected) {
+    constructor(candidateName, selected, order) {
       this.selected = false;
       let name = new LanguageText();
       name.text = candidateName;
+      this.object_id = candidateName;
+      this.order = order;
       this.title = [name];
       this.selected = selected;
     }
@@ -40238,6 +40242,7 @@
   }
   function encryptBallot(inputBallot, manifest) {
     const ballot = ballot2PlainTextBallot(inputBallot);
+    console.log(ballot);
     const internalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
     const seed_nonce = new ElementModQ2(BigInt("40358"));
@@ -40283,6 +40288,9 @@
   }
   function ballot2PlainTextBallot(ballot) {
     let ballotContests = [];
+    for (let k = 0; k < ballot.ballotItems.length; k++) {
+      console.log(ballot.ballotItems[k]);
+    }
     ballot.ballotItems.forEach((ballotItem) => {
       ballotContests = [...ballotContests, ballotItem2PlainTextBallotContest(ballotItem)];
     });
@@ -40318,10 +40326,10 @@
     for (let i = 0; i < ballot.ballotItems.length; i++) {
       let ballotOptions = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected);
+        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected, ballot.ballotItems[i].ballotOptions[j].order);
         ballotOptions = [...ballotOptions, ballotOption];
       }
-      const contest = new BallotItem(ballotOptions);
+      const contest = new BallotItem(ballot.ballotItems[i].title[0].text, ballot.ballotItems[i].order, ballotOptions);
       contests = [...contests, contest];
     }
     const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
@@ -41450,18 +41458,10 @@
     get_optional(document.getElementById("previous3")).style.display = "block";
   });
   get_optional(document.getElementById("next3")).addEventListener("click", function() {
-    console.log("buildBallot");
     const realBallot = buildBallot(demo_ballot_schema_exports);
-    console.log("buildManifest");
     const realManifest = buildManifest(demo_ballot_schema_exports);
     const json_plain_ballot = JSON.stringify(realBallot, null, "	");
     const json_manifest = JSON.stringify(realManifest, null, "	");
-    console.log(json_manifest);
-    console.log(json_plain_ballot);
-    download(json_manifest, "manifest.json", "text/plain");
-    download(json_plain_ballot, "plaintextballot.json", "text/plain");
-    console.log(realBallot);
-    console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);
     console.log("json plain ballot");
     console.log(json_plain_ballot);

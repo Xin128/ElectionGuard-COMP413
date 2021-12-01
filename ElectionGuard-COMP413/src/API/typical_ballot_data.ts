@@ -92,7 +92,9 @@ export class BallotItem {
     undervoteWarningEnabled: boolean;
     overvoteWarningEnabled: boolean;
 
-    constructor(ballotOptions: BallotOption[]) {
+    constructor(ballotId: string, order: number, ballotOptions: BallotOption[]) {
+        this.id = ballotId;
+        this.order = order;
         this.ballotOptions = ballotOptions;
     }
 }
@@ -106,6 +108,7 @@ export enum BallotItemType {
 export class BallotOption {
 
     id: string;
+    object_id: string;
     order: number; // the order of the selection
     type: BallotOptionType;
     candidateId: string;
@@ -119,9 +122,11 @@ export class BallotOption {
     writeInSelection: string;
     rank: number;
 
-    constructor(candidateName: string, selected: boolean) {
+    constructor(candidateName: string, selected: boolean, order: number) {
         let name = new LanguageText();
         name.text = candidateName;
+        this.object_id = candidateName;
+        this.order = order;
         this.title = [name];
         this.selected = selected;
     }

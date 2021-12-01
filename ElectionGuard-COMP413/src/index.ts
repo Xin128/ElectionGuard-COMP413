@@ -133,20 +133,20 @@ get_optional(document.getElementById("next2")).addEventListener("click", functio
 
 
 get_optional(document.getElementById("next3")).addEventListener("click", function () {
-  console.log('buildBallot');
+  // console.log('buildBallot');
   const realBallot = buildBallot(ballot);
-  console.log('buildManifest');
+  // console.log('buildManifest');
   const realManifest = buildManifest(ballot);
   const json_plain_ballot : string = JSON.stringify(realBallot, null, "\t");
   const json_manifest : string = JSON.stringify(realManifest, null, "\t");
 
-  console.log(json_manifest)
-  console.log(json_plain_ballot)
-  download(json_manifest, 'manifest.json', 'text/plain');
-  download(json_plain_ballot,  'plaintextballot.json', 'text/plain');
+  // console.log(json_manifest)
+  // console.log(json_plain_ballot)
+  // download(json_manifest, 'manifest.json', 'text/plain');
+  // download(json_plain_ballot,  'plaintextballot.json', 'text/plain');
 
-  console.log(realBallot)
-  console.log(realManifest)
+  // console.log(realBallot)
+  // console.log(realManifest)
 
   // const fakeBallot = buildFakeBallot();
   const result = encryptBallot(realBallot, realManifest);
