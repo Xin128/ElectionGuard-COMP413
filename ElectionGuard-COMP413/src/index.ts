@@ -3,6 +3,7 @@ import {encryptBallot, getQRCode, buildBallot, buildManifest, encryptBallot_ball
 import { ErrorBallotInput } from "./API/typical_ballot_data";
 // import encryptedBallot from "./encrypted_result_hex.json";
 import * as ballot from './DemoBallot/demo_ballot_schema.json'
+import * as manifest from './DemoBallot/election_manifest_simple.json'
 import {CiphertextBallot} from "./simple_election_data";
 import {serialize_compatible_CiphertextBallot} from "./serialization_browser";
 
@@ -136,14 +137,14 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   // console.log('buildBallot');
   const realBallot = buildBallot(ballot);
   // console.log('buildManifest');
-  const realManifest = buildManifest(ballot);
+  const realManifest = buildManifest(manifest);
   const json_plain_ballot : string = JSON.stringify(realBallot, null, "\t");
   const json_manifest : string = JSON.stringify(realManifest, null, "\t");
 
   // console.log(json_manifest)
   // console.log(json_plain_ballot)
-  // download(json_manifest, 'manifest.json', 'text/plain');
-  // download(json_plain_ballot,  'plaintextballot.json', 'text/plain');
+  download(json_manifest, 'manifest.json', 'text/plain');
+  download(json_plain_ballot,  'plaintextballot.json', 'text/plain');
 
   // console.log(realBallot)
   console.log(realManifest)

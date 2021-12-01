@@ -50,7 +50,7 @@
     "ballotItems": [
         {
             "id": "0a0ea028-46f9-4454-a89d-41602bb6a2e4",
-            "order": 1,
+            "order": 0,
             "type": 1,
             "title": [
                 {
@@ -106,7 +106,7 @@
             "ballotOptions": [
                 {
                     "id": "6d6e2d5e-6b01-453e-aae1-009be8d032cf",
-                    "order": 1,
+                    "order": 0,
                     "type": 1,
                     "title": [
                         {
@@ -145,7 +145,7 @@
                 },
                 {
                     "id": "f397cb9c-0b18-4674-b581-fadf9bb11ce4",
-                    "order": 2,
+                    "order": 1,
                     "type": 1,
                     "title": [
                         {
@@ -184,7 +184,7 @@
                 },
                 {
                     "id": "8e05c23e-0c30-4672-96a5-07c7ec42c519",
-                    "order": 3,
+                    "order": 2,
                     "type": 1,
                     "title": [
                         {
@@ -223,7 +223,7 @@
                 },
                 {
                     "id": "8e05c23e-0c30-4672-96a5-07c7ec42c569",
-                    "order": 4,
+                    "order": 3,
                     "type": 1,
                     "title": [
                         {
@@ -266,7 +266,7 @@
         },
         {
             "id": "84a2e49c-afd6-4952-ae2a-f5daba6ebd6a",
-            "order": 6,
+            "order": 1,
             "type": 1,
             "title": [
                 {
@@ -322,7 +322,7 @@
             "ballotOptions": [
                 {
                     "id": "a8670ebc-fd9b-41ff-a7e6-9ac34761b006",
-                    "order": 1,
+                    "order": 0,
                     "type": 1,
                     "title": [
                         {
@@ -361,7 +361,7 @@
                 },
                 {
                     "id": "c6d0c0e8-3c7d-405a-8d22-8ea6af76433b",
-                    "order": 2,
+                    "order": 1,
                     "type": 1,
                     "title": [
                         {
@@ -400,7 +400,7 @@
                 },
                 {
                     "id": "c6d0c0e8-3c7d-405a-8d22-8ea6af696628",
-                    "order": 3,
+                    "order": 2,
                     "type": 1,
                     "title": [
                         {
@@ -439,7 +439,7 @@
                 },
                 {
                     "id": "c6d0c0e8-3c7d-405a-8d22-8ea6af696629",
-                    "order": 4,
+                    "order": 3,
                     "type": 1,
                     "title": [
                         {
@@ -482,7 +482,7 @@
         },
         {
             "id": "206f6ed4-8bbc-42e7-b206-5471ef811602",
-            "order": 25,
+            "order": 2,
             "type": 1,
             "title": [
                 {
@@ -538,7 +538,7 @@
             "ballotOptions": [
                 {
                     "id": "d8eda7e1-a771-4e7a-993d-578b0da8293a",
-                    "order": 1,
+                    "order": 0,
                     "type": 1,
                     "title": [
                         {
@@ -577,7 +577,7 @@
                 },
                 {
                     "id": "7612c57f-ff13-46c7-85b4-0d22be11bea1",
-                    "order": 2,
+                    "order": 1,
                     "type": 1,
                     "title": [
                         {
@@ -655,7 +655,7 @@
                 },
                 {
                     "id": "7612c57f-ff13-46c7-85b4-0d22be11bez5",
-                    "order": 2,
+                    "order": 3,
                     "type": 1,
                     "title": [
                         {
@@ -698,7 +698,7 @@
         },
         {
             "id": "35652684-a91f-4507-90a8-965076a89acb",
-            "order": 28,
+            "order": 3,
             "type": 1,
             "title": [
                 {
@@ -754,7 +754,7 @@
             "ballotOptions": [
                 {
                     "id": "95825d9d-7a52-4632-a401-40ea3a3d910a",
-                    "order": 1,
+                    "order": 0,
                     "type": 1,
                     "title": [
                         {
@@ -793,7 +793,7 @@
                 },
                 {
                     "id": "d21fdac7-fd1f-440f-9a2c-184292811e30",
-                    "order": 2,
+                    "order": 1,
                     "type": 1,
                     "title": [
                         {
@@ -832,7 +832,7 @@
                 },
                 {
                     "id": "743599b8-304c-4179-955d-1519d82ad229",
-                    "order": 3,
+                    "order": 2,
                     "type": 1,
                     "title": [
                         {
@@ -871,7 +871,7 @@
                 },
                 {
                     "id": "26661225-9d20-40c1-947f-ea4532df7eb5",
-                    "order": 4,
+                    "order": 3,
                     "type": 1,
                     "title": [
                         {
