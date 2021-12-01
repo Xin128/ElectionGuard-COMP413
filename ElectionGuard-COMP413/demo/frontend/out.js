@@ -39716,11 +39716,8 @@
   var BallotOption = class {
     constructor(candidateName, selected, order) {
       this.selected = false;
-      let name = new LanguageText();
-      name.text = candidateName;
       this.object_id = candidateName;
       this.order = order;
-      this.title = [name];
       this.selected = selected;
     }
   };
@@ -40213,21 +40210,6 @@
     return selections;
   }
 
-  // src/serialization_browser.ts
-  var deserialize_toHex_banlist = ["timestamp"];
-  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
-    return JSON.stringify(encrypted_ballot, (key, value) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(10);
-      } else if (typeof value === "boolean") {
-        return value == false ? "00" : "01";
-      }
-      return value;
-    }, "	");
-  }
-
   // src/API/APIUtils.ts
   function encryptBallot_ballotOut(inputBallot, manifest) {
     const ballot = ballot2PlainTextBallot(inputBallot);
@@ -40246,16 +40228,6 @@
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    download(JSON.stringify(encrypted_ballot, (key, value) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(10);
-      } else if (typeof value === "boolean") {
-        return value == false ? "00" : "01";
-      }
-      return value;
-    }, "	"), "encrypted_ballot.json", "text/plain");
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   }
   function getQRCode(strs) {
@@ -40286,14 +40258,16 @@
   function ballotItem2Selection(ballotItem) {
     let plainTextSelections = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
-      plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.id, ballotOption.order, ballotOption.selected ? 1 : 0, false)];
+      plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected ? 1 : 0, false)];
     });
     return plainTextSelections;
   }
   function ballot2Context(ballot, internalManifest) {
     const names = new Set();
     ballot.ballotItems.forEach((ballotItem) => {
-      ballotItem.ballotOptions.forEach((ballotOption) => names.add(ballotOption.title[0].text));
+      ballotItem.ballotOptions.forEach((ballotOption) => {
+        names.add(ballotOption.object_id);
+      });
     });
     const number_of_guardians = 1;
     const quorum = 1;
@@ -40308,10 +40282,10 @@
     for (let i = 0; i < ballot.ballotItems.length; i++) {
       let ballotOptions = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected, ballot.ballotItems[i].ballotOptions[j].order);
+        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].id, ballot.ballotItems[i].ballotOptions[j].selected, ballot.ballotItems[i].ballotOptions[j].order);
         ballotOptions = [...ballotOptions, ballotOption];
       }
-      const contest = new BallotItem(ballot.ballotItems[i].title[0].text, ballot.ballotItems[i].order, ballotOptions);
+      const contest = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
       contests = [...contests, contest];
     }
     const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
@@ -41352,6 +41326,21 @@
     ballotImages
   };
 
+  // src/serialization_browser.ts
+  var deserialize_toHex_banlist = ["timestamp"];
+  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
+    return JSON.stringify(encrypted_ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	");
+  }
+
   // src/index.ts
   function download(content, fileName, contentType) {
     const a = document.createElement("a");
@@ -41444,6 +41433,7 @@
     const realManifest = buildManifest(demo_ballot_schema_exports);
     const json_plain_ballot = JSON.stringify(realBallot, null, "	");
     const json_manifest = JSON.stringify(realManifest, null, "	");
+    console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);
     if (result instanceof ErrorBallotInput) {
       console.log("error input!");

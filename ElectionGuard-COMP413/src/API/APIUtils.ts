@@ -66,17 +66,17 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
 
-    download(JSON.stringify(encrypted_ballot, (key, value) => {
-        if (typeof value === "bigint") {
-            return value.toString();
-        }
-        else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-            return value.toString(10);
-        } else if (typeof value === "boolean") {
-            return value == false ? "00" : "01";
-        }
-        return value;
-    }, '\t'), 'encrypted_ballot.json', 'text/plain');
+    // download(JSON.stringify(encrypted_ballot, (key, value) => {
+    //     if (typeof value === "bigint") {
+    //         return value.toString();
+    //     }
+    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //         return value.toString(10);
+    //     } else if (typeof value === "boolean") {
+    //         return value == false ? "00" : "01";
+    //     }
+    //     return value;
+    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
 
 
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
@@ -135,7 +135,7 @@ export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): Plain
 export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSelection[] {
     let plainTextSelections: PlaintextBallotSelection[] = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
-        plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
+        plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
     });
     return plainTextSelections;
 }
@@ -150,7 +150,9 @@ export function ballot2Context(ballot: Ballot, internalManifest: InternalManifes
     // construct the names list for candidates from ballot
     const names: Set<string> = new Set();
     ballot.ballotItems.forEach((ballotItem) => {
-        ballotItem.ballotOptions.forEach((ballotOption) => names.add(ballotOption.title[0].text));
+        ballotItem.ballotOptions.forEach((ballotOption) => {
+            names.add(ballotOption.object_id);
+        });
     });
 
     const number_of_guardians = 1;
@@ -193,10 +195,10 @@ export function buildBallot(ballot: any): Ballot {
     for(let i = 0; i < ballot.ballotItems.length; i++) {
         let ballotOptions: BallotOption[] = [];
         for(let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected,  ballot.ballotItems[i].ballotOptions[j].order);
+            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].id, ballot.ballotItems[i].ballotOptions[j].selected,  ballot.ballotItems[i].ballotOptions[j].order);
             ballotOptions = [...ballotOptions, ballotOption];
         }
-        const contest: BallotItem = new BallotItem(ballot.ballotItems[i].title[0].text, ballot.ballotItems[i].order, ballotOptions);
+        const contest: BallotItem = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
         contests = [...contests, contest];
     }
     const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);

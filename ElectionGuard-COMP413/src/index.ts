@@ -146,7 +146,7 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
   // download(json_plain_ballot,  'plaintextballot.json', 'text/plain');
 
   // console.log(realBallot)
-  // console.log(realManifest)
+  console.log(realManifest)
 
   // const fakeBallot = buildFakeBallot();
   const result = encryptBallot(realBallot, realManifest);

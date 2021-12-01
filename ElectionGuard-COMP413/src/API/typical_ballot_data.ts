@@ -123,11 +123,11 @@ export class BallotOption {
     rank: number;
 
     constructor(candidateName: string, selected: boolean, order: number) {
-        let name = new LanguageText();
-        name.text = candidateName;
+        // let name = new LanguageText();
+        // name.text = candidateName;
         this.object_id = candidateName;
         this.order = order;
-        this.title = [name];
+        // this.title = [name];
         this.selected = selected;
     }
 }
