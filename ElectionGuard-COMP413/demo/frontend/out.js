@@ -40217,6 +40217,8 @@
     const context = ballot2Context(inputBallot, internalManifest);
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
+    console.log("before encrypt_ballot!");
+    console.log(ballot);
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
     return encrypted_ballot;
   }
@@ -40228,6 +40230,35 @@
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+<<<<<<< HEAD
+=======
+    console.log("plaintextballot");
+    console.log(ballot);
+    console.log("encrypted_ballot");
+    console.log(encrypted_ballot);
+    console.log("internal manifest");
+    console.log(internalManifest);
+    download(JSON.stringify(ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	"), "plaintext_ballot.json", "text/plain");
+    download(JSON.stringify(encrypted_ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	"), "encrypted_ballot.json", "text/plain");
+>>>>>>> 99aa78f9117bb822d8c28a626744bad4939e993b
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   }
   function getQRCode(strs) {
@@ -41350,7 +41381,7 @@
     a.click();
   }
   function submitCiphertextBallot(voterId, encryptedBallot) {
-    fetch("https://3167-168-5-33-132.ngrok.io/receive/" + voterId, {
+    fetch("https://f069-168-5-58-228.ngrok.io/receive/" + voterId, {
       method: "POST",
       mode: "no-cors",
       headers: {"Content-Type": "application/json"},
@@ -41435,6 +41466,10 @@
     const json_manifest = JSON.stringify(realManifest, null, "	");
     console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);
+    console.log("json plain ballot");
+    console.log(json_plain_ballot);
+    console.log("encryptBallot here!");
+    console.log(result);
     if (result instanceof ErrorBallotInput) {
       console.log("error input!");
       return;
@@ -41449,6 +41484,8 @@
     const voterId = Math.floor(Math.random() * 100).toString();
     console.log("Generated random voterID: " + voterId);
     const encryptedballot = encryptBallot_ballotOut(realBallot, realManifest);
+    console.log("encryptedballot");
+    console.log(encryptedballot);
     submitCiphertextBallot(voterId, encryptedballot);
   });
 })();

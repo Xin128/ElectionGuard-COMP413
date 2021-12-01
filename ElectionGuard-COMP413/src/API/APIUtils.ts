@@ -44,7 +44,8 @@ export function encryptBallot_ballotOut(inputBallot: Ballot,
   const context = ballot2Context(inputBallot, internalManifest);
   const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
   const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
-
+  console.log("before encrypt_ballot!")
+  console.log(ballot);
   const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
   return encrypted_ballot;
 }
@@ -65,6 +66,23 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+    console.log("plaintextballot");
+    console.log(ballot);
+    console.log("encrypted_ballot");
+    console.log(encrypted_ballot);
+    console.log("internal manifest");
+    console.log(internalManifest)
+    download(JSON.stringify(ballot, (key, value) => {
+        if (typeof value === "bigint") {
+            return value.toString();
+        }
+        else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+            return value.toString(10);
+        } else if (typeof value === "boolean") {
+            return value == false ? "00" : "01";
+        }
+        return value;
+    }, '\t'), 'plaintext_ballot.json', 'text/plain');
 
     // download(JSON.stringify(encrypted_ballot, (key, value) => {
     //     if (typeof value === "bigint") {
