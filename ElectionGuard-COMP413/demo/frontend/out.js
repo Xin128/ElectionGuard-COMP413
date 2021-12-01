@@ -40227,7 +40227,7 @@
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
   }
   function getQRCode(strs) {
     const qr = new import_qrcode_generator_ts.QRCode();
