@@ -83,7 +83,7 @@ if not os.path.exists(os.path.join(encypted_file_dir)):
 for ballotNum in os.listdir(encypted_file_dir):
     if ballotNum == '.DS_Store':
         continue
-    print("================ballot_num:" + ballotNum + "==================")
+    print("================ Tally Decryption Start==================")
     ballotsList = []
     encypted_file_dir_with_ballotNum = os.path.join(encypted_file_dir, ballotNum)
     generated_data_dir_with_ballotNum = os.path.join(generated_file_dir, ballotNum)
@@ -93,6 +93,7 @@ for ballotNum in os.listdir(encypted_file_dir):
         )
     )
     internal_manifest = InternalManifest(manifest)
+
     context = make_ciphertext_election_context(
         number_of_guardians=1,
         quorum=1,
@@ -102,6 +103,7 @@ for ballotNum in os.listdir(encypted_file_dir):
     )
     store = DataStore()
     ballot_id_2_hash = {}
+
     for ballot_filename in os.listdir(encypted_file_dir_with_ballotNum):
         subject = ballot_factory.get_ciphertext_ballot_from_file(
             encypted_file_dir_with_ballotNum, ballot_filename
@@ -109,16 +111,18 @@ for ballotNum in os.listdir(encypted_file_dir):
         ballot_id_2_hash[subject.code] = subject.crypto_hash
         ballotsList.append(subject)
 
-    time.sleep(3)
     for subject in ballotsList:
         encryption_seed = subject.code
+
         store.set(
             subject.object_id,
             from_ciphertext_ballot(subject, BallotBoxState.CAST),
         )
-
+    time.sleep(3)
     result = tally_ballots(store, internal_manifest, context)
     decrypted_tallies = _decrypt_with_secret(result, keypair.secret_key)
+    # print(decrypted_tallies)
+
     decrypted_tallies_formated = convert_2_readable(decrypted_tallies, manifest)
     output = {}
     output["tally_result"] = decrypted_tallies_formated
@@ -126,6 +130,6 @@ for ballotNum in os.listdir(encypted_file_dir):
     decrypted_tallies_json = ballot_factory.export_ballot_to_file(
         output, export_data_dir, "tally_output"
     )
-    print("final output is")
+    print("================Final Output Below==================")
     print(output)
-    print("================Successfully tallied ballot " + ballotNum + "==================")
+    print("================Successfully tallied ballot==================")
