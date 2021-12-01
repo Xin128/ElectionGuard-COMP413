@@ -31611,7 +31611,9 @@
     }
   };
   var BallotItem = class {
-    constructor(ballotOptions) {
+    constructor(ballotId, order, ballotOptions) {
+      this.id = ballotId;
+      this.order = order;
       this.ballotOptions = ballotOptions;
     }
   };
@@ -31622,10 +31624,12 @@
     BallotItemType2[BallotItemType2["Office_RankedChoice"] = 10] = "Office_RankedChoice";
   })(BallotItemType || (BallotItemType = {}));
   var BallotOption = class {
-    constructor(candidateName, selected) {
+    constructor(candidateName, selected, order) {
       this.selected = false;
       let name = new LanguageText();
       name.text = candidateName;
+      this.object_id = candidateName;
+      this.order = order;
       this.title = [name];
       this.selected = selected;
     }
@@ -31675,6 +31679,7 @@
   }
   function encryptBallot(inputBallot, manifest) {
     const ballot = ballot2PlainTextBallot(inputBallot);
+    console.log(ballot);
     const internalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
     const seed_nonce = elements_mod_q_no_zero();
@@ -31694,6 +31699,9 @@
   }
   function ballot2PlainTextBallot(ballot) {
     let ballotContests = [];
+    for (let k = 0; k < ballot.ballotItems.length; k++) {
+      console.log(ballot.ballotItems[k]);
+    }
     ballot.ballotItems.forEach((ballotItem) => {
       ballotContests = [...ballotContests, ballotItem2PlainTextBallotContest(ballotItem)];
     });
@@ -31729,10 +31737,10 @@
     for (let i = 0; i < ballot.ballotItems.length; i++) {
       let ballotOptions = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected);
+        const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected, ballot.ballotItems[i].ballotOptions[j].order);
         ballotOptions = [...ballotOptions, ballotOption];
       }
-      const contest = new BallotItem(ballotOptions);
+      const contest = new BallotItem(ballot.ballotItems[i].title[0].text, ballot.ballotItems[i].order, ballotOptions);
       contests = [...contests, contest];
     }
     const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
@@ -31749,13 +31757,18 @@
     let candidates = [];
     let contests = [];
     let ballot_styles = [];
-    const name = ballot.electionName[0].text;
+    const language = new Language(ballot.electionName[0].text, "en");
+    const interText = new InternationalizedText([language]);
+    const name = interText;
+    const emailAnnotation = new AnnotatedString("office", "a@b.c");
+    const phoneAnnotation = new AnnotatedString("office", "111-111-1111");
+    const contactInfo = new ContactInformation(["6100 Main St, Houston, TX"], [emailAnnotation], [phoneAnnotation], "Rice University");
     geopolitical_units = buildGeopoliticalUnit(ballot);
     parties = buildParty(ballot);
     candidates = buildCandidate(ballot);
     contests = buildContest(ballot);
     ballot_styles = buildBallotStyle(ballot);
-    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name);
+    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contactInfo);
   }
   function buildGeopoliticalUnit(ballot) {
     const object_id = ballot.precinctId;
@@ -31790,7 +31803,7 @@
       const electoral_district_id = ballot.precinctId;
       const vote_variation = VoteVariationType.unknown;
       const number_elected = 0;
-      const votes_allowed = void 0;
+      const votes_allowed = 1;
       const name = ballot.ballotItems[i].title[0].text;
       const ballot_selections = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
@@ -32856,12 +32869,10 @@
     get_optional(document.getElementById("previous3")).style.display = "block";
   });
   get_optional(document.getElementById("next3")).addEventListener("click", function() {
-    console.log("buildBallot");
     const realBallot = buildBallot(demo_ballot_schema_exports);
-    console.log("buildManifest");
     const realManifest = buildManifest(demo_ballot_schema_exports);
-    console.log(realBallot);
-    console.log(realManifest);
+    const json_plain_ballot = JSON.stringify(realBallot, null, "	");
+    const json_manifest = JSON.stringify(realManifest, null, "	");
     const result = encryptBallot(realBallot, realManifest);
     if (result instanceof ErrorBallotInput) {
       console.log("error input!");

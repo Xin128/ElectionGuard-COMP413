@@ -58,6 +58,7 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     // let validatedBallot = validateBallot(inputBallot);
     // if (validatedBallot instanceof ErrorBallotInput) return validatedBallot;
     const ballot = ballot2PlainTextBallot(inputBallot);
+    console.log(ballot);
     const internalManifest: InternalManifest = new InternalManifest(manifest);
     const context = ballot2Context(inputBallot, internalManifest);
     const seed_nonce:ElementModQ = elements_mod_q_no_zero();
@@ -65,17 +66,17 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
 
-    download(JSON.stringify(encrypted_ballot, (key, value) => {
-        if (typeof value === "bigint") {
-            return value.toString();
-        }
-        else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-            return value.toString(10);
-        } else if (typeof value === "boolean") {
-            return value == false ? "00" : "01";
-        }
-        return value;
-    }, '\t'), 'encrypted_ballot.json', 'text/plain');
+    // download(JSON.stringify(encrypted_ballot, (key, value) => {
+    //     if (typeof value === "bigint") {
+    //         return value.toString();
+    //     }
+    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //         return value.toString(10);
+    //     } else if (typeof value === "boolean") {
+    //         return value == false ? "00" : "01";
+    //     }
+    //     return value;
+    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
 
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
 }
@@ -104,6 +105,10 @@ export function getQRCode(strs:string[]):any {
  */
 export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
     let ballotContests: PlaintextBallotContest[] = [];
+    for (let k = 0; k < ballot.ballotItems.length; k++) {
+        console.log(ballot.ballotItems[k]);
+    }
+
     ballot.ballotItems.forEach((ballotItem) => {
         ballotContests = [...ballotContests, ballotItem2PlainTextBallotContest(ballotItem)];
     });
@@ -118,6 +123,7 @@ export function ballot2PlainTextBallot(ballot: Ballot): PlaintextBallot {
  */
 export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): PlaintextBallotContest {
     const selections: PlaintextBallotSelection[] = ballotItem2Selection(ballotItem);
+
     return new PlaintextBallotContest(ballotItem.id, ballotItem.order, selections);
 }
 
@@ -128,8 +134,6 @@ export function ballotItem2PlainTextBallotContest(ballotItem: BallotItem): Plain
 export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSelection[] {
     let plainTextSelections: PlaintextBallotSelection[] = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
-        // MISSING: Candidate name from ballotOption
-        // what would be the correct field for the selection? Ours assume a candidate name
         plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
     });
     return plainTextSelections;
@@ -191,13 +195,14 @@ export function buildBallot(ballot: any): Ballot {
     for(let i = 0; i < ballot.ballotItems.length; i++) {
         let ballotOptions: BallotOption[] = [];
         for(let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected);
+            const ballotOption = new BallotOption(ballot.ballotItems[i].ballotOptions[j].title[0].text, ballot.ballotItems[i].ballotOptions[j].selected,  ballot.ballotItems[i].ballotOptions[j].order);
             ballotOptions = [...ballotOptions, ballotOption];
         }
-        const contest: BallotItem = new BallotItem(ballotOptions);
+        const contest: BallotItem = new BallotItem(ballot.ballotItems[i].title[0].text, ballot.ballotItems[i].order, ballotOptions);
         contests = [...contests, contest];
     }
     const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
+    // print(electionBallot)
 
     return electionBallot;
 }
