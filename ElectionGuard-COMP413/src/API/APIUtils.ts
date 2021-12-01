@@ -223,7 +223,7 @@ export function buildBallot(ballot: any): Ballot {
         const contest: BallotItem = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
         contests = [...contests, contest];
     }
-    const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
+    const electionBallot = new Ballot(makeId(15), ballot.electionName[0].text, contests);
     // print(electionBallot)
 
     return electionBallot;
@@ -354,6 +354,16 @@ export function buildBallotStyle(manifest: any): BallotStyle[] {
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
+export function makeId(length: number) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
 
 export function validateBallot(ballot: Ballot): ErrorBallotInput | null {
     if (ballot.electionName === undefined || ballot.electionName.length === 0) return new ErrorBallotInput(ErrorType.MissingElectionName, "Missing Election Name");

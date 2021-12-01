@@ -40314,7 +40314,7 @@
       const contest = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
       contests2 = [...contests2, contest];
     }
-    const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests2);
+    const electionBallot = new Ballot(makeId(15), ballot.electionName[0].text, contests2);
     return electionBallot;
   }
   function buildManifest(manifest) {
@@ -40392,6 +40392,15 @@
     const geopolitical_unit_ids = [manifest.ballot_styles[0].geopolitical_unit_ids[0]];
     const party_ids = [manifest.ballot_styles[0].party_ids[0]];
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
+  }
+  function makeId(length) {
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 
   // src/DemoBallot/demo_ballot_schema.json
