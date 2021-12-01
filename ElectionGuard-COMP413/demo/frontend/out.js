@@ -40231,6 +40231,8 @@
     const context = ballot2Context(inputBallot, internalManifest);
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
+    console.log("before encrypt_ballot!");
+    console.log(ballot);
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
     return encrypted_ballot;
   }
@@ -40247,6 +40249,16 @@
     console.log(encrypted_ballot);
     console.log("internal manifest");
     console.log(internalManifest);
+    download(JSON.stringify(ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	"), "plaintext_ballot.json", "text/plain");
     download(JSON.stringify(encrypted_ballot, (key, value) => {
       if (typeof value === "bigint") {
         return value.toString();
@@ -41451,6 +41463,10 @@
     console.log(realBallot);
     console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);
+    console.log("json plain ballot");
+    console.log(json_plain_ballot);
+    console.log("encryptBallot here!");
+    console.log(result);
     if (result instanceof ErrorBallotInput) {
       console.log("error input!");
       return;
@@ -41465,6 +41481,8 @@
     const voterId = Math.floor(Math.random() * 100).toString();
     console.log("Generated random voterID: " + voterId);
     const encryptedballot = encryptBallot_ballotOut(realBallot, realManifest);
+    console.log("encryptedballot");
+    console.log(encryptedballot);
     submitCiphertextBallot(voterId, encryptedballot);
   });
 })();
