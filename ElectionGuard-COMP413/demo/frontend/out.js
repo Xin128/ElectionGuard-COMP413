@@ -15,8 +15,8 @@
     return mod2 || (0, cb[Object.keys(cb)[0]])((mod2 = {exports: {}}).exports, mod2), mod2.exports;
   };
   var __export = (target, all) => {
-    for (var name in all)
-      __defProp(target, name, {get: all[name], enumerable: true});
+    for (var name2 in all)
+      __defProp(target, name2, {get: all[name2], enumerable: true});
   };
   var __reExport = (target, module, desc) => {
     if (module && typeof module === "object" || typeof module === "function") {
@@ -1658,14 +1658,14 @@
           }
         };
       }
-      E("ERR_BUFFER_OUT_OF_BOUNDS", function(name) {
-        if (name) {
-          return `${name} is outside of buffer bounds`;
+      E("ERR_BUFFER_OUT_OF_BOUNDS", function(name2) {
+        if (name2) {
+          return `${name2} is outside of buffer bounds`;
         }
         return "Attempt to access memory outside buffer bounds";
       }, RangeError);
-      E("ERR_INVALID_ARG_TYPE", function(name, actual) {
-        return `The "${name}" argument must be of type number. Received type ${typeof actual}`;
+      E("ERR_INVALID_ARG_TYPE", function(name2, actual) {
+        return `The "${name2}" argument must be of type number. Received type ${typeof actual}`;
       }, TypeError);
       E("ERR_OUT_OF_RANGE", function(str, range, input) {
         let msg = `The value of "${str}" is out of range.`;
@@ -1714,20 +1714,20 @@
         }
         checkBounds(buf, offset, byteLength2);
       }
-      function validateNumber(value, name) {
+      function validateNumber(value, name2) {
         if (typeof value !== "number") {
-          throw new errors.ERR_INVALID_ARG_TYPE(name, "number", value);
+          throw new errors.ERR_INVALID_ARG_TYPE(name2, "number", value);
         }
       }
-      function boundsError(value, length, type) {
+      function boundsError(value, length, type2) {
         if (Math.floor(value) !== value) {
-          validateNumber(value, type);
-          throw new errors.ERR_OUT_OF_RANGE(type || "offset", "an integer", value);
+          validateNumber(value, type2);
+          throw new errors.ERR_OUT_OF_RANGE(type2 || "offset", "an integer", value);
         }
         if (length < 0) {
           throw new errors.ERR_BUFFER_OUT_OF_BOUNDS();
         }
-        throw new errors.ERR_OUT_OF_RANGE(type || "offset", `>= ${type ? 1 : 0} and <= ${length}`, value);
+        throw new errors.ERR_OUT_OF_RANGE(type2 || "offset", `>= ${type2 ? 1 : 0} and <= ${length}`, value);
       }
       var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
       function base64clean(str) {
@@ -1829,8 +1829,8 @@
         }
         return i;
       }
-      function isInstance(obj, type) {
-        return obj instanceof type || obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type.name;
+      function isInstance(obj, type2) {
+        return obj instanceof type2 || obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type2.name;
       }
       function numberIsNaN(obj) {
         return obj !== obj;
@@ -2060,11 +2060,11 @@
       EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
         return _getMaxListeners(this);
       };
-      EventEmitter.prototype.emit = function emit(type) {
+      EventEmitter.prototype.emit = function emit(type2) {
         var args = [];
         for (var i = 1; i < arguments.length; i++)
           args.push(arguments[i]);
-        var doError = type === "error";
+        var doError = type2 === "error";
         var events = this._events;
         if (events !== void 0)
           doError = doError && events.error === void 0;
@@ -2081,7 +2081,7 @@
           err.context = er;
           throw err;
         }
-        var handler = events[type];
+        var handler = events[type2];
         if (handler === void 0)
           return false;
         if (typeof handler === "function") {
@@ -2094,7 +2094,7 @@
         }
         return true;
       };
-      function _addListener(target, type, listener, prepend) {
+      function _addListener(target, type2, listener, prepend) {
         var m;
         var events;
         var existing;
@@ -2105,17 +2105,17 @@
           target._eventsCount = 0;
         } else {
           if (events.newListener !== void 0) {
-            target.emit("newListener", type, listener.listener ? listener.listener : listener);
+            target.emit("newListener", type2, listener.listener ? listener.listener : listener);
             events = target._events;
           }
-          existing = events[type];
+          existing = events[type2];
         }
         if (existing === void 0) {
-          existing = events[type] = listener;
+          existing = events[type2] = listener;
           ++target._eventsCount;
         } else {
           if (typeof existing === "function") {
-            existing = events[type] = prepend ? [listener, existing] : [existing, listener];
+            existing = events[type2] = prepend ? [listener, existing] : [existing, listener];
           } else if (prepend) {
             existing.unshift(listener);
           } else {
@@ -2124,22 +2124,22 @@
           m = _getMaxListeners(target);
           if (m > 0 && existing.length > m && !existing.warned) {
             existing.warned = true;
-            var w = new Error("Possible EventEmitter memory leak detected. " + existing.length + " " + String(type) + " listeners added. Use emitter.setMaxListeners() to increase limit");
+            var w = new Error("Possible EventEmitter memory leak detected. " + existing.length + " " + String(type2) + " listeners added. Use emitter.setMaxListeners() to increase limit");
             w.name = "MaxListenersExceededWarning";
             w.emitter = target;
-            w.type = type;
+            w.type = type2;
             w.count = existing.length;
             ProcessEmitWarning(w);
           }
         }
         return target;
       }
-      EventEmitter.prototype.addListener = function addListener(type, listener) {
-        return _addListener(this, type, listener, false);
+      EventEmitter.prototype.addListener = function addListener(type2, listener) {
+        return _addListener(this, type2, listener, false);
       };
       EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-      EventEmitter.prototype.prependListener = function prependListener(type, listener) {
-        return _addListener(this, type, listener, true);
+      EventEmitter.prototype.prependListener = function prependListener(type2, listener) {
+        return _addListener(this, type2, listener, true);
       };
       function onceWrapper() {
         if (!this.fired) {
@@ -2150,39 +2150,39 @@
           return this.listener.apply(this.target, arguments);
         }
       }
-      function _onceWrap(target, type, listener) {
-        var state = {fired: false, wrapFn: void 0, target, type, listener};
+      function _onceWrap(target, type2, listener) {
+        var state = {fired: false, wrapFn: void 0, target, type: type2, listener};
         var wrapped = onceWrapper.bind(state);
         wrapped.listener = listener;
         state.wrapFn = wrapped;
         return wrapped;
       }
-      EventEmitter.prototype.once = function once2(type, listener) {
+      EventEmitter.prototype.once = function once2(type2, listener) {
         checkListener(listener);
-        this.on(type, _onceWrap(this, type, listener));
+        this.on(type2, _onceWrap(this, type2, listener));
         return this;
       };
-      EventEmitter.prototype.prependOnceListener = function prependOnceListener(type, listener) {
+      EventEmitter.prototype.prependOnceListener = function prependOnceListener(type2, listener) {
         checkListener(listener);
-        this.prependListener(type, _onceWrap(this, type, listener));
+        this.prependListener(type2, _onceWrap(this, type2, listener));
         return this;
       };
-      EventEmitter.prototype.removeListener = function removeListener(type, listener) {
+      EventEmitter.prototype.removeListener = function removeListener(type2, listener) {
         var list, events, position, i, originalListener;
         checkListener(listener);
         events = this._events;
         if (events === void 0)
           return this;
-        list = events[type];
+        list = events[type2];
         if (list === void 0)
           return this;
         if (list === listener || list.listener === listener) {
           if (--this._eventsCount === 0)
             this._events = Object.create(null);
           else {
-            delete events[type];
+            delete events[type2];
             if (events.removeListener)
-              this.emit("removeListener", type, list.listener || listener);
+              this.emit("removeListener", type2, list.listener || listener);
           }
         } else if (typeof list !== "function") {
           position = -1;
@@ -2201,14 +2201,14 @@
             spliceOne(list, position);
           }
           if (list.length === 1)
-            events[type] = list[0];
+            events[type2] = list[0];
           if (events.removeListener !== void 0)
-            this.emit("removeListener", type, originalListener || listener);
+            this.emit("removeListener", type2, originalListener || listener);
         }
         return this;
       };
       EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
-      EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
+      EventEmitter.prototype.removeAllListeners = function removeAllListeners(type2) {
         var listeners, events, i;
         events = this._events;
         if (events === void 0)
@@ -2217,11 +2217,11 @@
           if (arguments.length === 0) {
             this._events = Object.create(null);
             this._eventsCount = 0;
-          } else if (events[type] !== void 0) {
+          } else if (events[type2] !== void 0) {
             if (--this._eventsCount === 0)
               this._events = Object.create(null);
             else
-              delete events[type];
+              delete events[type2];
           }
           return this;
         }
@@ -2239,45 +2239,45 @@
           this._eventsCount = 0;
           return this;
         }
-        listeners = events[type];
+        listeners = events[type2];
         if (typeof listeners === "function") {
-          this.removeListener(type, listeners);
+          this.removeListener(type2, listeners);
         } else if (listeners !== void 0) {
           for (i = listeners.length - 1; i >= 0; i--) {
-            this.removeListener(type, listeners[i]);
+            this.removeListener(type2, listeners[i]);
           }
         }
         return this;
       };
-      function _listeners(target, type, unwrap) {
+      function _listeners(target, type2, unwrap) {
         var events = target._events;
         if (events === void 0)
           return [];
-        var evlistener = events[type];
+        var evlistener = events[type2];
         if (evlistener === void 0)
           return [];
         if (typeof evlistener === "function")
           return unwrap ? [evlistener.listener || evlistener] : [evlistener];
         return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
       }
-      EventEmitter.prototype.listeners = function listeners(type) {
-        return _listeners(this, type, true);
+      EventEmitter.prototype.listeners = function listeners(type2) {
+        return _listeners(this, type2, true);
       };
-      EventEmitter.prototype.rawListeners = function rawListeners(type) {
-        return _listeners(this, type, false);
+      EventEmitter.prototype.rawListeners = function rawListeners(type2) {
+        return _listeners(this, type2, false);
       };
-      EventEmitter.listenerCount = function(emitter, type) {
+      EventEmitter.listenerCount = function(emitter, type2) {
         if (typeof emitter.listenerCount === "function") {
-          return emitter.listenerCount(type);
+          return emitter.listenerCount(type2);
         } else {
-          return listenerCount.call(emitter, type);
+          return listenerCount.call(emitter, type2);
         }
       };
       EventEmitter.prototype.listenerCount = listenerCount;
-      function listenerCount(type) {
+      function listenerCount(type2) {
         var events = this._events;
         if (events !== void 0) {
-          var evlistener = events[type];
+          var evlistener = events[type2];
           if (typeof evlistener === "function") {
             return 1;
           } else if (evlistener !== void 0) {
@@ -2307,10 +2307,10 @@
         }
         return ret;
       }
-      function once(emitter, name) {
+      function once(emitter, name2) {
         return new Promise(function(resolve, reject) {
           function errorListener(err) {
-            emitter.removeListener(name, resolver);
+            emitter.removeListener(name2, resolver);
             reject(err);
           }
           function resolver() {
@@ -2320,8 +2320,8 @@
             resolve([].slice.call(arguments));
           }
           ;
-          eventTargetAgnosticAddListener(emitter, name, resolver, {once: true});
-          if (name !== "error") {
+          eventTargetAgnosticAddListener(emitter, name2, resolver, {once: true});
+          if (name2 !== "error") {
             addErrorHandlerIfEventEmitter(emitter, errorListener, {once: true});
           }
         });
@@ -2331,17 +2331,17 @@
           eventTargetAgnosticAddListener(emitter, "error", handler, flags);
         }
       }
-      function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+      function eventTargetAgnosticAddListener(emitter, name2, listener, flags) {
         if (typeof emitter.on === "function") {
           if (flags.once) {
-            emitter.once(name, listener);
+            emitter.once(name2, listener);
           } else {
-            emitter.on(name, listener);
+            emitter.on(name2, listener);
           }
         } else if (typeof emitter.addEventListener === "function") {
-          emitter.addEventListener(name, function wrapListener(arg) {
+          emitter.addEventListener(name2, function wrapListener(arg) {
             if (flags.once) {
-              emitter.removeEventListener(name, wrapListener);
+              emitter.removeEventListener(name2, wrapListener);
             }
             listener(arg);
           });
@@ -2773,10 +2773,10 @@
           return str.indexOf(search, start) !== -1;
         }
       }
-      createErrorType("ERR_INVALID_OPT_VALUE", function(name, value) {
-        return 'The value "' + value + '" is invalid for option "' + name + '"';
+      createErrorType("ERR_INVALID_OPT_VALUE", function(name2, value) {
+        return 'The value "' + value + '" is invalid for option "' + name2 + '"';
       }, TypeError);
-      createErrorType("ERR_INVALID_ARG_TYPE", function(name, expected, actual) {
+      createErrorType("ERR_INVALID_ARG_TYPE", function(name2, expected, actual) {
         var determiner;
         if (typeof expected === "string" && startsWith(expected, "not ")) {
           determiner = "must not be";
@@ -2785,22 +2785,22 @@
           determiner = "must be";
         }
         var msg;
-        if (endsWith(name, " argument")) {
-          msg = "The ".concat(name, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+        if (endsWith(name2, " argument")) {
+          msg = "The ".concat(name2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         } else {
-          var type = includes(name, ".") ? "property" : "argument";
-          msg = 'The "'.concat(name, '" ').concat(type, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+          var type2 = includes(name2, ".") ? "property" : "argument";
+          msg = 'The "'.concat(name2, '" ').concat(type2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         }
         msg += ". Received type ".concat(typeof actual);
         return msg;
       }, TypeError);
       createErrorType("ERR_STREAM_PUSH_AFTER_EOF", "stream.push() after EOF");
-      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name) {
-        return "The " + name + " method is not implemented";
+      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name2) {
+        return "The " + name2 + " method is not implemented";
       });
       createErrorType("ERR_STREAM_PREMATURE_CLOSE", "Premature close");
-      createErrorType("ERR_STREAM_DESTROYED", function(name) {
-        return "Cannot call " + name + " after a stream was destroyed";
+      createErrorType("ERR_STREAM_DESTROYED", function(name2) {
+        return "Cannot call " + name2 + " after a stream was destroyed";
       });
       createErrorType("ERR_MULTIPLE_CALLBACK", "Callback called multiple times");
       createErrorType("ERR_STREAM_CANNOT_PIPE", "Cannot pipe, not readable");
@@ -2826,8 +2826,8 @@
         var hwm = highWaterMarkFrom(options, isDuplex, duplexKey);
         if (hwm != null) {
           if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
-            var name = isDuplex ? duplexKey : "highWaterMark";
-            throw new ERR_INVALID_OPT_VALUE(name, hwm);
+            var name2 = isDuplex ? duplexKey : "highWaterMark";
+            throw new ERR_INVALID_OPT_VALUE(name2, hwm);
           }
           return Math.floor(hwm);
         }
@@ -2863,14 +2863,14 @@
         }
         return deprecated;
       }
-      function config(name) {
+      function config(name2) {
         try {
           if (!global.localStorage)
             return false;
         } catch (_) {
           return false;
         }
-        var val = global.localStorage[name];
+        var val = global.localStorage[name2];
         if (val == null)
           return false;
         return String(val).toLowerCase() === "true";
@@ -4000,8 +4000,8 @@
       var Duplex;
       Readable.ReadableState = ReadableState;
       var EE = require_events().EventEmitter;
-      var EElistenerCount = function EElistenerCount2(emitter, type) {
-        return emitter.listeners(type).length;
+      var EElistenerCount = function EElistenerCount2(emitter, type2) {
+        return emitter.listeners(type2).length;
       };
       var Stream = require_stream_browser();
       var Buffer2 = require_buffer().Buffer;
@@ -6919,10 +6919,10 @@
           return str.indexOf(search, start) !== -1;
         }
       }
-      createErrorType("ERR_INVALID_OPT_VALUE", function(name, value) {
-        return 'The value "' + value + '" is invalid for option "' + name + '"';
+      createErrorType("ERR_INVALID_OPT_VALUE", function(name2, value) {
+        return 'The value "' + value + '" is invalid for option "' + name2 + '"';
       }, TypeError);
-      createErrorType("ERR_INVALID_ARG_TYPE", function(name, expected, actual) {
+      createErrorType("ERR_INVALID_ARG_TYPE", function(name2, expected, actual) {
         var determiner;
         if (typeof expected === "string" && startsWith(expected, "not ")) {
           determiner = "must not be";
@@ -6931,22 +6931,22 @@
           determiner = "must be";
         }
         var msg;
-        if (endsWith(name, " argument")) {
-          msg = "The ".concat(name, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+        if (endsWith(name2, " argument")) {
+          msg = "The ".concat(name2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         } else {
-          var type = includes(name, ".") ? "property" : "argument";
-          msg = 'The "'.concat(name, '" ').concat(type, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+          var type2 = includes(name2, ".") ? "property" : "argument";
+          msg = 'The "'.concat(name2, '" ').concat(type2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         }
         msg += ". Received type ".concat(typeof actual);
         return msg;
       }, TypeError);
       createErrorType("ERR_STREAM_PUSH_AFTER_EOF", "stream.push() after EOF");
-      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name) {
-        return "The " + name + " method is not implemented";
+      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name2) {
+        return "The " + name2 + " method is not implemented";
       });
       createErrorType("ERR_STREAM_PREMATURE_CLOSE", "Premature close");
-      createErrorType("ERR_STREAM_DESTROYED", function(name) {
-        return "Cannot call " + name + " after a stream was destroyed";
+      createErrorType("ERR_STREAM_DESTROYED", function(name2) {
+        return "Cannot call " + name2 + " after a stream was destroyed";
       });
       createErrorType("ERR_MULTIPLE_CALLBACK", "Callback called multiple times");
       createErrorType("ERR_STREAM_CANNOT_PIPE", "Cannot pipe, not readable");
@@ -6972,8 +6972,8 @@
         var hwm = highWaterMarkFrom(options, isDuplex, duplexKey);
         if (hwm != null) {
           if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
-            var name = isDuplex ? duplexKey : "highWaterMark";
-            throw new ERR_INVALID_OPT_VALUE(name, hwm);
+            var name2 = isDuplex ? duplexKey : "highWaterMark";
+            throw new ERR_INVALID_OPT_VALUE(name2, hwm);
           }
           return Math.floor(hwm);
         }
@@ -8107,8 +8107,8 @@
       var Duplex;
       Readable.ReadableState = ReadableState;
       var EE = require_events().EventEmitter;
-      var EElistenerCount = function EElistenerCount2(emitter, type) {
-        return emitter.listeners(type).length;
+      var EElistenerCount = function EElistenerCount2(emitter, type2) {
+        return emitter.listeners(type2).length;
       };
       var Stream = require_stream_browser2();
       var Buffer2 = require_buffer().Buffer;
@@ -9943,7 +9943,7 @@
   var require_to_buffer = __commonJS({
     "node_modules/pbkdf2/lib/to-buffer.js"(exports, module) {
       var Buffer2 = require_safe_buffer().Buffer;
-      module.exports = function(thing, encoding, name) {
+      module.exports = function(thing, encoding, name2) {
         if (Buffer2.isBuffer(thing)) {
           return thing;
         } else if (typeof thing === "string") {
@@ -9951,7 +9951,7 @@
         } else if (ArrayBuffer.isView(thing)) {
           return Buffer2.from(thing.buffer);
         } else {
-          throw new TypeError(name + " must be a string, a Buffer, a typed array or a DataView");
+          throw new TypeError(name2 + " must be a string, a Buffer, a typed array or a DataView");
         }
       };
     }
@@ -11244,12 +11244,12 @@
       var inherits = require_inherits_browser();
       var Cipher = require_cipher();
       var DES = require_des();
-      function EDEState(type, key) {
+      function EDEState(type2, key) {
         assert.equal(key.length, 24, "Invalid key length");
         var k1 = key.slice(0, 8);
         var k2 = key.slice(8, 16);
         var k3 = key.slice(16, 24);
-        if (type === "encrypt") {
+        if (type2 === "encrypt") {
           this.ciphers = [
             DES.create({type: "encrypt", key: k1}),
             DES.create({type: "decrypt", key: k2}),
@@ -11319,11 +11319,11 @@
         CipherBase.call(this);
         var modeName = opts.mode.toLowerCase();
         var mode = modes[modeName];
-        var type;
+        var type2;
         if (opts.decrypt) {
-          type = "decrypt";
+          type2 = "decrypt";
         } else {
-          type = "encrypt";
+          type2 = "encrypt";
         }
         var key = opts.key;
         if (!Buffer2.isBuffer(key)) {
@@ -11339,7 +11339,7 @@
         this._des = mode.create({
           key,
           iv,
-          type
+          type: type2
         });
       }
       DES.prototype._update = function(data) {
@@ -15008,8 +15008,8 @@
           p192: null,
           p25519: null
         };
-        function MPrime(name, p) {
-          this.name = name;
+        function MPrime(name2, p) {
+          this.name = name2;
           this.p = new BN(p, 16);
           this.n = this.p.bitLength();
           this.k = new BN(1).iushln(this.n).isub(this.p);
@@ -15126,22 +15126,22 @@
           }
           return num;
         };
-        BN._prime = function prime(name) {
-          if (primes[name])
-            return primes[name];
+        BN._prime = function prime(name2) {
+          if (primes[name2])
+            return primes[name2];
           var prime2;
-          if (name === "k256") {
+          if (name2 === "k256") {
             prime2 = new K256();
-          } else if (name === "p224") {
+          } else if (name2 === "p224") {
             prime2 = new P224();
-          } else if (name === "p192") {
+          } else if (name2 === "p192") {
             prime2 = new P192();
-          } else if (name === "p25519") {
+          } else if (name2 === "p25519") {
             prime2 = new P25519();
           } else {
-            throw new Error("Unknown prime " + name);
+            throw new Error("Unknown prime " + name2);
           }
-          primes[name] = prime2;
+          primes[name2] = prime2;
           return prime2;
         };
         function Red(m) {
@@ -16281,10 +16281,10 @@
           return str.indexOf(search, start) !== -1;
         }
       }
-      createErrorType("ERR_INVALID_OPT_VALUE", function(name, value) {
-        return 'The value "' + value + '" is invalid for option "' + name + '"';
+      createErrorType("ERR_INVALID_OPT_VALUE", function(name2, value) {
+        return 'The value "' + value + '" is invalid for option "' + name2 + '"';
       }, TypeError);
-      createErrorType("ERR_INVALID_ARG_TYPE", function(name, expected, actual) {
+      createErrorType("ERR_INVALID_ARG_TYPE", function(name2, expected, actual) {
         var determiner;
         if (typeof expected === "string" && startsWith(expected, "not ")) {
           determiner = "must not be";
@@ -16293,22 +16293,22 @@
           determiner = "must be";
         }
         var msg;
-        if (endsWith(name, " argument")) {
-          msg = "The ".concat(name, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+        if (endsWith(name2, " argument")) {
+          msg = "The ".concat(name2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         } else {
-          var type = includes(name, ".") ? "property" : "argument";
-          msg = 'The "'.concat(name, '" ').concat(type, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
+          var type2 = includes(name2, ".") ? "property" : "argument";
+          msg = 'The "'.concat(name2, '" ').concat(type2, " ").concat(determiner, " ").concat(oneOf(expected, "type"));
         }
         msg += ". Received type ".concat(typeof actual);
         return msg;
       }, TypeError);
       createErrorType("ERR_STREAM_PUSH_AFTER_EOF", "stream.push() after EOF");
-      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name) {
-        return "The " + name + " method is not implemented";
+      createErrorType("ERR_METHOD_NOT_IMPLEMENTED", function(name2) {
+        return "The " + name2 + " method is not implemented";
       });
       createErrorType("ERR_STREAM_PREMATURE_CLOSE", "Premature close");
-      createErrorType("ERR_STREAM_DESTROYED", function(name) {
-        return "Cannot call " + name + " after a stream was destroyed";
+      createErrorType("ERR_STREAM_DESTROYED", function(name2) {
+        return "Cannot call " + name2 + " after a stream was destroyed";
       });
       createErrorType("ERR_MULTIPLE_CALLBACK", "Callback called multiple times");
       createErrorType("ERR_STREAM_CANNOT_PIPE", "Cannot pipe, not readable");
@@ -16334,8 +16334,8 @@
         var hwm = highWaterMarkFrom(options, isDuplex, duplexKey);
         if (hwm != null) {
           if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
-            var name = isDuplex ? duplexKey : "highWaterMark";
-            throw new ERR_INVALID_OPT_VALUE(name, hwm);
+            var name2 = isDuplex ? duplexKey : "highWaterMark";
+            throw new ERR_INVALID_OPT_VALUE(name2, hwm);
           }
           return Math.floor(hwm);
         }
@@ -17469,8 +17469,8 @@
       var Duplex;
       Readable.ReadableState = ReadableState;
       var EE = require_events().EventEmitter;
-      var EElistenerCount = function EElistenerCount2(emitter, type) {
-        return emitter.listeners(type).length;
+      var EElistenerCount = function EElistenerCount2(emitter, type2) {
+        return emitter.listeners(type2).length;
       };
       var Stream = require_stream_browser3();
       var Buffer2 = require_buffer().Buffer;
@@ -21017,8 +21017,8 @@
           p192: null,
           p25519: null
         };
-        function MPrime(name, p) {
-          this.name = name;
+        function MPrime(name2, p) {
+          this.name = name2;
           this.p = new BN(p, 16);
           this.n = this.p.bitLength();
           this.k = new BN(1).iushln(this.n).isub(this.p);
@@ -21135,22 +21135,22 @@
           }
           return num;
         };
-        BN._prime = function prime(name) {
-          if (primes[name])
-            return primes[name];
+        BN._prime = function prime(name2) {
+          if (primes[name2])
+            return primes[name2];
           var prime2;
-          if (name === "k256") {
+          if (name2 === "k256") {
             prime2 = new K256();
-          } else if (name === "p224") {
+          } else if (name2 === "p224") {
             prime2 = new P224();
-          } else if (name === "p192") {
+          } else if (name2 === "p192") {
             prime2 = new P192();
-          } else if (name === "p25519") {
+          } else if (name2 === "p25519") {
             prime2 = new P25519();
           } else {
-            throw new Error("Unknown prime " + name);
+            throw new Error("Unknown prime " + name2);
           }
-          primes[name] = prime2;
+          primes[name2] = prime2;
           return prime2;
         };
         function Red(m) {
@@ -21644,9 +21644,9 @@
         return jsf;
       }
       utils.getJSF = getJSF;
-      function cachedProperty(obj, name, computer) {
-        var key = "_" + name;
-        obj.prototype[name] = function cachedProperty2() {
+      function cachedProperty(obj, name2, computer) {
+        var key = "_" + name2;
+        obj.prototype[name2] = function cachedProperty2() {
           return this[key] !== void 0 ? this[key] : this[key] = computer.call(this);
         };
       }
@@ -21671,8 +21671,8 @@
       var getNAF = utils.getNAF;
       var getJSF = utils.getJSF;
       var assert = utils.assert;
-      function BaseCurve(type, conf) {
-        this.type = type;
+      function BaseCurve(type2, conf) {
+        this.type = type2;
         this.p = new BN(conf.p, 16);
         this.red = conf.prime ? BN.red(conf.prime) : BN.mont(this.p);
         this.zero = new BN(0).toRed(this.red);
@@ -21866,9 +21866,9 @@
         else
           return acc.toP();
       };
-      function BasePoint(curve, type) {
+      function BasePoint(curve, type2) {
         this.curve = curve;
-        this.type = type;
+        this.type = type2;
         this.precomputed = null;
       }
       BaseCurve.BasePoint = BasePoint;
@@ -25484,13 +25484,13 @@
         assert(this.g.mul(this.n).isInfinity(), "Invalid curve, G*N != O");
       }
       curves.PresetCurve = PresetCurve;
-      function defineCurve(name, options) {
-        Object.defineProperty(curves, name, {
+      function defineCurve(name2, options) {
+        Object.defineProperty(curves, name2, {
           configurable: true,
           enumerable: true,
           get: function() {
             var curve2 = new PresetCurve(options);
-            Object.defineProperty(curves, name, {
+            Object.defineProperty(curves, name2, {
               configurable: true,
               enumerable: true,
               value: curve2
@@ -28895,8 +28895,8 @@
           p192: null,
           p25519: null
         };
-        function MPrime(name, p) {
-          this.name = name;
+        function MPrime(name2, p) {
+          this.name = name2;
           this.p = new BN(p, 16);
           this.n = this.p.bitLength();
           this.k = new BN(1).iushln(this.n).isub(this.p);
@@ -29013,22 +29013,22 @@
           }
           return num;
         };
-        BN._prime = function prime(name) {
-          if (primes[name])
-            return primes[name];
+        BN._prime = function prime(name2) {
+          if (primes[name2])
+            return primes[name2];
           var prime2;
-          if (name === "k256") {
+          if (name2 === "k256") {
             prime2 = new K256();
-          } else if (name === "p224") {
+          } else if (name2 === "p224") {
             prime2 = new P224();
-          } else if (name === "p192") {
+          } else if (name2 === "p192") {
             prime2 = new P192();
-          } else if (name === "p25519") {
+          } else if (name2 === "p25519") {
             prime2 = new P25519();
           } else {
-            throw new Error("Unknown prime " + name);
+            throw new Error("Unknown prime " + name2);
           }
-          primes[name] = prime2;
+          primes[name2] = prime2;
           return prime2;
         };
         function Red(m) {
@@ -29636,10 +29636,10 @@
         "_encodeInt",
         "_encodeBool"
       ];
-      function Node(enc, parent, name) {
+      function Node(enc, parent, name2) {
         const state = {};
         this._baseState = state;
-        state.name = name;
+        state.name = name2;
         state.enc = enc;
         state.parent = parent || null;
         state.children = null;
@@ -30744,23 +30744,23 @@
       var decoders = require_decoders();
       var inherits = require_inherits_browser();
       var api = exports;
-      api.define = function define2(name, body) {
-        return new Entity(name, body);
+      api.define = function define2(name2, body) {
+        return new Entity(name2, body);
       };
-      function Entity(name, body) {
-        this.name = name;
+      function Entity(name2, body) {
+        this.name = name2;
         this.body = body;
         this.decoders = {};
         this.encoders = {};
       }
       Entity.prototype._createNamed = function createNamed(Base) {
-        const name = this.name;
+        const name2 = this.name;
         function Generated(entity) {
-          this._initNamed(entity, name);
+          this._initNamed(entity, name2);
         }
         inherits(Generated, Base);
-        Generated.prototype._initNamed = function _initNamed(entity, name2) {
-          Base.call(this, entity, name2);
+        Generated.prototype._initNamed = function _initNamed(entity, name3) {
+          Base.call(this, entity, name3);
         };
         return new Generated(this);
       };
@@ -31004,10 +31004,10 @@
           buffer = Buffer2.from(buffer);
         }
         var stripped = fixProc(buffer, password);
-        var type = stripped.tag;
+        var type2 = stripped.tag;
         var data = stripped.data;
         var subtype, ndata;
-        switch (type) {
+        switch (type2) {
           case "CERTIFICATE":
             ndata = asn1.certificate.decode(data, "der").tbsCertificate.subjectPublicKeyInfo;
           case "PUBLIC KEY":
@@ -31072,7 +31072,7 @@
               privateKey: data.privateKey
             };
           default:
-            throw new Error("unknown key type " + type);
+            throw new Error("unknown key type " + type2);
         }
       }
       parseKeys.signature = asn1.signature;
@@ -34067,13 +34067,13 @@
           }, fn);
         }
         var deprecations = {};
-        function deprecateSimple(name, msg) {
+        function deprecateSimple(name2, msg) {
           if (hooks.deprecationHandler != null) {
-            hooks.deprecationHandler(name, msg);
+            hooks.deprecationHandler(name2, msg);
           }
-          if (!deprecations[name]) {
+          if (!deprecations[name2]) {
             warn(msg);
-            deprecations[name] = true;
+            deprecations[name2] = true;
           }
         }
         hooks.suppressDeprecationWarnings = false;
@@ -35206,19 +35206,19 @@
           }
           return globalLocale;
         }
-        function loadLocale(name) {
+        function loadLocale(name2) {
           var oldLocale = null, aliasedRequire;
-          if (locales[name] === void 0 && typeof module !== "undefined" && module && module.exports) {
+          if (locales[name2] === void 0 && typeof module !== "undefined" && module && module.exports) {
             try {
               oldLocale = globalLocale._abbr;
               aliasedRequire = __require;
-              aliasedRequire("./locale/" + name);
+              aliasedRequire("./locale/" + name2);
               getSetGlobalLocale(oldLocale);
             } catch (e) {
-              locales[name] = null;
+              locales[name2] = null;
             }
           }
-          return locales[name];
+          return locales[name2];
         }
         function getSetGlobalLocale(key, values) {
           var data;
@@ -35238,13 +35238,13 @@
           }
           return globalLocale._abbr;
         }
-        function defineLocale(name, config) {
+        function defineLocale(name2, config) {
           if (config !== null) {
             var locale2, parentConfig = baseConfig;
-            config.abbr = name;
-            if (locales[name] != null) {
+            config.abbr = name2;
+            if (locales[name2] != null) {
               deprecateSimple("defineLocaleOverride", "use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info.");
-              parentConfig = locales[name]._config;
+              parentConfig = locales[name2]._config;
             } else if (config.parentLocale != null) {
               if (locales[config.parentLocale] != null) {
                 parentConfig = locales[config.parentLocale]._config;
@@ -35257,58 +35257,58 @@
                     localeFamilies[config.parentLocale] = [];
                   }
                   localeFamilies[config.parentLocale].push({
-                    name,
+                    name: name2,
                     config
                   });
                   return null;
                 }
               }
             }
-            locales[name] = new Locale(mergeConfigs(parentConfig, config));
-            if (localeFamilies[name]) {
-              localeFamilies[name].forEach(function(x) {
+            locales[name2] = new Locale(mergeConfigs(parentConfig, config));
+            if (localeFamilies[name2]) {
+              localeFamilies[name2].forEach(function(x) {
                 defineLocale(x.name, x.config);
               });
             }
-            getSetGlobalLocale(name);
-            return locales[name];
+            getSetGlobalLocale(name2);
+            return locales[name2];
           } else {
-            delete locales[name];
+            delete locales[name2];
             return null;
           }
         }
-        function updateLocale(name, config) {
+        function updateLocale(name2, config) {
           if (config != null) {
             var locale2, tmpLocale, parentConfig = baseConfig;
-            if (locales[name] != null && locales[name].parentLocale != null) {
-              locales[name].set(mergeConfigs(locales[name]._config, config));
+            if (locales[name2] != null && locales[name2].parentLocale != null) {
+              locales[name2].set(mergeConfigs(locales[name2]._config, config));
             } else {
-              tmpLocale = loadLocale(name);
+              tmpLocale = loadLocale(name2);
               if (tmpLocale != null) {
                 parentConfig = tmpLocale._config;
               }
               config = mergeConfigs(parentConfig, config);
               if (tmpLocale == null) {
-                config.abbr = name;
+                config.abbr = name2;
               }
               locale2 = new Locale(config);
-              locale2.parentLocale = locales[name];
-              locales[name] = locale2;
+              locale2.parentLocale = locales[name2];
+              locales[name2] = locale2;
             }
-            getSetGlobalLocale(name);
+            getSetGlobalLocale(name2);
           } else {
-            if (locales[name] != null) {
-              if (locales[name].parentLocale != null) {
-                locales[name] = locales[name].parentLocale;
-                if (name === getSetGlobalLocale()) {
-                  getSetGlobalLocale(name);
+            if (locales[name2] != null) {
+              if (locales[name2].parentLocale != null) {
+                locales[name2] = locales[name2].parentLocale;
+                if (name2 === getSetGlobalLocale()) {
+                  getSetGlobalLocale(name2);
                 }
-              } else if (locales[name] != null) {
-                delete locales[name];
+              } else if (locales[name2] != null) {
+                delete locales[name2];
               }
             }
           }
-          return locales[name];
+          return locales[name2];
         }
         function getLocale(key) {
           var locale2;
@@ -36166,11 +36166,11 @@
           }
           return res;
         }
-        function createAdder(direction, name) {
+        function createAdder(direction, name2) {
           return function(val, period) {
             var dur, tmp;
             if (period !== null && !isNaN(+period)) {
-              deprecateSimple(name, "moment()." + name + "(period, number) is deprecated. Please use moment()." + name + "(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info.");
+              deprecateSimple(name2, "moment()." + name2 + "(period, number) is deprecated. Please use moment()." + name2 + "(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info.");
               tmp = val;
               val = period;
               period = tmp;
@@ -36699,10 +36699,10 @@
           return eras;
         }
         function localeErasParse(eraName, format2, strict) {
-          var i, l, eras = this.eras(), name, abbr, narrow;
+          var i, l, eras = this.eras(), name2, abbr, narrow;
           eraName = eraName.toUpperCase();
           for (i = 0, l = eras.length; i < l; ++i) {
-            name = eras[i].name.toUpperCase();
+            name2 = eras[i].name.toUpperCase();
             abbr = eras[i].abbr.toUpperCase();
             narrow = eras[i].narrow.toUpperCase();
             if (strict) {
@@ -36715,7 +36715,7 @@
                   }
                   break;
                 case "NNNN":
-                  if (name === eraName) {
+                  if (name2 === eraName) {
                     return eras[i];
                   }
                   break;
@@ -36725,7 +36725,7 @@
                   }
                   break;
               }
-            } else if ([name, abbr, narrow].indexOf(eraName) >= 0) {
+            } else if ([name2, abbr, narrow].indexOf(eraName) >= 0) {
               return eras[i];
             }
           }
@@ -37338,9 +37338,9 @@
           units = normalizeUnits(units);
           return this.isValid() ? this[units + "s"]() : NaN;
         }
-        function makeGetter(name) {
+        function makeGetter(name2) {
           return function() {
-            return this.isValid() ? this._data[name] : NaN;
+            return this.isValid() ? this._data[name2] : NaN;
           };
         }
         var milliseconds = makeGetter("milliseconds"), seconds = makeGetter("seconds"), minutes = makeGetter("minutes"), hours = makeGetter("hours"), days = makeGetter("days"), months = makeGetter("months"), years = makeGetter("years");
@@ -37706,9 +37706,9 @@
     MetadataStorage2.prototype.findExposeMetadata = function(target, propertyName) {
       return this.findMetadata(this._exposeMetadatas, target, propertyName);
     };
-    MetadataStorage2.prototype.findExposeMetadataByCustomName = function(target, name) {
+    MetadataStorage2.prototype.findExposeMetadataByCustomName = function(target, name2) {
       return this.getExposedMetadatas(target).find(function(metadata) {
-        return metadata.options && metadata.options.name === name;
+        return metadata.options && metadata.options.name === name2;
       });
     };
     MetadataStorage2.prototype.findTypeMetadata = function(target, propertyName) {
@@ -39169,10 +39169,10 @@
     }
   };
   var _PlaintextBallot = class {
-    constructor(object_id, style_id, contests) {
+    constructor(object_id, style_id, contests2) {
       this.object_id = object_id;
       this.style_id = style_id;
-      this.contests = contests;
+      this.contests = contests2;
     }
     is_valid(expected_ballot_style_id) {
       if (this.style_id !== expected_ballot_style_id) {
@@ -39280,13 +39280,13 @@
     Type(() => ExtendedData)
   ], PlaintextBallotSelection.prototype, "extended_data", 2);
   var CiphertextBallot = class extends CryptoHashCheckable {
-    constructor(ballot_id, style_id, manifest_hash, code_seed, contests, code, timestamp, crypto_hash, nonce) {
+    constructor(ballot_id, style_id, manifest_hash, code_seed, contests2, code, timestamp, crypto_hash, nonce) {
       super();
       this.object_id = ballot_id;
       this.style_id = style_id;
       this.manifest_hash = manifest_hash;
       this.code_seed = code_seed;
-      this.contests = contests;
+      this.contests = contests2;
       this.code = code;
       this.timestamp = timestamp;
       this.crypto_hash = crypto_hash;
@@ -39552,11 +39552,11 @@
     }
     return new CiphertextBallotContest(object_id, sequence_order, description_hash, ballot_selections, elgamal_accumulation, crypto_hash, nonce, proof);
   }
-  function make_ciphertext_ballot(object_id, style_id, manifest_hash, contests, code_seed, nonce, timestamp, ballot_code) {
-    if (contests.length === 0) {
+  function make_ciphertext_ballot(object_id, style_id, manifest_hash, contests2, code_seed, nonce, timestamp, ballot_code) {
+    if (contests2.length === 0) {
       console.log("ciphertext ballot with no contests");
     }
-    const contest_hash = create_ballot_hash(object_id, manifest_hash, contests);
+    const contest_hash = create_ballot_hash(object_id, manifest_hash, contests2);
     timestamp = 1635015400;
     if (code_seed === void 0) {
       code_seed = manifest_hash;
@@ -39564,7 +39564,7 @@
     if (ballot_code === void 0) {
       ballot_code = get_ballot_code(code_seed, timestamp, contest_hash);
     }
-    return new CiphertextBallot(object_id, style_id, manifest_hash, code_seed, contests, ballot_code, timestamp, contest_hash, nonce);
+    return new CiphertextBallot(object_id, style_id, manifest_hash, code_seed, contests2, ballot_code, timestamp, contest_hash, nonce);
   }
   function get_ballot_code(prev_code, timestamp, ballot_hash) {
     return hash_elems([prev_code, timestamp, ballot_hash]);
@@ -39662,8 +39662,8 @@
     }
     return encrypted_ballot;
   }
-  function create_ballot_hash(ballot_id, description_hash, contests) {
-    const contests_hash = sequence_order_sort(contests).map((contest) => contest.crypto_hash);
+  function create_ballot_hash(ballot_id, description_hash, contests2) {
+    const contests_hash = sequence_order_sort(contests2).map((contest) => contest.crypto_hash);
     return hash_elems([ballot_id, description_hash, ...contests_hash]);
   }
 
@@ -39854,7 +39854,7 @@
     Type(() => Language)
   ], InternationalizedText.prototype, "text", 2);
   var ContactInformation = class extends CryptoHashable {
-    constructor(address_line, email, phone, name) {
+    constructor(address_line, email, phone, name2) {
       super();
       this.address_line = void 0;
       this.email = void 0;
@@ -39863,7 +39863,7 @@
       this.address_line = address_line;
       this.email = email;
       this.phone = phone;
-      this.name = name;
+      this.name = name2;
     }
     crypto_hash() {
       return hash_elems([this.name, this.address_line, this.email, this.phone]);
@@ -39876,13 +39876,13 @@
     Type(() => AnnotatedString)
   ], ContactInformation.prototype, "phone", 2);
   var GeopoliticalUnit = class extends CryptoHashable {
-    constructor(object_id, name, type, contact_information) {
+    constructor(object_id, name2, type2, contact_information2) {
       super();
       this.contact_information = void 0;
       this.object_id = object_id;
-      this.name = name;
-      this.type = type;
-      this.contact_information = contact_information;
+      this.name = name2;
+      this.type = type2;
+      this.contact_information = contact_information2;
     }
     crypto_hash() {
       return hash_elems([this.object_id, this.name, this.type.toString(), this.contact_information]);
@@ -39910,14 +39910,14 @@
     }
   };
   var Party = class extends CryptoHashable {
-    constructor(object_id, name, abbreviation, color, logo_uri) {
+    constructor(object_id, name2, abbreviation, color, logo_uri) {
       super();
       this.name = new InternationalizedText();
       this.abbreviation = void 0;
       this.color = void 0;
       this.logo_uri = void 0;
       this.object_id = object_id;
-      this.name = name;
+      this.name = name2;
       this.abbreviation = abbreviation;
       this.color = color;
       this.logo_uri = logo_uri;
@@ -39933,14 +39933,14 @@
     Type(() => InternationalizedText)
   ], Party.prototype, "name", 2);
   var Candidate = class extends CryptoHashable {
-    constructor(object_id, name, party_id, image_uri, is_write_in) {
+    constructor(object_id, name2, party_id, image_uri, is_write_in) {
       super();
       this.name = new InternationalizedText();
       this.party_id = void 0;
       this.image_uri = void 0;
       this.is_write_in = void 0;
       this.object_id = object_id;
-      this.name = name;
+      this.name = name2;
       this.party_id = party_id;
       this.image_uri = image_uri;
       this.is_write_in = is_write_in;
@@ -39967,7 +39967,7 @@
     }
   };
   var ContestDescription = class extends CryptoHashable {
-    constructor(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name, ballot_selections, votes_allowed, ballot_title, ballot_subtitle) {
+    constructor(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name2, ballot_selections, votes_allowed, ballot_title, ballot_subtitle) {
       super();
       this.ballot_selections = [];
       this.ballot_title = void 0;
@@ -39978,7 +39978,7 @@
       this.vote_variation = vote_variation;
       this.number_elected = number_elected;
       this.votes_allowed = votes_allowed;
-      this.name = name;
+      this.name = name2;
       this.ballot_selections = ballot_selections;
       this.ballot_title = ballot_title;
       this.ballot_subtitle = ballot_subtitle;
@@ -40038,8 +40038,8 @@
     Type(() => InternationalizedText)
   ], ContestDescription.prototype, "ballot_subtitle", 2);
   var ContestDescriptionWithPlaceholders = class extends ContestDescription {
-    constructor(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name, ballot_selections, placeholder_selections, votes_allowed, ballot_title, ballot_subtitle) {
-      super(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name, ballot_selections, votes_allowed, ballot_title, ballot_subtitle);
+    constructor(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name2, ballot_selections, placeholder_selections, votes_allowed, ballot_title, ballot_subtitle) {
+      super(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name2, ballot_selections, votes_allowed, ballot_title, ballot_subtitle);
       this.placeholder_selections = [];
       this.placeholder_selections = placeholder_selections;
     }
@@ -40066,33 +40066,33 @@
     Type(() => SelectionDescription)
   ], ContestDescriptionWithPlaceholders.prototype, "placeholder_selections", 2);
   var Manifest = class extends CryptoHashable {
-    constructor(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contact_information) {
+    constructor(election_scope_id2, spec_version2, type2, start_date2, end_date2, geopolitical_units2, parties2, candidates2, contests2, ballot_styles2, name2, contact_information2) {
       super();
       this.name = void 0;
       this.contact_information = void 0;
-      this.election_scope_id = election_scope_id;
-      this.spec_version = spec_version;
-      this.type = type;
-      this.start_date = start_date;
-      this.end_date = end_date;
-      this.geopolitical_units = geopolitical_units;
-      this.parties = parties;
-      this.candidates = candidates;
-      this.contests = contests;
-      this.ballot_styles = ballot_styles;
-      this.name = name;
-      this.contact_information = contact_information;
+      this.election_scope_id = election_scope_id2;
+      this.spec_version = spec_version2;
+      this.type = type2;
+      this.start_date = start_date2;
+      this.end_date = end_date2;
+      this.geopolitical_units = geopolitical_units2;
+      this.parties = parties2;
+      this.candidates = candidates2;
+      this.contests = contests2;
+      this.ballot_styles = ballot_styles2;
+      this.name = name2;
+      this.contact_information = contact_information2;
     }
     crypto_hash() {
-      let start_date = (0, import_moment.default)(this.start_date).format();
-      start_date = start_date.slice(0, start_date.length - 6) + "Z";
-      let end_date = (0, import_moment.default)(this.end_date).format();
-      end_date = end_date.slice(0, end_date.length - 6) + "Z";
+      let start_date2 = (0, import_moment.default)(this.start_date).format();
+      start_date2 = start_date2.slice(0, start_date2.length - 6) + "Z";
+      let end_date2 = (0, import_moment.default)(this.end_date).format();
+      end_date2 = end_date2.slice(0, end_date2.length - 6) + "Z";
       return hash_elems([
         this.election_scope_id,
         this.type.toString(),
-        start_date,
-        end_date,
+        start_date2,
+        end_date2,
         this.name,
         this.contact_information,
         this.geopolitical_units,
@@ -40163,12 +40163,12 @@
       return this.contests.filter((contest) => gp_unit_ids.includes(contest.electoral_district_id));
     }
     static _generate_contests_with_placeholders(manifest) {
-      const contests = [];
+      const contests2 = [];
       for (const contest of manifest.contests) {
         const placeholder_selections = generate_placeholder_selections_from(contest, contest.number_elected);
-        contests.push(contest_description_with_placeholders_from(contest, placeholder_selections));
+        contests2.push(contest_description_with_placeholders_from(contest, placeholder_selections));
       }
-      return contests;
+      return contests2;
     }
   };
   var InternalManifest = _InternalManifest;
@@ -40210,35 +40210,10 @@
     return selections;
   }
 
-  // src/API/APIUtils.ts
-  function encryptBallot_ballotOut(inputBallot, manifest) {
-    const ballot = ballot2PlainTextBallot(inputBallot);
-    const internalManifest = new InternalManifest(manifest);
-    const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce = new ElementModQ2(BigInt("40358"));
-    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
-    console.log("before encrypt_ballot!");
-    console.log(ballot);
-    const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    return encrypted_ballot;
-  }
-  function encryptBallot(inputBallot, manifest) {
-    const ballot = ballot2PlainTextBallot(inputBallot);
-    console.log(ballot);
-    const internalManifest = new InternalManifest(manifest);
-    const context = ballot2Context(inputBallot, internalManifest);
-    const seed_nonce = new ElementModQ2(BigInt("40358"));
-    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
-    const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-<<<<<<< HEAD
-=======
-    console.log("plaintextballot");
-    console.log(ballot);
-    console.log("encrypted_ballot");
-    console.log(encrypted_ballot);
-    console.log("internal manifest");
-    console.log(internalManifest);
-    download(JSON.stringify(ballot, (key, value) => {
+  // src/serialization_browser.ts
+  var deserialize_toHex_banlist = ["timestamp"];
+  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
+    return JSON.stringify(encrypted_ballot, (key, value) => {
       if (typeof value === "bigint") {
         return value.toString();
       } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
@@ -40247,7 +40222,26 @@
         return value == false ? "00" : "01";
       }
       return value;
-    }, "	"), "plaintext_ballot.json", "text/plain");
+    }, "	");
+  }
+
+  // src/API/APIUtils.ts
+  function encryptBallot_ballotOut(inputBallot, manifest) {
+    const ballot = ballot2PlainTextBallot(inputBallot);
+    const internalManifest = new InternalManifest(manifest);
+    const context = ballot2Context(inputBallot, internalManifest);
+    const seed_nonce = new ElementModQ2(BigInt("40358"));
+    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
+    const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
+    return encrypted_ballot;
+  }
+  function encryptBallot(inputBallot, manifest) {
+    const ballot = ballot2PlainTextBallot(inputBallot);
+    const internalManifest = new InternalManifest(manifest);
+    const context = ballot2Context(inputBallot, internalManifest);
+    const seed_nonce = new ElementModQ2(BigInt("40358"));
+    const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
+    const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
     download(JSON.stringify(encrypted_ballot, (key, value) => {
       if (typeof value === "bigint") {
         return value.toString();
@@ -40258,7 +40252,6 @@
       }
       return value;
     }, "	"), "encrypted_ballot.json", "text/plain");
->>>>>>> 99aa78f9117bb822d8c28a626744bad4939e993b
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
   }
   function getQRCode(strs) {
@@ -40289,7 +40282,9 @@
   function ballotItem2Selection(ballotItem) {
     let plainTextSelections = [];
     ballotItem.ballotOptions.forEach((ballotOption) => {
-      plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected ? 1 : 0, false)];
+      if (ballotOption.selected) {
+        plainTextSelections = [new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected ? 1 : 0, false)];
+      }
     });
     return plainTextSelections;
   }
@@ -40309,7 +40304,7 @@
     return make_ciphertext_election_context(number_of_guardians, quorum, elgamal_public_key, commitment_hash, manifest_hash, extended_data);
   }
   function buildBallot(ballot) {
-    let contests = [];
+    let contests2 = [];
     for (let i = 0; i < ballot.ballotItems.length; i++) {
       let ballotOptions = [];
       for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
@@ -40317,87 +40312,85 @@
         ballotOptions = [...ballotOptions, ballotOption];
       }
       const contest = new BallotItem(ballot.ballotItems[i].id, ballot.ballotItems[i].order, ballotOptions);
-      contests = [...contests, contest];
+      contests2 = [...contests2, contest];
     }
-    const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests);
+    const electionBallot = new Ballot(ballot.id, ballot.electionName[0].text, contests2);
     return electionBallot;
   }
-  function buildManifest(ballot) {
-    const election_scope_id = ballot.electionName[0].text;
-    const spec_version = "spec_version";
-    const type = ElectionType.unknown;
-    const start_date = new Date(ballot.text1[0].text);
-    const end_date = new Date(ballot.text1[0].text);
-    let geopolitical_units = [];
-    let parties = [];
-    let candidates = [];
-    let contests = [];
-    let ballot_styles = [];
-    const language = new Language(ballot.electionName[0].text, "en");
+  function buildManifest(manifest) {
+    const election_scope_id2 = manifest.election_scope_id;
+    const spec_version2 = manifest.spec_version;
+    const type2 = ElectionType.unknown;
+    const start_date2 = manifest.start_date;
+    const end_date2 = manifest.end_date;
+    let geopolitical_units2 = [];
+    let parties2 = [];
+    let candidates2 = [];
+    let contests2 = [];
+    let ballot_styles2 = [];
+    const language = new Language(manifest.name.text[0].value, "en");
     const interText = new InternationalizedText([language]);
-    const name = interText;
+    const name2 = interText;
     const emailAnnotation = new AnnotatedString("office", "a@b.c");
     const phoneAnnotation = new AnnotatedString("office", "111-111-1111");
     const contactInfo = new ContactInformation(["6100 Main St, Houston, TX"], [emailAnnotation], [phoneAnnotation], "Rice University");
-    geopolitical_units = buildGeopoliticalUnit(ballot);
-    parties = buildParty(ballot);
-    candidates = buildCandidate(ballot);
-    contests = buildContest(ballot);
-    ballot_styles = buildBallotStyle(ballot);
-    return new Manifest(election_scope_id, spec_version, type, start_date, end_date, geopolitical_units, parties, candidates, contests, ballot_styles, name, contactInfo);
+    geopolitical_units2 = buildGeopoliticalUnit(manifest);
+    parties2 = buildParty(manifest);
+    candidates2 = buildCandidate(manifest);
+    contests2 = buildContest(manifest);
+    ballot_styles2 = buildBallotStyle(manifest);
+    return new Manifest(election_scope_id2, spec_version2, type2, start_date2, end_date2, geopolitical_units2, parties2, candidates2, contests2, ballot_styles2, name2, contactInfo);
   }
-  function buildGeopoliticalUnit(ballot) {
-    const object_id = ballot.precinctId;
-    const name = ballot.precinctName;
-    const type = ReportingUnitType.precinct;
-    return [new GeopoliticalUnit(object_id, name, type)];
+  function buildGeopoliticalUnit(manifest) {
+    const object_id = manifest.geopolitical_units[0].object_id;
+    const name2 = manifest.geopolitical_units[0].name;
+    const type2 = ReportingUnitType.precinct;
+    return [new GeopoliticalUnit(object_id, name2, type2)];
   }
-  function buildParty(ballot) {
-    const object_id = ballot.partyId;
-    const languageName = new Language(ballot.partyName[0].text, "en");
-    const name = new InternationalizedText([languageName]);
-    return [new Party(object_id, name)];
+  function buildParty(manifest) {
+    const object_id = manifest.parties[0].object_id;
+    const languageName = new Language(manifest.parties[0].name.text[0].value, "en");
+    const name2 = new InternationalizedText([languageName]);
+    return [new Party(object_id, name2)];
   }
-  function buildCandidate(ballot) {
-    const candidates = [];
-    for (let i = 0; i < ballot.ballotItems.length; i++) {
-      for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-        const object_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
-        const candidateName = new Language(ballot.ballotItems[i].ballotOptions[j].title[0].text, "en");
-        const name = new InternationalizedText([candidateName]);
-        const candidate = new Candidate(object_id, name);
-        candidates.push(candidate);
-      }
+  function buildCandidate(manifest) {
+    const candidates2 = [];
+    for (let i = 0; i < manifest.candidates.length; i++) {
+      const object_id = manifest.candidates[i].object_id;
+      const candidateName = new Language(manifest.candidates[i].name.text[0].value, "en");
+      const name2 = new InternationalizedText([candidateName]);
+      const candidate = new Candidate(object_id, name2);
+      candidates2.push(candidate);
     }
-    return candidates;
+    return candidates2;
   }
-  function buildContest(ballot) {
+  function buildContest(manifest) {
     const descriptions = [];
-    for (let i = 0; i < ballot.ballotItems.length; i++) {
-      const object_id = ballot.ballotItems[i].id;
-      const sequence_order = ballot.ballotItems[i].order;
-      const electoral_district_id = ballot.precinctId;
+    for (let i = 0; i < manifest.contests.length; i++) {
+      const object_id = manifest.contests[i].object_id;
+      const sequence_order = manifest.contests[i].sequence_order;
+      const electoral_district_id = manifest.contests[i].electoral_district_id;
       const vote_variation = VoteVariationType.unknown;
-      const number_elected = 0;
-      const votes_allowed = 1;
-      const name = ballot.ballotItems[i].title[0].text;
+      const number_elected = manifest.contests[i].number_elected;
+      const votes_allowed = manifest.contests[i].votes_allowed;
+      const name2 = manifest.contests[i].name;
       const ballot_selections = [];
-      for (let j = 0; j < ballot.ballotItems[i].ballotOptions.length; j++) {
-        const option_object_id = ballot.ballotItems[i].ballotOptions[j].id;
-        const option_sequence_order = ballot.ballotItems[i].ballotOptions[j].order;
-        const option_candidate_id = ballot.ballotItems[i].ballotOptions[j].title[0].text;
+      for (let j = 0; j < manifest.contests[i].ballot_selections.length; j++) {
+        const option_object_id = manifest.contests[i].ballot_selections[j].object_id;
+        const option_sequence_order = manifest.contests[i].ballot_selections[j].sequence_order;
+        const option_candidate_id = manifest.contests[i].ballot_selections[j].candidate_id;
         const selection = new SelectionDescription(option_object_id, option_sequence_order, option_candidate_id);
         ballot_selections.push(selection);
       }
-      const description = new ContestDescription(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name, ballot_selections, votes_allowed, void 0, void 0);
+      const description = new ContestDescription(object_id, sequence_order, electoral_district_id, vote_variation, number_elected, name2, ballot_selections, votes_allowed, void 0, void 0);
       descriptions.push(description);
     }
     return descriptions;
   }
-  function buildBallotStyle(ballot) {
-    const object_id = ballot.electionName[0].text;
-    const geopolitical_unit_ids = [ballot.precinctId];
-    const party_ids = [ballot.partyId];
+  function buildBallotStyle(manifest) {
+    const object_id = manifest.ballot_styles[0].object_id;
+    const geopolitical_unit_ids = [manifest.ballot_styles[0].geopolitical_unit_ids[0]];
+    const party_ids = [manifest.ballot_styles[0].party_ids[0]];
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
   }
 
@@ -40473,7 +40466,7 @@
   var ballotItems = [
     {
       id: "0a0ea028-46f9-4454-a89d-41602bb6a2e4",
-      order: 1,
+      order: 0,
       type: 1,
       title: [
         {
@@ -40529,7 +40522,7 @@
       ballotOptions: [
         {
           id: "6d6e2d5e-6b01-453e-aae1-009be8d032cf",
-          order: 1,
+          order: 0,
           type: 1,
           title: [
             {
@@ -40568,7 +40561,7 @@
         },
         {
           id: "f397cb9c-0b18-4674-b581-fadf9bb11ce4",
-          order: 2,
+          order: 1,
           type: 1,
           title: [
             {
@@ -40607,7 +40600,7 @@
         },
         {
           id: "8e05c23e-0c30-4672-96a5-07c7ec42c519",
-          order: 3,
+          order: 2,
           type: 1,
           title: [
             {
@@ -40646,7 +40639,7 @@
         },
         {
           id: "8e05c23e-0c30-4672-96a5-07c7ec42c569",
-          order: 4,
+          order: 3,
           type: 1,
           title: [
             {
@@ -40689,7 +40682,7 @@
     },
     {
       id: "84a2e49c-afd6-4952-ae2a-f5daba6ebd6a",
-      order: 6,
+      order: 1,
       type: 1,
       title: [
         {
@@ -40745,7 +40738,7 @@
       ballotOptions: [
         {
           id: "a8670ebc-fd9b-41ff-a7e6-9ac34761b006",
-          order: 1,
+          order: 0,
           type: 1,
           title: [
             {
@@ -40784,7 +40777,7 @@
         },
         {
           id: "c6d0c0e8-3c7d-405a-8d22-8ea6af76433b",
-          order: 2,
+          order: 1,
           type: 1,
           title: [
             {
@@ -40823,7 +40816,7 @@
         },
         {
           id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696628",
-          order: 3,
+          order: 2,
           type: 1,
           title: [
             {
@@ -40862,7 +40855,7 @@
         },
         {
           id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696629",
-          order: 4,
+          order: 3,
           type: 1,
           title: [
             {
@@ -40905,7 +40898,7 @@
     },
     {
       id: "206f6ed4-8bbc-42e7-b206-5471ef811602",
-      order: 25,
+      order: 2,
       type: 1,
       title: [
         {
@@ -40961,7 +40954,7 @@
       ballotOptions: [
         {
           id: "d8eda7e1-a771-4e7a-993d-578b0da8293a",
-          order: 1,
+          order: 0,
           type: 1,
           title: [
             {
@@ -41000,7 +40993,7 @@
         },
         {
           id: "7612c57f-ff13-46c7-85b4-0d22be11bea1",
-          order: 2,
+          order: 1,
           type: 1,
           title: [
             {
@@ -41078,7 +41071,7 @@
         },
         {
           id: "7612c57f-ff13-46c7-85b4-0d22be11bez5",
-          order: 2,
+          order: 3,
           type: 1,
           title: [
             {
@@ -41121,7 +41114,7 @@
     },
     {
       id: "35652684-a91f-4507-90a8-965076a89acb",
-      order: 28,
+      order: 3,
       type: 1,
       title: [
         {
@@ -41177,7 +41170,7 @@
       ballotOptions: [
         {
           id: "95825d9d-7a52-4632-a401-40ea3a3d910a",
-          order: 1,
+          order: 0,
           type: 1,
           title: [
             {
@@ -41216,7 +41209,7 @@
         },
         {
           id: "d21fdac7-fd1f-440f-9a2c-184292811e30",
-          order: 2,
+          order: 1,
           type: 1,
           title: [
             {
@@ -41255,7 +41248,7 @@
         },
         {
           id: "743599b8-304c-4179-955d-1519d82ad229",
-          order: 3,
+          order: 2,
           type: 1,
           title: [
             {
@@ -41294,7 +41287,7 @@
         },
         {
           id: "26661225-9d20-40c1-947f-ea4532df7eb5",
-          order: 4,
+          order: 3,
           type: 1,
           title: [
             {
@@ -41357,20 +41350,403 @@
     ballotImages
   };
 
-  // src/serialization_browser.ts
-  var deserialize_toHex_banlist = ["timestamp"];
-  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
-    return JSON.stringify(encrypted_ballot, (key, value) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(10);
-      } else if (typeof value === "boolean") {
-        return value == false ? "00" : "01";
+  // src/DemoBallot/election_manifest_simple.json
+  var election_manifest_simple_exports = {};
+  __export(election_manifest_simple_exports, {
+    ballot_styles: () => ballot_styles,
+    candidates: () => candidates,
+    contact_information: () => contact_information,
+    contests: () => contests,
+    default: () => election_manifest_simple_default,
+    election_scope_id: () => election_scope_id,
+    end_date: () => end_date,
+    geopolitical_units: () => geopolitical_units,
+    name: () => name,
+    parties: () => parties,
+    spec_version: () => spec_version,
+    start_date: () => start_date,
+    type: () => type
+  });
+  var name = {
+    text: [
+      {
+        language: "en",
+        value: "2021 COMP 413 FINAL DEMO ELECTION"
       }
-      return value;
-    }, "	");
-  }
+    ]
+  };
+  var contact_information = {
+    address_line: [
+      "6100 Main St, Houston, TX"
+    ],
+    email: [
+      {
+        annotation: "office",
+        value: "a@b.c"
+      }
+    ],
+    phone: [
+      {
+        annotation: "office",
+        value: "111-111-1111"
+      }
+    ],
+    name: "Rice University"
+  };
+  var election_scope_id = "2021 COMP 413 FINAL DEMO ELECTION";
+  var spec_version = "spec_version";
+  var type = "unknown";
+  var start_date = "2000-01-01T00:00:00";
+  var end_date = "2000-01-01T00:00:00";
+  var geopolitical_units = [
+    {
+      object_id: "rice-university",
+      name: "RICE UNIVERSITY",
+      type: "precinct"
+    }
+  ];
+  var parties = [
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "RICE UNIVERSITY COMP 413"
+          }
+        ]
+      },
+      object_id: "rice-university-comp-413"
+    }
+  ];
+  var candidates = [
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Luay Nakhleh"
+          }
+        ]
+      },
+      object_id: "6d6e2d5e-6b01-453e-aae1-009be8d032cf"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Dan Wallach"
+          }
+        ]
+      },
+      object_id: "f397cb9c-0b18-4674-b581-fadf9bb11ce4"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Scott Rixner"
+          }
+        ]
+      },
+      object_id: "8e05c23e-0c30-4672-96a5-07c7ec42c519"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Write In"
+          }
+        ]
+      },
+      object_id: "8e05c23e-0c30-4672-96a5-07c7ec42c569"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "RICE UNIVERSITY"
+          }
+        ]
+      },
+      object_id: "a8670ebc-fd9b-41ff-a7e6-9ac34761b006"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "UT Austin"
+          }
+        ]
+      },
+      object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af76433b"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "UH"
+          }
+        ]
+      },
+      object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696628"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Write In"
+          }
+        ]
+      },
+      object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696629"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "CS"
+          }
+        ]
+      },
+      object_id: "d8eda7e1-a771-4e7a-993d-578b0da8293a"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "ECE"
+          }
+        ]
+      },
+      object_id: "7612c57f-ff13-46c7-85b4-0d22be11bea1"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Economics"
+          }
+        ]
+      },
+      object_id: "7612c57f-ff13-46c7-85b4-0d22be11bek3"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Write In"
+          }
+        ]
+      },
+      object_id: "7612c57f-ff13-46c7-85b4-0d22be11bez5"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "ElectionGuard-TypeScript1"
+          }
+        ]
+      },
+      object_id: "95825d9d-7a52-4632-a401-40ea3a3d910a"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "ElectionGuard-TypeScript2"
+          }
+        ]
+      },
+      object_id: "d21fdac7-fd1f-440f-9a2c-184292811e30"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "ElectionGuard-TypeScript3"
+          }
+        ]
+      },
+      object_id: "743599b8-304c-4179-955d-1519d82ad229"
+    },
+    {
+      name: {
+        text: [
+          {
+            language: "en",
+            value: "Write In"
+          }
+        ]
+      },
+      object_id: "26661225-9d20-40c1-947f-ea4532df7eb5"
+    }
+  ];
+  var contests = [
+    {
+      ballot_selections: [
+        {
+          object_id: "6d6e2d5e-6b01-453e-aae1-009be8d032cf",
+          sequence_order: 0,
+          candidate_id: "Luay Nakhleh"
+        },
+        {
+          object_id: "f397cb9c-0b18-4674-b581-fadf9bb11ce4",
+          sequence_order: 1,
+          candidate_id: "Dan Wallach"
+        },
+        {
+          object_id: "8e05c23e-0c30-4672-96a5-07c7ec42c519",
+          sequence_order: 2,
+          candidate_id: "Scott Rixner"
+        },
+        {
+          object_id: "8e05c23e-0c30-4672-96a5-07c7ec42c569",
+          sequence_order: 3,
+          candidate_id: "Write In"
+        }
+      ],
+      object_id: "0a0ea028-46f9-4454-a89d-41602bb6a2e4",
+      sequence_order: 0,
+      electoral_district_id: "rice-university",
+      vote_variation: "unknown",
+      number_elected: 1,
+      votes_allowed: 1,
+      name: "Instructor of COMP413"
+    },
+    {
+      ballot_selections: [
+        {
+          object_id: "a8670ebc-fd9b-41ff-a7e6-9ac34761b006",
+          sequence_order: 0,
+          candidate_id: "RICE UNIVERSITY"
+        },
+        {
+          object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af76433b",
+          sequence_order: 1,
+          candidate_id: "UT Austin"
+        },
+        {
+          object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696628",
+          sequence_order: 2,
+          candidate_id: "UH"
+        },
+        {
+          object_id: "c6d0c0e8-3c7d-405a-8d22-8ea6af696629",
+          sequence_order: 3,
+          candidate_id: "Write In"
+        }
+      ],
+      object_id: "84a2e49c-afd6-4952-ae2a-f5daba6ebd6a",
+      sequence_order: 1,
+      electoral_district_id: "rice-university",
+      vote_variation: "unknown",
+      number_elected: 1,
+      votes_allowed: 1,
+      name: "Best College in Texas"
+    },
+    {
+      ballot_selections: [
+        {
+          object_id: "d8eda7e1-a771-4e7a-993d-578b0da8293a",
+          sequence_order: 0,
+          candidate_id: "CS"
+        },
+        {
+          object_id: "7612c57f-ff13-46c7-85b4-0d22be11bea1",
+          sequence_order: 1,
+          candidate_id: "ECE"
+        },
+        {
+          object_id: "7612c57f-ff13-46c7-85b4-0d22be11bek3",
+          sequence_order: 2,
+          candidate_id: "Economics"
+        },
+        {
+          object_id: "7612c57f-ff13-46c7-85b4-0d22be11bez5",
+          sequence_order: 3,
+          candidate_id: "Write In"
+        }
+      ],
+      object_id: "206f6ed4-8bbc-42e7-b206-5471ef811602",
+      sequence_order: 2,
+      electoral_district_id: "rice-university",
+      vote_variation: "unknown",
+      number_elected: 1,
+      votes_allowed: 1,
+      name: "Best Department"
+    },
+    {
+      ballot_selections: [
+        {
+          object_id: "95825d9d-7a52-4632-a401-40ea3a3d910a",
+          sequence_order: 0,
+          candidate_id: "ElectionGuard-TypeScript1"
+        },
+        {
+          object_id: "d21fdac7-fd1f-440f-9a2c-184292811e30",
+          sequence_order: 1,
+          candidate_id: "ElectionGuard-TypeScript2"
+        },
+        {
+          object_id: "743599b8-304c-4179-955d-1519d82ad229",
+          sequence_order: 2,
+          candidate_id: "ElectionGuard-TypeScript3"
+        },
+        {
+          object_id: "26661225-9d20-40c1-947f-ea4532df7eb5",
+          sequence_order: 3,
+          candidate_id: "Write In"
+        }
+      ],
+      object_id: "35652684-a91f-4507-90a8-965076a89acb",
+      sequence_order: 3,
+      electoral_district_id: "rice-university",
+      vote_variation: "unknown",
+      number_elected: 1,
+      votes_allowed: 1,
+      name: "COMP413 Best Team"
+    }
+  ];
+  var ballot_styles = [
+    {
+      geopolitical_unit_ids: [
+        "rice-university"
+      ],
+      party_ids: [
+        "rice-university-comp-413"
+      ],
+      object_id: "2021 COMP 413 FINAL DEMO ELECTION"
+    }
+  ];
+  var election_manifest_simple_default = {
+    name,
+    contact_information,
+    election_scope_id,
+    spec_version,
+    type,
+    start_date,
+    end_date,
+    geopolitical_units,
+    parties,
+    candidates,
+    contests,
+    ballot_styles
+  };
 
   // src/index.ts
   function download(content, fileName, contentType) {
@@ -41461,9 +41837,11 @@
   });
   get_optional(document.getElementById("next3")).addEventListener("click", function() {
     const realBallot = buildBallot(demo_ballot_schema_exports);
-    const realManifest = buildManifest(demo_ballot_schema_exports);
+    const realManifest = buildManifest(election_manifest_simple_exports);
     const json_plain_ballot = JSON.stringify(realBallot, null, "	");
     const json_manifest = JSON.stringify(realManifest, null, "	");
+    download(json_manifest, "manifest.json", "text/plain");
+    download(json_plain_ballot, "plaintextballot.json", "text/plain");
     console.log(realManifest);
     const result = encryptBallot(realBallot, realManifest);
     console.log("json plain ballot");
