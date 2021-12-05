@@ -41786,6 +41786,9 @@
     document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
       elem.removeAttribute("disabled");
     });
+    document.querySelectorAll('input[name="writein"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
     get_optional(document.getElementById("review-btn")).style.display = "block";
     get_optional(document.getElementById("submit-btn")).style.display = "none";
     get_optional(document.getElementById("previous2")).style.display = "block";
@@ -41840,6 +41843,9 @@
       elem.disabled = true;
     });
     document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
+      elem.disabled = true;
+    });
+    document.querySelectorAll('input[name="writein"]').forEach((elem) => {
       elem.disabled = true;
     });
     get_optional(document.getElementById("step_2")).className = "step done";
