@@ -85,20 +85,20 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     //     return value;
     // }, '\t'), 'plaintext_ballot.json', 'text/plain');
 
-    download(JSON.stringify(encrypted_ballot, (key, value) => {
-        if (typeof value === "bigint") {
-            return value.toString();
-        }
-        else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-            return value.toString(10);
-        } else if (typeof value === "boolean") {
-            return value == false ? "00" : "01";
-        }
-        return value;
-    }, '\t'), 'encrypted_ballot.json', 'text/plain');
+    // download(JSON.stringify(encrypted_ballot, (key, value) => {
+    //     if (typeof value === "bigint") {
+    //         return value.toString();
+    //     }
+    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+    //         return value.toString(10);
+    //     } else if (typeof value === "boolean") {
+    //         return value == false ? "00" : "01";
+    //     }
+    //     return value;
+    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
 
 
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
 }
 
 /**

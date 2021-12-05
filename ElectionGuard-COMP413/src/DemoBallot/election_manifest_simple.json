@@ -327,17 +327,17 @@
 				{
 					"object_id": "95825d9d-7a52-4632-a401-40ea3a3d910a",
 					"sequence_order": 0,
-					"candidate_id": "ElectionGuard-TypeScript1"
+					"candidate_id": "Yes"
 				},
 				{
 					"object_id": "d21fdac7-fd1f-440f-9a2c-184292811e30",
 					"sequence_order": 1,
-					"candidate_id": "ElectionGuard-TypeScript2"
+					"candidate_id": "You cannot say no"
 				},
 				{
 					"object_id": "743599b8-304c-4179-955d-1519d82ad229",
 					"sequence_order": 2,
-					"candidate_id": "ElectionGuard-TypeScript3"
+					"candidate_id": "Yes and yes"
 				},
 				{
 					"object_id": "26661225-9d20-40c1-947f-ea4532df7eb5",
@@ -351,7 +351,7 @@
 			"vote_variation": "unknown",
 			"number_elected": 1,
 			"votes_allowed": 1,
-			"name": "COMP413 Best Team"
+			"name": "Do you like ElectionGuard-Typescript?"
 		}
 	],
 	"ballot_styles": [

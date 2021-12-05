@@ -14,6 +14,8 @@ readTextFile();
 
 document.getElementById("get").addEventListener("click", function() {
     var data = JSON.parse(document.getElementById("temp").innerHTML);
+    console.log("data");
+    console.log(data);
     document.getElementById("temp").innerHTML = "";
 
     Object.keys(data["tally_result"]).forEach((contest, index)=>{
@@ -62,7 +64,7 @@ document.getElementById("get").addEventListener("click", function() {
         var id = document.createElement('td');
         var hash = document.createElement('td');
         id.innerHTML = entry;
-        hash.innerHTML = BigInt(ballot[entry]).toString();
+        hash.innerHTML = ballot[entry];
         oneLine.appendChild(id);
         oneLine.appendChild(hash);
         document.getElementById("hash_table").appendChild(oneLine);

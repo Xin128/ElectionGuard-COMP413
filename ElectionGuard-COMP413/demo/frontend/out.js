@@ -40210,21 +40210,6 @@
     return selections;
   }
 
-  // src/serialization_browser.ts
-  var deserialize_toHex_banlist = ["timestamp"];
-  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
-    return JSON.stringify(encrypted_ballot, (key, value) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(10);
-      } else if (typeof value === "boolean") {
-        return value == false ? "00" : "01";
-      }
-      return value;
-    }, "	");
-  }
-
   // src/API/APIUtils.ts
   function encryptBallot_ballotOut(inputBallot, manifest) {
     const ballot = ballot2PlainTextBallot(inputBallot);
@@ -40242,17 +40227,7 @@
     const seed_nonce = new ElementModQ2(BigInt("40358"));
     const encryption_seed = new ElementModQ2(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
     const encrypted_ballot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    download(JSON.stringify(encrypted_ballot, (key, value) => {
-      if (typeof value === "bigint") {
-        return value.toString();
-      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-        return value.toString(10);
-      } else if (typeof value === "boolean") {
-        return value == false ? "00" : "01";
-      }
-      return value;
-    }, "	"), "encrypted_ballot.json", "text/plain");
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash_with(seed_nonce).toString());
+    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
   }
   function getQRCode(strs) {
     const qr = new import_qrcode_generator_ts.QRCode();
@@ -41756,6 +41731,21 @@
     contests,
     ballot_styles
   };
+
+  // src/serialization_browser.ts
+  var deserialize_toHex_banlist = ["timestamp"];
+  function serialize_compatible_CiphertextBallot(encrypted_ballot) {
+    return JSON.stringify(encrypted_ballot, (key, value) => {
+      if (typeof value === "bigint") {
+        return value.toString();
+      } else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
+        return value.toString(10);
+      } else if (typeof value === "boolean") {
+        return value == false ? "00" : "01";
+      }
+      return value;
+    }, "	");
+  }
 
   // src/index.ts
   function download(content, fileName, contentType) {
