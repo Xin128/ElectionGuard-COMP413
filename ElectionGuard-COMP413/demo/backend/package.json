@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1",
-    "@electionguard-comp413/config": "1.0.0"
+    "@electionguard-comp413/config": "1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
   },
   "scripts": {
     "start": "node index.js"

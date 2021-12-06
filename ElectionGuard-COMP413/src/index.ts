@@ -31,9 +31,9 @@ export function download(content:any, fileName:string, contentType:string) {
 
 
 function submitCiphertextBallot(voterId: string, encryptedBallot: CiphertextBallot){
-  fetch("https://f069-168-5-58-228.ngrok.io" + "/receive/" +voterId, {
+  fetch("https://dc3c-168-5-160-135.ngrok.io" + "/receive/" +voterId, {
     method: "POST",
-    mode: "no-cors",
+    mode: "cors",
     headers: {'Content-Type': 'application/json'},
 
     body: serialize_compatible_CiphertextBallot(get_optional(encryptedBallot))
@@ -184,7 +184,7 @@ get_optional(document.getElementById("next3")).addEventListener("click", functio
 
   // const fakeBallot = buildFakeBallot();
   const result = encryptBallot(realBallot, realManifest);
-  
+
   console.log("json plain ballot")
   console.log(json_plain_ballot);
   console.log("encryptBallot here!")

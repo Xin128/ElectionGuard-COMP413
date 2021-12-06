@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
@@ -13,7 +14,7 @@ let options = {
 };
 
 const app = express();
-
+app.use(cors());
 // TODO: Write API
 
 //host voter main interface
