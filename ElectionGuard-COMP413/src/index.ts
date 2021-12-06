@@ -65,22 +65,41 @@ get_optional(document.getElementById("prev2")).addEventListener("click", functio
 get_optional(document.getElementById("prev3")).addEventListener("click", function () {
   get_optional(document.getElementById("step_2")).className = "step current";
   get_optional(document.getElementById("step_3")).className = "step";
-  if(document.querySelector('input[name="choice"]')){
-    document.querySelectorAll('input[name="choice"]').forEach((elem) => {
-      elem.removeAttribute("disabled");
-    });
-  }
-  if(document.querySelector('input[name="secondary"]')){
-    document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
-      elem.removeAttribute("disabled");
-    });
-  }
+  document.querySelectorAll('input[name="choice"]').forEach((elem) => {
+    elem.removeAttribute("disabled");
+  });
+  document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
+    elem.removeAttribute("disabled");
+  });
+  document.querySelectorAll('input[name="tertiary"]').forEach((elem) => {
+    elem.removeAttribute("disabled");
+  });
+  document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
+    elem.removeAttribute("disabled");
+  });
+  document.querySelectorAll('input[name="writein"]').forEach((elem) => {
+    elem.removeAttribute("disabled");
+  });
   get_optional(document.getElementById("review-btn")).style.display = "block";
   get_optional(document.getElementById("submit-btn")).style.display = "none";
   get_optional(document.getElementById("previous2")).style.display = "block";
   get_optional(document.getElementById("previous3")).style.display = "none";
 });
-
+document.querySelectorAll('input[name="choice"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
+    document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
+    document.querySelectorAll('input[name="tertiary"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
+    document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
+    document.querySelectorAll('input[name="writein"]').forEach((elem) => {
+      elem.removeAttribute("disabled");
+    });
 get_optional(document.getElementById("next1")).addEventListener("click", function () {
   get_optional(document.getElementById("step_1")).className = "step done";
   get_optional(document.getElementById("step_2")).className = "step current";
@@ -122,7 +141,21 @@ get_optional(document.getElementById("next2")).addEventListener("click", functio
   }
 
   // console.log(JSON.stringify(ballot, null, "\t"), 'ballot.json', 'text/plain')
-
+  document.querySelectorAll('input[name="choice"]').forEach((elem) => {
+    elem.disabled = true;
+  });
+  document.querySelectorAll('input[name="secondary"]').forEach((elem) => {
+    elem.disabled = true;
+  });
+  document.querySelectorAll('input[name="tertiary"]').forEach((elem) => {
+    elem.disabled = true;
+  });
+  document.querySelectorAll('input[name="quaternary"]').forEach((elem) => {
+    elem.disabled = true;
+  });
+  document.querySelectorAll('input[name="writein"]').forEach((elem) => {
+    elem.disabled = true;
+  });
 
   get_optional(document.getElementById("step_2")).className = "step done";
   get_optional(document.getElementById("step_3")).className = "step current";
