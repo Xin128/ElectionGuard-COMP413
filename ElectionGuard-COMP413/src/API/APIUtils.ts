@@ -98,7 +98,7 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     // }, '\t'), 'encrypted_ballot.json', 'text/plain');
 
 
-    return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
+    return new EncryptBallotOutput(seed_nonce.to_hex().toString(), encrypted_ballot.crypto_hash.to_hex().toString());
 }
 
 /**
