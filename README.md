@@ -7,10 +7,10 @@
 
 
 ## ❓ What Is Vote-by-mail?
- Vote by mail, or vote at home, is a method of voting that voters get their ballot delivered to them weeks before Election Day, fill it out at their convenience, then return it either in-person or by mail. There are two types of vote by mail system -- comprehensive vote by mail and absentee ballots. In a comprehensive vote by mail state, voters are automatically sent ballots by mail. Voters in these states can then choose if and how to cast their ballot (send it back by mail, take it to a secure drop-off location, or vote at a fully staffed voting center). Traditional “absentee” systems require voters to apply to receive a ballot by mail. 
+ Vote by mail, or vote at home, is a method of voting that voters get their ballot delivered to them weeks before Election Day, fill it out at their convenience, then return it either in-person or by mail. There are two types of vote by mail system -- comprehensive vote by mail and absentee ballots. To ensure the integrity of elections and the validity of each ballot, risk-limiting audits are implemented and ballot tracking services are provided.
 
-## ❓ What Is End-to-End Verifiable Encryption?
- In general, E2E encryption is a way to guarantee voting system security, which prevents someone other than the sender or recipient from accessing & modifying the ballots. That means, the voters first vote the way they would traditionally on an electronic voting system, but in the end, an e2e system could use some fancy cryptographic method and generate a receipt of a long sequence of numbers or a qrcode. This receipt is essentially a computer record of the vote that's been encrypted with a secret key the voter doesn't have. But it still allows voters to verify that their votes were counted. They can take the encrypted ballots that were published and write up a mathematical proof which shows that the ballots add up to the officially announced totals.  That is the mechanism of how the voters can get confident evidence of their ballot being effective without revealing which candidates were voted for nor requiring them to trust election official results, software, hardware, and so on.
+## ❓ What Is End-to-End Verifiable Voting?
+ E2E verifiable voting is a way to guarantee voting system security, preventing someone other than the sender or recipient from accessing & modifying the ballots. The voters first vote the way they would traditionally on an electronic voting system, but in the end, an e2e system would use cryptography and generate a receipt of a long numeric sequence or a qrcode. This receipt is essentially a record of the vote that's been encrypted with a secret key the voter doesn't have. But it still allows voters to verify that their votes were counted. E2E verifiable voting is able to respond to voters' challenge on whether their ballots are included by providing mathematical proofs which show that the ballots add up to the officially announced totals.  That is the mechanism of how the voters can get confident evidence of their ballot being effective without revealing which candidates were voted for nor requiring them to trust election official results, software, hardware, and so on.
 
 
 ## ❓ What Is ElectionGuard?
@@ -24,8 +24,6 @@ To achieve this, for Microsoft team, we built a typescript frontend implementati
 ## Workflow of ETS:
 Data pipeline:
 ![workflow of ETS](README_src/workflow.png)
-Our user story
-![user story](README_src/user_story.png)
 
 ## Demo application:
 
