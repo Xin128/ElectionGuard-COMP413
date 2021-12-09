@@ -1,5 +1,4 @@
 import {add_q, ElementModP, ElementModQ} from "../group";
-import {elements_mod_q_no_zero } from "../groupUtils";
 import { encrypt_ballot } from "../simple_elections";
 import {
     CiphertextBallot,
@@ -28,8 +27,6 @@ import {
     SelectionDescription,
     ContactInformation, AnnotatedString
 } from "../manifest"
-import {download} from "../index";
-import {deserialize_toHex_banlist} from "../serialization_browser";
 /**
  * Ballot ==> Whole Election
  * BallotItem ==> A single question on the ballot
@@ -44,8 +41,6 @@ export function encryptBallot_ballotOut(inputBallot: Ballot,
   const context = ballot2Context(inputBallot, internalManifest);
   const seed_nonce:ElementModQ =  new ElementModQ(BigInt("40358"));
   const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
-  // console.log("before encrypt_ballot!")
-  // console.log(ballot);
   const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
   return encrypted_ballot;
 }
@@ -66,38 +61,6 @@ export function encryptBallot(inputBallot: Ballot, manifest: Manifest): EncryptB
     const encryption_seed: ElementModQ = new ElementModQ(BigInt("88136692332113344175662474900446441286169260372780056734314948839391938984061"));
 
     const encrypted_ballot: CiphertextBallot = get_optional(encrypt_ballot(ballot, internalManifest, context, encryption_seed, seed_nonce));
-    // console.log("plaintextballot");
-    // console.log(ballot);
-    // console.log("encrypted_ballot");
-    // console.log(encrypted_ballot);
-    // console.log("internal manifest");
-    // console.log(internalManifest)
-
-    // download(JSON.stringify(ballot, (key, value) => {
-    //     if (typeof value === "bigint") {
-    //         return value.toString();
-    //     }
-    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-    //         return value.toString(10);
-    //     } else if (typeof value === "boolean") {
-    //         return value == false ? "00" : "01";
-    //     }
-    //     return value;
-    // }, '\t'), 'plaintext_ballot.json', 'text/plain');
-
-    // download(JSON.stringify(encrypted_ballot, (key, value) => {
-    //     if (typeof value === "bigint") {
-    //         return value.toString();
-    //     }
-    //     else if (typeof value === "number" && !deserialize_toHex_banlist.includes(key)) {
-    //         return value.toString(10);
-    //     } else if (typeof value === "boolean") {
-    //         return value == false ? "00" : "01";
-    //     }
-    //     return value;
-    // }, '\t'), 'encrypted_ballot.json', 'text/plain');
-
-
     return new EncryptBallotOutput(seed_nonce.elem.toString(), encrypted_ballot.crypto_hash.to_hex().toString());
 }
 
@@ -157,7 +120,6 @@ export function ballotItem2Selection(ballotItem: BallotItem): PlaintextBallotSel
         if (ballotOption.selected) {
             plainTextSelections = [new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
         }
-        // plainTextSelections = [...plainTextSelections, new PlaintextBallotSelection(ballotOption.object_id, ballotOption.order, ballotOption.selected? 1 : 0, false)]
     });
     return plainTextSelections;
 }
@@ -224,7 +186,6 @@ export function buildBallot(ballot: any): Ballot {
         contests = [...contests, contest];
     }
     const electionBallot = new Ballot(makeId(15), ballot.electionName[0].text, contests);
-    // print(electionBallot)
 
     return electionBallot;
 }
@@ -235,13 +196,9 @@ export function buildBallot(ballot: any): Ballot {
  */
 export function buildManifest(manifest: any): Manifest {
 
-    // same as name of this election
     const election_scope_id: string = manifest.election_scope_id;
-    // we do not have spec version in our code
     const spec_version = manifest.spec_version;
-    // we do not have the election type from the ballot
     const type: ElectionType = ElectionType.unknown;
-    // we assume start date and end date are the same since we only have start date from the ballot
     const start_date: Date = manifest.start_date;
     const end_date: Date = manifest.end_date;
 
@@ -354,6 +311,10 @@ export function buildBallotStyle(manifest: any): BallotStyle[] {
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
+/***
+ * This function generates random user id for tallying purposes
+ * @param length length of generated id
+ */
 export function makeId(length: number) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

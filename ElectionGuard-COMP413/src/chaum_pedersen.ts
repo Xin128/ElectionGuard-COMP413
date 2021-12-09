@@ -246,10 +246,10 @@ export class ConstantChaumPedersenProof {
             && consistent_kv
         );
         if (!success){
-            // console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a: ", in_bounds_a,
-            // "in_bounds_b: ", in_bounds_b, "in_bounds_c: ", in_bounds_c, "in_bounds_v: ", in_bounds_v, "in_bounds_constant: ", in_bounds_constant,
-            // "sane_constant: ", sane_constant, "same_c: ", same_c, "consistent_gv: ", consistent_gv, "consistent_kv: ", consistent_kv,
-            // "k: ", k);
+            console.log("in_bounds_alpha: ", in_bounds_alpha, "in_bounds_beta: ", in_bounds_beta, "in_bounds_a: ", in_bounds_a,
+            "in_bounds_b: ", in_bounds_b, "in_bounds_c: ", in_bounds_c, "in_bounds_v: ", in_bounds_v, "in_bounds_constant: ", in_bounds_constant,
+            "sane_constant: ", sane_constant, "same_c: ", same_c, "consistent_gv: ", consistent_gv, "consistent_kv: ", consistent_kv,
+            "k: ", k);
         }
 
         return success
@@ -264,8 +264,6 @@ export function make_disjunctive_chaum_pedersen(
     q: ElementModQ,
     seed: ElementModQ,
     plaintext: number): DisjunctiveChaumPedersenProof {
-    //TODO for Alex: throw errors here.
-    // assert(0 <= plaintext && plaintext <= 1);
     if (plaintext == 0){
         return make_disjunctive_chaum_pedersen_zero(message, r, k, q, seed);
     } else {
@@ -283,21 +281,6 @@ export function make_disjunctive_chaum_pedersen_zero(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    // const c1 = nonces.get(0);
-    // const v1 = nonces.get(1);
-    // const u0 = nonces.get(2);
-    // // Compute the NIZKP
-    // const a0 = g_pow_p(u0);
-    // const b0 = pow_p(k, u0);
-    // const q_minus_c1 = negate_q(c1);
-    // const a1 = mult_p(g_pow_p(v1), pow_p(alpha, q_minus_c1));
-    // const b1 = mult_p(pow_p(k, v1), g_pow_p(c1), pow_p(beta, q_minus_c1));
-    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
-    // const c0 = a_minus_b_q(c, c1);
-
-    // const v0 = a_plus_bc_q(u0, c0, r);
-    // console.log("make disjunctive one c1 v1 u0 a0 b1 c0 c v0 v1", c1, v1, u0, a0, b0, a1, b1, c0, c1, c, v0, v1);
-    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
 
     const c1 = nonces.get(0);
     const v = nonces.get(1);
@@ -324,21 +307,6 @@ export function make_disjunctive_chaum_pedersen_one(
     const [alpha, beta] = [message.pad, message.data];
     // Pick three random numbers in Q.
     const nonces = new Nonces(seed, "disjoint-chaum-pedersen-proof");
-    // const c0 = nonces.get(0);
-    // const v0 = nonces.get(1);
-    // const u1 = nonces.get(2);
-
-    // // Compute the NIZKP
-    // const q_minus_c0 = negate_q(c0);
-    // const a0 = mult_p(g_pow_p(v0), pow_p(alpha, q_minus_c0));
-    // const b0 = mult_p(pow_p(k, v0), pow_p(beta, q_minus_c0));
-    // const a1 = g_pow_p(u1);
-    // const b1 = pow_p(k, u1);
-    // const c = hash_elems([q, alpha, beta, a0, b0, a1, b1]);
-    // const c1 = a_minus_b_q(c, c0);
-    // const v1 = a_plus_bc_q(u1, c1, r);
-
-    // return new DisjunctiveChaumPedersenProof(a0, b0, a1, b1, c0, c1, c, v0, v1);
     const w = nonces.get(0);
     const v = nonces.get(1);
     const u1 = nonces.get(2);
@@ -440,9 +408,9 @@ export class ChaumPedersenProofGeneric {
             && good_h
         );
         if (!success){
-            // console.log("hash_good: ", hash_good, "in_bounds_a: ", in_bounds_a, "in_bounds_b: ", in_bounds_b,
-            // "in_bounds_g: ", in_bounds_g, "in_bounds_gx: ", in_bounds_gx, "in_bounds_h: ", in_bounds_h, "in_bounds_hx: ", in_bounds_hx,
-            // "good_g: ", good_g, "good_h: ", good_h);
+            console.log("hash_good: ", hash_good, "in_bounds_a: ", in_bounds_a, "in_bounds_b: ", in_bounds_b,
+            "in_bounds_g: ", in_bounds_g, "in_bounds_gx: ", in_bounds_gx, "in_bounds_h: ", in_bounds_h, "in_bounds_hx: ", in_bounds_hx,
+            "good_g: ", good_g, "good_h: ", good_h);
         }
 
         return success
@@ -515,8 +483,8 @@ export class ChaumPedersenDecryptionProof {
           true,
         );
         if (!valid_proof) {
-            // console.log("plaintext: ", plaintext, "ciphertext: ", ciphertext, "public_key: ", public_key,
-            // "proof: ", this.proof);
+            console.log("plaintext: ", plaintext, "ciphertext: ", ciphertext, "public_key: ", public_key,
+            "proof: ", this.proof);
         }
         return valid_proof;
     }
