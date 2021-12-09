@@ -6,6 +6,9 @@
 [banner image]: https://raw.githubusercontent.com/microsoft/electionguard-python/main/images/electionguard-banner.svg
 
 
+## ❓ What Is Vote-by-mail?
+ Vote by mail, or vote at home, is a method of voting that voters get their ballot delivered to them weeks before Election Day, fill it out at their convenience, then return it either in-person or by mail. There are two types of vote by mail system -- comprehensive vote by mail and absentee ballots. In a comprehensive vote by mail state, voters are automatically sent ballots by mail. Voters in these states can then choose if and how to cast their ballot (send it back by mail, take it to a secure drop-off location, or vote at a fully staffed voting center). Traditional “absentee” systems require voters to apply to receive a ballot by mail. 
+
 ## ❓ What Is End-to-End Verifiable Encryption?
  In general, E2E encryption is a way to guarantee voting system security, which prevents someone other than the sender or recipient from accessing & modifying the ballots. That means, the voters first vote the way they would traditionally on an electronic voting system, but in the end, an e2e system could use some fancy cryptographic method and generate a receipt of a long sequence of numbers or a qrcode. This receipt is essentially a computer record of the vote that's been encrypted with a secret key the voter doesn't have. But it still allows voters to verify that their votes were counted. They can take the encrypted ballots that were published and write up a mathematical proof which shows that the ballots add up to the officially announced totals.  That is the mechanism of how the voters can get confident evidence of their ballot being effective without revealing which candidates were voted for nor requiring them to trust election official results, software, hardware, and so on.
 
@@ -39,6 +42,17 @@ Our user story
   has its own [installation requirements (native C libraries)](https://gmpy2.readthedocs.io/en/latest/intro.html#installation) on Linux and MacOS. **⚠️ Note:** _This is not required for Windows since the gmpy2 precompiled libraries are provided._
 - [poetry 1.1.10](https://python-poetry.org/) is used to configure the python environment. Installation instructions can be found [here](https://python-poetry.org/docs/#installation).
 
+## Robustness & Compatibility
+
+Testing is always important in any engineering project. How do we know that our implementation is correct? 
+
+Since we’re branching out from Microsoft’s python version, there’s one more thing we need to worry about: whether our version is compatible with Microsoft’s. That is to say, given the same inputs, we should come up with the exact same outputs as Microsoft’s version. To test that our version is correct, we’ve unit-tested each sub-pieces of our implementation. 
+
+To make sure that our version is compatible with Microsoft’s, we built a test factory that contained input-output pairs generated from Microsoft’s version and used this [test factory](testVector.sh) to test against our version. Once we ensured that the test factory’s inputs resulted in the same outputs under our typescript version, we were confident that our implementation is compatible with Microsoft’s.
+
+## Performance
+
+We performed a benchmark encryption on a large ballot with 20 contests and 10 options. On average it takes about 11.3 seconds for entire encryption, about half seconds for each contest. With almost 90% of time spent on sequentially excrypting contests, it leaves us possibility for further acceleration by doing parallel encryption. The benchmarking ballot we used is considerably large. In reality, this large ballot is rarely the case. A more realistic use case is from our external collaborator Enhanced Voting, and according to them, our implementation of electionguard takes around 5-6 seconds, while the python version takes around 7 seconds. 
 
 ## Impact
 
@@ -51,10 +65,5 @@ This is not just a simple school project that will be left out once the semester
 
 Therefore, this is a project that has already benefited and will continue to benefit multiple parties. We are really glad to work on a project that has such a long-lasting impact during this semester. Hope you’ve enjoyed our presentation and thank you for listening. 
 
-## Robustness & Compatibility
 
-Testing is always important in any engineering project. How do we know that our implementation is correct? 
 
-Since we’re branching out from Microsoft’s python version, there’s one more thing we need to worry about: whether our version is compatible with Microsoft’s. That is to say, given the same inputs, we should come up with the exact same outputs as Microsoft’s version. To test that our version is correct, we’ve unit-tested each sub-pieces of our implementation. 
-
-To make sure that our version is compatible with Microsoft’s, we built a test factory that contained input-output pairs generated from Microsoft’s version and used this [test factory](testVector.sh) to test against our version. Once we ensured that the test factory’s inputs resulted in the same outputs under our typescript version, we were confident that our implementation is compatible with Microsoft’s.
