@@ -9,8 +9,8 @@ import {
   // TWO_MOD_Q,
   // ONE_MOD_Q,
   // ONE_MOD_P,
-} from './group';
-import { elements_mod_q_no_zero} from './groupUtils';
+} from './group_sjcl';
+import { elements_mod_q_no_zero} from './groupUtils_sjcl';
 // import {hash_elems} from './hash';
 import {
   ElGamalKeyPair,
@@ -19,7 +19,7 @@ import {
   // elgamal_add,
   elgamal_keypair_from_secret, ElGamalCiphertext,
   // elgamal_keypair_random
-} from './elgamal';
+} from './elgamal_sjcl';
 // import * as sjcl from 'sjcl';
 import {get_optional} from "./utils";
 // import exp from 'constants';
