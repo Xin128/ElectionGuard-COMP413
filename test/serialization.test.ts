@@ -60,7 +60,8 @@ describe("TestDeserialization", () => {
 
     fs.readdirSync(testFolder).forEach(file => {
       if (file !== testFolder) {
-        const path2TestVector = testFolder + "\\" + file;
+        // const path2TestVector = testFolder + "\\" + file;
+        const path2TestVector = testFolder + "/" + file;
         const encryptInputs: EncryptInput[] = from_test_file_to_valid_inputs(path2TestVector);
         for (const input of encryptInputs) {
           const inputs = from_file_to_class();
