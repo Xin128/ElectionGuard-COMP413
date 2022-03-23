@@ -1,0 +1,724 @@
+[
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "0@A.com",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "2000-01-01T00:00:00",
+                "end_date": "2000-01-01T00:00:00",
+                "geopolitical_units": [
+                    {
+                        "object_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "name": "0@A.com",
+                        "type": "unknown",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "aa",
+                                    "value": "0@A.com"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "James SMITH"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "8c46b649-195c-3e9c-c5b4-6b837b236a8f",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "http://A.com/"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "James SMITH",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "electoral_district_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "0@A.com",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "candidate_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                        "geopolitical_unit_ids": [
+                            "76f72886-6201-fb47-5b31-333015dca281"
+                        ],
+                        "party_ids": [
+                            "8c46b649-195c-3e9c-c5b4-6b837b236a8f"
+                        ],
+                        "image_uri": "http://A.com/"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "0@A.com",
+                            "language": "aa"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "aa",
+                            "value": "0@A.com"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "James SMITH"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-dc4e204e-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "26956665991289013065467138973471804813690114152210521882375161751194228443869"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "0@A.com",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "2000-01-01T00:00:00",
+                "end_date": "2000-01-01T00:00:00",
+                "geopolitical_units": [
+                    {
+                        "object_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "name": "0@A.com",
+                        "type": "unknown",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "aa",
+                                    "value": "0@A.com"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "James SMITH"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "8c46b649-195c-3e9c-c5b4-6b837b236a8f",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "http://A.com/"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "James SMITH",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "electoral_district_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "0@A.com",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "candidate_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                        "geopolitical_unit_ids": [
+                            "76f72886-6201-fb47-5b31-333015dca281"
+                        ],
+                        "party_ids": [
+                            "8c46b649-195c-3e9c-c5b4-6b837b236a8f"
+                        ],
+                        "image_uri": "http://A.com/"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "0@A.com",
+                            "language": "aa"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "aa",
+                            "value": "0@A.com"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "James SMITH"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-dc4e226a-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "90804200867257958390938655842228636618114030799326188525964541013779817417397"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "0@A.com",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "2000-01-01T00:00:00",
+                "end_date": "2000-01-01T00:00:00",
+                "geopolitical_units": [
+                    {
+                        "object_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "name": "0@A.com",
+                        "type": "unknown",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "aa",
+                                    "value": "0@A.com"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "James SMITH"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "8c46b649-195c-3e9c-c5b4-6b837b236a8f",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "http://A.com/"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "James SMITH",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "electoral_district_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "0@A.com",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "candidate_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                        "geopolitical_unit_ids": [
+                            "76f72886-6201-fb47-5b31-333015dca281"
+                        ],
+                        "party_ids": [
+                            "8c46b649-195c-3e9c-c5b4-6b837b236a8f"
+                        ],
+                        "image_uri": "http://A.com/"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "0@A.com",
+                            "language": "aa"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "aa",
+                            "value": "0@A.com"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "James SMITH"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-dc4e23aa-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "49681434096924384270451206102029281268920266998524811077087646502770982094403"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "0@A.com",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "2000-01-01T00:00:00",
+                "end_date": "2000-01-01T00:00:00",
+                "geopolitical_units": [
+                    {
+                        "object_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "name": "0@A.com",
+                        "type": "unknown",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "aa",
+                                    "value": "0@A.com"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "James SMITH"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "8c46b649-195c-3e9c-c5b4-6b837b236a8f",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "http://A.com/"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "James SMITH",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "electoral_district_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "0@A.com",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "candidate_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                        "geopolitical_unit_ids": [
+                            "76f72886-6201-fb47-5b31-333015dca281"
+                        ],
+                        "party_ids": [
+                            "8c46b649-195c-3e9c-c5b4-6b837b236a8f"
+                        ],
+                        "image_uri": "http://A.com/"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "0@A.com",
+                            "language": "aa"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "aa",
+                            "value": "0@A.com"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "James SMITH"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-dc4e24ae-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "ballot_selections": []
+                    }
+                ]
+            }
+        },
+        "output": "14182256505940857885159490840220996358748362506361894033751523120872149293824"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "0@A.com",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "2000-01-01T00:00:00",
+                "end_date": "2000-01-01T00:00:00",
+                "geopolitical_units": [
+                    {
+                        "object_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "name": "0@A.com",
+                        "type": "unknown",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "aa",
+                                    "value": "0@A.com"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "James SMITH"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "8c46b649-195c-3e9c-c5b4-6b837b236a8f",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "http://A.com/"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "James SMITH",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "electoral_district_id": "76f72886-6201-fb47-5b31-333015dca281",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "0@A.com",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "candidate_id": "b4db51ae-5013-cb0f-0c19-5ae63a23edcc"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "0@A.com",
+                                    "language": "aa"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                        "geopolitical_unit_ids": [
+                            "76f72886-6201-fb47-5b31-333015dca281"
+                        ],
+                        "party_ids": [
+                            "8c46b649-195c-3e9c-c5b4-6b837b236a8f"
+                        ],
+                        "image_uri": "http://A.com/"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "0@A.com",
+                            "language": "aa"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "aa",
+                            "value": "0@A.com"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "James SMITH"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-dc4e25bc-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "3412a847-1072-04e9-771e-1ce8afb6dd9e",
+                "contests": [
+                    {
+                        "object_id": "0f6a6a76-345f-114b-e14c-e9572d5fb25e",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-b4db51ae-5013-cb0f-0c19-5ae63a23edcc",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "25405737332967119007464558291916152897525440272753022648787200153280675203175"
+    }
+]

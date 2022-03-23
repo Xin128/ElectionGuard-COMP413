@@ -1,0 +1,1241 @@
+[
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "Kko@Jsdj.Eg",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "8489-12-29T00:33:32.486191",
+                "end_date": "8489-12-29T00:33:32.486191",
+                "geopolitical_units": [
+                    {
+                        "object_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "name": "4@mXBOBlCOA.E.loNDON",
+                        "type": "special",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "rn",
+                                    "value": "i@R.X.UYJe.I.Mohw.j.z.o.H.YODobaShI"
+                                },
+                                {
+                                    "annotation": "wv",
+                                    "value": "'*D!Ne1wa@z.LTd"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "Fran\u00e7ois GUPTA"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "https://ww4l.q.Q.Ee8yp.k.szN.GUJcEqyDyarTk1.M.select/%0D/V)g/%7C%5C/a/v!%2F%26ZvU#j%99%A0%BF6"
+                    },
+                    {
+                        "object_id": "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party1",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P1",
+                        "color": null,
+                        "logo_uri": "http://c.g.nl.ASN7781DwZnV8S-kSSMbzCRbx50uNHVReAZ1mHfRNBa3xyLzcR9cHJ.ikxtNTepP.BB8xlNrFh.ipiranGA:34985/%0D%7B9%23(Y5%25)%3F%20/%26DK%22//t/x%7D%3E+z/%5Bw//f%5CJ%09%3B$qR/_%3F4%09x-%7CdJW0V/DB-4/p%23%60Oh#%FD%85%A4%04"
+                    },
+                    {
+                        "object_id": "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party2",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P2",
+                        "color": null,
+                        "logo_uri": "http://d.xIN:33498/4FXw%5BY%3Et%7CBZ%0B%7B/70(///%3C*/Y,%5EN%5BjZ%5C%0Dma#%84"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "972e0cde-d013-9981-0804-4b89c882e5c1",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Lisa WILLIAMS",
+                                    "language": "il"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://e8.w.cfd:10012/%25",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Viktor ALLEN",
+                                    "language": "pu"
+                                },
+                                {
+                                    "value": "Betty ROBINSON",
+                                    "language": "lg"
+                                },
+                                {
+                                    "value": "James GONZALEZ",
+                                    "language": "bi"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://Y.i2swg.uRtKPIEbIudgloYnnqx.s2cj3.I.LExUs/I6YX%7C8y%5DY/rY%09Fp%3A%7D#%52%E4%9B",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "44960b89-b19c-d081-4bbc-64a44dab4507",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Fran\u00e7ois GUPTA",
+                                    "language": "vs"
+                                },
+                                {
+                                    "value": "Patricia GUPTA",
+                                    "language": "dv"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "electoral_district_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "-5fmXS9+@CQ.JLkk.p.z.L.g.jFZm2I.iO",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "candidate_id": "972e0cde-d013-9981-0804-4b89c882e5c1"
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "candidate_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6"
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "candidate_id": "44960b89-b19c-d081-4bbc-64a44dab4507"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "1VVwGqW6@IrtqDjj5m.HyatT",
+                                    "language": "xr"
+                                },
+                                {
+                                    "value": "U@l.Xn--3PXu8k",
+                                    "language": "jp"
+                                },
+                                {
+                                    "value": "GAlxSY5Rb1U+@Z.I.XN--GEcRj9c",
+                                    "language": "ae"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "{L@EhWqrHSWfVSd2.N.U.gL",
+                                    "language": "kt"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                        "geopolitical_unit_ids": [
+                            "cb2bc189-cbaf-af2e-3275-ff19c75f55e7"
+                        ],
+                        "party_ids": [
+                            "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                            "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                            "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed"
+                        ],
+                        "image_uri": "https://L.i.vyMFYOy.bID:10416/%3B5b%0A%40"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "9C7W@s.t.Jq9vSDXKB.GLobo",
+                            "language": "ch"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "za",
+                            "value": "^@L.FitneSS"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "Matthew WRIGHT"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-db651ce6-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "64176977433004518926819844312876868467868155733119312094446594627080596301988"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "Kko@Jsdj.Eg",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "8489-12-29T00:33:32.486191",
+                "end_date": "8489-12-29T00:33:32.486191",
+                "geopolitical_units": [
+                    {
+                        "object_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "name": "4@mXBOBlCOA.E.loNDON",
+                        "type": "special",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "rn",
+                                    "value": "i@R.X.UYJe.I.Mohw.j.z.o.H.YODobaShI"
+                                },
+                                {
+                                    "annotation": "wv",
+                                    "value": "'*D!Ne1wa@z.LTd"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "Fran\u00e7ois GUPTA"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "https://ww4l.q.Q.Ee8yp.k.szN.GUJcEqyDyarTk1.M.select/%0D/V)g/%7C%5C/a/v!%2F%26ZvU#j%99%A0%BF6"
+                    },
+                    {
+                        "object_id": "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party1",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P1",
+                        "color": null,
+                        "logo_uri": "http://c.g.nl.ASN7781DwZnV8S-kSSMbzCRbx50uNHVReAZ1mHfRNBa3xyLzcR9cHJ.ikxtNTepP.BB8xlNrFh.ipiranGA:34985/%0D%7B9%23(Y5%25)%3F%20/%26DK%22//t/x%7D%3E+z/%5Bw//f%5CJ%09%3B$qR/_%3F4%09x-%7CdJW0V/DB-4/p%23%60Oh#%FD%85%A4%04"
+                    },
+                    {
+                        "object_id": "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party2",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P2",
+                        "color": null,
+                        "logo_uri": "http://d.xIN:33498/4FXw%5BY%3Et%7CBZ%0B%7B/70(///%3C*/Y,%5EN%5BjZ%5C%0Dma#%84"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "972e0cde-d013-9981-0804-4b89c882e5c1",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Lisa WILLIAMS",
+                                    "language": "il"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://e8.w.cfd:10012/%25",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Viktor ALLEN",
+                                    "language": "pu"
+                                },
+                                {
+                                    "value": "Betty ROBINSON",
+                                    "language": "lg"
+                                },
+                                {
+                                    "value": "James GONZALEZ",
+                                    "language": "bi"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://Y.i2swg.uRtKPIEbIudgloYnnqx.s2cj3.I.LExUs/I6YX%7C8y%5DY/rY%09Fp%3A%7D#%52%E4%9B",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "44960b89-b19c-d081-4bbc-64a44dab4507",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Fran\u00e7ois GUPTA",
+                                    "language": "vs"
+                                },
+                                {
+                                    "value": "Patricia GUPTA",
+                                    "language": "dv"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "electoral_district_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "-5fmXS9+@CQ.JLkk.p.z.L.g.jFZm2I.iO",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "candidate_id": "972e0cde-d013-9981-0804-4b89c882e5c1"
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "candidate_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6"
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "candidate_id": "44960b89-b19c-d081-4bbc-64a44dab4507"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "1VVwGqW6@IrtqDjj5m.HyatT",
+                                    "language": "xr"
+                                },
+                                {
+                                    "value": "U@l.Xn--3PXu8k",
+                                    "language": "jp"
+                                },
+                                {
+                                    "value": "GAlxSY5Rb1U+@Z.I.XN--GEcRj9c",
+                                    "language": "ae"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "{L@EhWqrHSWfVSd2.N.U.gL",
+                                    "language": "kt"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                        "geopolitical_unit_ids": [
+                            "cb2bc189-cbaf-af2e-3275-ff19c75f55e7"
+                        ],
+                        "party_ids": [
+                            "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                            "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                            "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed"
+                        ],
+                        "image_uri": "https://L.i.vyMFYOy.bID:10416/%3B5b%0A%40"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "9C7W@s.t.Jq9vSDXKB.GLobo",
+                            "language": "ch"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "za",
+                            "value": "^@L.FitneSS"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "Matthew WRIGHT"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-db651f02-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "68230394963339500796105755922127101182247188644728808396618041249963214561805"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "Kko@Jsdj.Eg",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "8489-12-29T00:33:32.486191",
+                "end_date": "8489-12-29T00:33:32.486191",
+                "geopolitical_units": [
+                    {
+                        "object_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "name": "4@mXBOBlCOA.E.loNDON",
+                        "type": "special",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "rn",
+                                    "value": "i@R.X.UYJe.I.Mohw.j.z.o.H.YODobaShI"
+                                },
+                                {
+                                    "annotation": "wv",
+                                    "value": "'*D!Ne1wa@z.LTd"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "Fran\u00e7ois GUPTA"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "https://ww4l.q.Q.Ee8yp.k.szN.GUJcEqyDyarTk1.M.select/%0D/V)g/%7C%5C/a/v!%2F%26ZvU#j%99%A0%BF6"
+                    },
+                    {
+                        "object_id": "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party1",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P1",
+                        "color": null,
+                        "logo_uri": "http://c.g.nl.ASN7781DwZnV8S-kSSMbzCRbx50uNHVReAZ1mHfRNBa3xyLzcR9cHJ.ikxtNTepP.BB8xlNrFh.ipiranGA:34985/%0D%7B9%23(Y5%25)%3F%20/%26DK%22//t/x%7D%3E+z/%5Bw//f%5CJ%09%3B$qR/_%3F4%09x-%7CdJW0V/DB-4/p%23%60Oh#%FD%85%A4%04"
+                    },
+                    {
+                        "object_id": "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party2",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P2",
+                        "color": null,
+                        "logo_uri": "http://d.xIN:33498/4FXw%5BY%3Et%7CBZ%0B%7B/70(///%3C*/Y,%5EN%5BjZ%5C%0Dma#%84"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "972e0cde-d013-9981-0804-4b89c882e5c1",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Lisa WILLIAMS",
+                                    "language": "il"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://e8.w.cfd:10012/%25",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Viktor ALLEN",
+                                    "language": "pu"
+                                },
+                                {
+                                    "value": "Betty ROBINSON",
+                                    "language": "lg"
+                                },
+                                {
+                                    "value": "James GONZALEZ",
+                                    "language": "bi"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://Y.i2swg.uRtKPIEbIudgloYnnqx.s2cj3.I.LExUs/I6YX%7C8y%5DY/rY%09Fp%3A%7D#%52%E4%9B",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "44960b89-b19c-d081-4bbc-64a44dab4507",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Fran\u00e7ois GUPTA",
+                                    "language": "vs"
+                                },
+                                {
+                                    "value": "Patricia GUPTA",
+                                    "language": "dv"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "electoral_district_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "-5fmXS9+@CQ.JLkk.p.z.L.g.jFZm2I.iO",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "candidate_id": "972e0cde-d013-9981-0804-4b89c882e5c1"
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "candidate_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6"
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "candidate_id": "44960b89-b19c-d081-4bbc-64a44dab4507"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "1VVwGqW6@IrtqDjj5m.HyatT",
+                                    "language": "xr"
+                                },
+                                {
+                                    "value": "U@l.Xn--3PXu8k",
+                                    "language": "jp"
+                                },
+                                {
+                                    "value": "GAlxSY5Rb1U+@Z.I.XN--GEcRj9c",
+                                    "language": "ae"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "{L@EhWqrHSWfVSd2.N.U.gL",
+                                    "language": "kt"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                        "geopolitical_unit_ids": [
+                            "cb2bc189-cbaf-af2e-3275-ff19c75f55e7"
+                        ],
+                        "party_ids": [
+                            "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                            "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                            "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed"
+                        ],
+                        "image_uri": "https://L.i.vyMFYOy.bID:10416/%3B5b%0A%40"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "9C7W@s.t.Jq9vSDXKB.GLobo",
+                            "language": "ch"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "za",
+                            "value": "^@L.FitneSS"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "Matthew WRIGHT"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-db652056-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "84259857813629693007894409621480473372567826215714061305000376274466751775565"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "Kko@Jsdj.Eg",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "8489-12-29T00:33:32.486191",
+                "end_date": "8489-12-29T00:33:32.486191",
+                "geopolitical_units": [
+                    {
+                        "object_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "name": "4@mXBOBlCOA.E.loNDON",
+                        "type": "special",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "rn",
+                                    "value": "i@R.X.UYJe.I.Mohw.j.z.o.H.YODobaShI"
+                                },
+                                {
+                                    "annotation": "wv",
+                                    "value": "'*D!Ne1wa@z.LTd"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "Fran\u00e7ois GUPTA"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "https://ww4l.q.Q.Ee8yp.k.szN.GUJcEqyDyarTk1.M.select/%0D/V)g/%7C%5C/a/v!%2F%26ZvU#j%99%A0%BF6"
+                    },
+                    {
+                        "object_id": "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party1",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P1",
+                        "color": null,
+                        "logo_uri": "http://c.g.nl.ASN7781DwZnV8S-kSSMbzCRbx50uNHVReAZ1mHfRNBa3xyLzcR9cHJ.ikxtNTepP.BB8xlNrFh.ipiranGA:34985/%0D%7B9%23(Y5%25)%3F%20/%26DK%22//t/x%7D%3E+z/%5Bw//f%5CJ%09%3B$qR/_%3F4%09x-%7CdJW0V/DB-4/p%23%60Oh#%FD%85%A4%04"
+                    },
+                    {
+                        "object_id": "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party2",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P2",
+                        "color": null,
+                        "logo_uri": "http://d.xIN:33498/4FXw%5BY%3Et%7CBZ%0B%7B/70(///%3C*/Y,%5EN%5BjZ%5C%0Dma#%84"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "972e0cde-d013-9981-0804-4b89c882e5c1",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Lisa WILLIAMS",
+                                    "language": "il"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://e8.w.cfd:10012/%25",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Viktor ALLEN",
+                                    "language": "pu"
+                                },
+                                {
+                                    "value": "Betty ROBINSON",
+                                    "language": "lg"
+                                },
+                                {
+                                    "value": "James GONZALEZ",
+                                    "language": "bi"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://Y.i2swg.uRtKPIEbIudgloYnnqx.s2cj3.I.LExUs/I6YX%7C8y%5DY/rY%09Fp%3A%7D#%52%E4%9B",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "44960b89-b19c-d081-4bbc-64a44dab4507",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Fran\u00e7ois GUPTA",
+                                    "language": "vs"
+                                },
+                                {
+                                    "value": "Patricia GUPTA",
+                                    "language": "dv"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "electoral_district_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "-5fmXS9+@CQ.JLkk.p.z.L.g.jFZm2I.iO",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "candidate_id": "972e0cde-d013-9981-0804-4b89c882e5c1"
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "candidate_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6"
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "candidate_id": "44960b89-b19c-d081-4bbc-64a44dab4507"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "1VVwGqW6@IrtqDjj5m.HyatT",
+                                    "language": "xr"
+                                },
+                                {
+                                    "value": "U@l.Xn--3PXu8k",
+                                    "language": "jp"
+                                },
+                                {
+                                    "value": "GAlxSY5Rb1U+@Z.I.XN--GEcRj9c",
+                                    "language": "ae"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "{L@EhWqrHSWfVSd2.N.U.gL",
+                                    "language": "kt"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                        "geopolitical_unit_ids": [
+                            "cb2bc189-cbaf-af2e-3275-ff19c75f55e7"
+                        ],
+                        "party_ids": [
+                            "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                            "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                            "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed"
+                        ],
+                        "image_uri": "https://L.i.vyMFYOy.bID:10416/%3B5b%0A%40"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "9C7W@s.t.Jq9vSDXKB.GLobo",
+                            "language": "ch"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "za",
+                            "value": "^@L.FitneSS"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "Matthew WRIGHT"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-db65218c-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "108275564628756291108977606203992870051991068673618657605725778367883319320339"
+    },
+    {
+        "input": {
+            "manifest": {
+                "election_scope_id": "Kko@Jsdj.Eg",
+                "spec_version": "v0.95",
+                "type": "general",
+                "start_date": "8489-12-29T00:33:32.486191",
+                "end_date": "8489-12-29T00:33:32.486191",
+                "geopolitical_units": [
+                    {
+                        "object_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "name": "4@mXBOBlCOA.E.loNDON",
+                        "type": "special",
+                        "contact_information": {
+                            "address_line": null,
+                            "email": [
+                                {
+                                    "annotation": "rn",
+                                    "value": "i@R.X.UYJe.I.Mohw.j.z.o.H.YODobaShI"
+                                },
+                                {
+                                    "annotation": "wv",
+                                    "value": "'*D!Ne1wa@z.LTd"
+                                }
+                            ],
+                            "phone": null,
+                            "name": "Fran\u00e7ois GUPTA"
+                        }
+                    }
+                ],
+                "parties": [
+                    {
+                        "object_id": "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party0",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P0",
+                        "color": null,
+                        "logo_uri": "https://ww4l.q.Q.Ee8yp.k.szN.GUJcEqyDyarTk1.M.select/%0D/V)g/%7C%5C/a/v!%2F%26ZvU#j%99%A0%BF6"
+                    },
+                    {
+                        "object_id": "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party1",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P1",
+                        "color": null,
+                        "logo_uri": "http://c.g.nl.ASN7781DwZnV8S-kSSMbzCRbx50uNHVReAZ1mHfRNBa3xyLzcR9cHJ.ikxtNTepP.BB8xlNrFh.ipiranGA:34985/%0D%7B9%23(Y5%25)%3F%20/%26DK%22//t/x%7D%3E+z/%5Bw//f%5CJ%09%3B$qR/_%3F4%09x-%7CdJW0V/DB-4/p%23%60Oh#%FD%85%A4%04"
+                    },
+                    {
+                        "object_id": "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Party2",
+                                    "language": "en"
+                                }
+                            ]
+                        },
+                        "abbreviation": "P2",
+                        "color": null,
+                        "logo_uri": "http://d.xIN:33498/4FXw%5BY%3Et%7CBZ%0B%7B/70(///%3C*/Y,%5EN%5BjZ%5C%0Dma#%84"
+                    }
+                ],
+                "candidates": [
+                    {
+                        "object_id": "972e0cde-d013-9981-0804-4b89c882e5c1",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Lisa WILLIAMS",
+                                    "language": "il"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://e8.w.cfd:10012/%25",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Viktor ALLEN",
+                                    "language": "pu"
+                                },
+                                {
+                                    "value": "Betty ROBINSON",
+                                    "language": "lg"
+                                },
+                                {
+                                    "value": "James GONZALEZ",
+                                    "language": "bi"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": "https://Y.i2swg.uRtKPIEbIudgloYnnqx.s2cj3.I.LExUs/I6YX%7C8y%5DY/rY%09Fp%3A%7D#%52%E4%9B",
+                        "is_write_in": null
+                    },
+                    {
+                        "object_id": "44960b89-b19c-d081-4bbc-64a44dab4507",
+                        "name": {
+                            "text": [
+                                {
+                                    "value": "Fran\u00e7ois GUPTA",
+                                    "language": "vs"
+                                },
+                                {
+                                    "value": "Patricia GUPTA",
+                                    "language": "dv"
+                                }
+                            ]
+                        },
+                        "party_id": null,
+                        "image_uri": null,
+                        "is_write_in": null
+                    }
+                ],
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "electoral_district_id": "cb2bc189-cbaf-af2e-3275-ff19c75f55e7",
+                        "vote_variation": "one_of_m",
+                        "number_elected": 1,
+                        "votes_allowed": 1,
+                        "name": "-5fmXS9+@CQ.JLkk.p.z.L.g.jFZm2I.iO",
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "candidate_id": "972e0cde-d013-9981-0804-4b89c882e5c1"
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "candidate_id": "d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6"
+                            },
+                            {
+                                "object_id": "c-44960b89-b19c-d081-4bbc-64a44dab4507",
+                                "sequence_order": 2,
+                                "candidate_id": "44960b89-b19c-d081-4bbc-64a44dab4507"
+                            }
+                        ],
+                        "ballot_title": {
+                            "text": [
+                                {
+                                    "value": "1VVwGqW6@IrtqDjj5m.HyatT",
+                                    "language": "xr"
+                                },
+                                {
+                                    "value": "U@l.Xn--3PXu8k",
+                                    "language": "jp"
+                                },
+                                {
+                                    "value": "GAlxSY5Rb1U+@Z.I.XN--GEcRj9c",
+                                    "language": "ae"
+                                }
+                            ]
+                        },
+                        "ballot_subtitle": {
+                            "text": [
+                                {
+                                    "value": "{L@EhWqrHSWfVSd2.N.U.gL",
+                                    "language": "kt"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ballot_styles": [
+                    {
+                        "object_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                        "geopolitical_unit_ids": [
+                            "cb2bc189-cbaf-af2e-3275-ff19c75f55e7"
+                        ],
+                        "party_ids": [
+                            "7b519ac5-406e-8715-4f4a-9883ce248ae2",
+                            "28fd742a-b8ff-b25d-dddd-a3998fd0166c",
+                            "19d4feb8-2402-7bb6-a2e6-37a488f6c8ed"
+                        ],
+                        "image_uri": "https://L.i.vyMFYOy.bID:10416/%3B5b%0A%40"
+                    }
+                ],
+                "name": {
+                    "text": [
+                        {
+                            "value": "9C7W@s.t.Jq9vSDXKB.GLobo",
+                            "language": "ch"
+                        }
+                    ]
+                },
+                "contact_information": {
+                    "address_line": null,
+                    "email": [
+                        {
+                            "annotation": "za",
+                            "value": "^@L.FitneSS"
+                        }
+                    ],
+                    "phone": null,
+                    "name": "Matthew WRIGHT"
+                }
+            },
+            "ballot": {
+                "object_id": "ballot-db6522e0-aa37-11ec-9609-cac12fe231d6",
+                "style_id": "55bcc98d-b8ca-6803-4ac6-6bf975485a43",
+                "contests": [
+                    {
+                        "object_id": "43117594-0e93-77da-e3d4-a702f1192eb3",
+                        "sequence_order": 0,
+                        "ballot_selections": [
+                            {
+                                "object_id": "c-972e0cde-d013-9981-0804-4b89c882e5c1",
+                                "sequence_order": 0,
+                                "vote": 1,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            },
+                            {
+                                "object_id": "c-d7bf2202-cd0d-92c0-3bcd-a5a036fb29f6",
+                                "sequence_order": 1,
+                                "vote": 0,
+                                "is_placeholder_selection": true,
+                                "extended_data": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "output": "79460032961003519625885300001686292042644654667780736041286966593506101383052"
+    }
+]
