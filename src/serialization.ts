@@ -240,10 +240,10 @@ export function from_file_to_PlaintextBallot(jsonString: string): PlaintextBallo
 }
 
 export function from_file_to_PlaintextBallots(path: string): PlaintextBallot[] {
-  let ballots: PlaintextBallot[] = [];
+  const ballots: PlaintextBallot[] = [];
   const dataJson = fs.readFileSync(path, "utf8");
   const data = JSON.parse(dataJson);
-  for (let ballot of data) {
+  for (const ballot of data) {
     ballots.push(from_file_to_PlaintextBallot(JSON.stringify(ballot)));
   }
   return ballots;
@@ -258,10 +258,10 @@ export function from_file_to_class_manifest(manifest_JSON: string):Manifest {
 export function from_test_file_to_valid_inputs(path: string): EncryptInput[] {
   const data = fs.readFileSync(path, "utf8");
   const result = JSON.parse(data);
-  let encryptInputs = [];
-  for (let res of result) {
-    let manifest = plainToClass(Manifest, res.input.manifest as Manifest);
-    let ballot = plainToClass(PlaintextBallot, res.input.ballot as PlaintextBallot);
+  const encryptInputs = [];
+  for (const res of result) {
+    const manifest = plainToClass(Manifest, res.input.manifest as Manifest);
+    const ballot = plainToClass(PlaintextBallot, res.input.ballot as PlaintextBallot);
     encryptInputs.push({plaintextBallot: ballot, manifest: manifest, output: new ElementModQ(res.output)});
   }
   return encryptInputs;
