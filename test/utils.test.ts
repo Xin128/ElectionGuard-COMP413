@@ -1,7 +1,7 @@
 import {get_optional,
   match_optional,
   get_or_else_optional,
-  flatmap_optional} from "./utils";
+  flatmap_optional} from "../src/utils";
 
 describe("TestUtils", () => {
   test("test_unwrap", () => {

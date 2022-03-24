@@ -2,10 +2,10 @@ import {ElementModQ,
     // ElementModP,
     // elements_mod_p,
     // int_to_q_unchecked
-} from './group';
-import {    elements_mod_q} from './groupUtils'
-// import {hash_elems} from './hash';
-import {Nonces} from './nonces';
+} from '../src/group';
+import {    elements_mod_q} from '../src/groupUtils'
+// import {hash_elems} from '../src/hash';
+import {Nonces} from '../src/nonces';
 
 describe("TestNonces", () => {
     test('test_nonces_iterable', () => {
@@ -42,7 +42,7 @@ describe("TestNonces", () => {
     test('test_nonces_with_slices', () => {
         const seed:ElementModQ = elements_mod_q();
         const n:Nonces = new Nonces(seed);
-        const l:ElementModQ[] = [];  
+        const l:ElementModQ[] = [];
         for (let i = 0; i < 10; i++) {
             l.push(n.get(i));
           }
@@ -51,7 +51,7 @@ describe("TestNonces", () => {
 
     // test('test_nonces_type_errors', () => {
     //     const seed:ElementModQ = int_to_q_unchecked(3n);
-        
+
     //     expect(new Nonces(seed)).toThrowError();
     // });
 

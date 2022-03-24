@@ -8,14 +8,14 @@ import {
     int_to_p_unchecked,
     int_to_q_unchecked,
     P
-} from './group';
+} from '../src/group';
 import * as bigintModArith from 'bigint-mod-arith'
 
 import {
     get_optional
-} from './utils';
-// import {powmod} from './groupUtils';
-import {discrete_log} from './dlog';
+} from '../src/utils';
+// import {powmod} from '../src/groupUtils';
+import {discrete_log} from '../src/dlog';
 
 function _discrete_log_uncached(e: ElementModP): bigint {
     let count = 0;

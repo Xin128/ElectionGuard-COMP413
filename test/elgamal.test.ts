@@ -8,17 +8,17 @@ import {
     ZERO_MOD_Q,
     TWO_MOD_Q,
     ONE_MOD_Q,
-    ONE_MOD_P,} from './group';
-import { elements_mod_q_no_zero} from './groupUtils';
-// import {hash_elems} from './hash';
+    ONE_MOD_P,} from '../src/group';
+import { elements_mod_q_no_zero} from '../src/groupUtils';
+// import {hash_elems} from '../src/hash';
 import {ElGamalKeyPair,
     ElGamalCiphertext,
     elgamal_encrypt,
     elgamal_add,
     elgamal_keypair_from_secret,
     elgamal_keypair_random
-} from './elgamal';
-import {get_optional} from "./utils";
+} from '../src/elgamal';
+import {get_optional} from "../src/utils";
 // import exp from 'constants';
 
 describe("TestElgamal", () => {

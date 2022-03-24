@@ -1,7 +1,7 @@
 import {
   encrypt_ballot,
-} from "./simple_elections";
-import {get_optional} from "./utils";
+} from "../src/simple_elections";
+import {get_optional} from "../src/utils";
 import {
   // encrypt_compatible_testing_demo,
   from_file_to_class,
@@ -9,14 +9,14 @@ import {
   // from_file_to_PlaintextBallots,
   from_test_file_to_valid_inputs,
   EncryptInput
-} from "./serialization";
+} from "../src/serialization";
 import {
   make_ciphertext_election_context,
   // PlaintextBallot
-} from "./simple_election_data";
-import { ElementModQ,ElementModP } from "./group";
+} from "../src/simple_election_data";
+import { ElementModQ,ElementModP } from "../src/group";
 
-import {InternalManifest} from "./manifest";
+import {InternalManifest} from "../src/manifest";
 import * as fs from "fs";
 
 describe("TestDeserialization", () => {

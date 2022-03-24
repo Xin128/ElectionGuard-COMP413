@@ -23,14 +23,14 @@ import {
     int_to_q_unchecked,
     convertBase,
     groupDigits,
-} from './group';
+} from '../src/group';
 
 import {
     flatmap_optional,
     get_or_else_optional,
     match_optional,
     get_optional,
-} from './utils';
+} from '../src/utils';
 
 import {
     elements_mod_q,
@@ -38,7 +38,7 @@ import {
     elements_mod_p_no_zero,
     elements_mod_q_no_zero,
     // getRandomIntExclusive
-} from './groupUtils';
+} from '../src/groupUtils';
 
 describe("TestBigIntToHex", () => {
     const randomQ: ElementModQ = elements_mod_q();

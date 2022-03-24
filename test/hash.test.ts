@@ -1,8 +1,8 @@
 import {ElementModQ,
-    ElementModP} from './group';
+    ElementModP} from '../src/group';
 import {elements_mod_q,
-    elements_mod_p} from './groupUtils'
-import {hash_elems} from './hash';
+    elements_mod_p} from '../src/groupUtils'
+import {hash_elems} from '../src/hash';
 
 describe("TestHash", () => {
     test('test_same_answer_twice_in_a_row', () => {
@@ -14,7 +14,7 @@ describe("TestHash", () => {
 
         expect(h1.equals(h2)).toBe(true);
     });
-    
+
     test('test_basic_hash_properties', () => {
         const a: ElementModQ = elements_mod_q();
         const b: ElementModQ = elements_mod_q();

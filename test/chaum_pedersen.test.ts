@@ -2,7 +2,7 @@ import { ElGamalCiphertext,
     ElGamalKeyPair,
     elgamal_encrypt,
     elgamal_keypair_from_secret,
-} from "./elgamal";
+} from "../src/elgamal";
 
 
 import {
@@ -15,10 +15,10 @@ import {
     // add_q,
     // g_pow_p,
     // ZERO_MOD_Q
-} from './group';
+} from '../src/group';
 
 import {elements_mod_q_no_zero,
-    elements_mod_q,} from './groupUtils';
+    elements_mod_q,} from '../src/groupUtils';
 
 import {DisjunctiveChaumPedersenProof,
     make_disjunctive_chaum_pedersen_zero,
@@ -27,9 +27,9 @@ import {DisjunctiveChaumPedersenProof,
     ConstantChaumPedersenProof,
     // make_disjunctive_chaum_pedersen
 }
-from './chaum_pedersen'
+from '../src/chaum_pedersen'
 
-import {get_optional} from './utils'
+import {get_optional} from '../src/utils'
 
 describe("TestDisjunctiveChaumPedersen", () => {
     test('test_djcp_proofs_simple', () => {

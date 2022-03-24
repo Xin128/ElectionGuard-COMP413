@@ -9,9 +9,9 @@ import {
   // TWO_MOD_Q,
   // ONE_MOD_Q,
   // ONE_MOD_P,
-} from './group';
-import { elements_mod_q_no_zero} from './groupUtils';
-// import {hash_elems} from './hash';
+} from '../src/group';
+import { elements_mod_q_no_zero} from '../src/groupUtils';
+// import {hash_elems} from '../src/hash';
 import {
   ElGamalKeyPair,
   // ElGamalCiphertext,
@@ -19,11 +19,11 @@ import {
   // elgamal_add,
   elgamal_keypair_from_secret, ElGamalCiphertext,
   // elgamal_keypair_random
-} from './elgamal';
+} from '../src/elgamal';
 // import * as sjcl from 'sjcl';
-import {get_optional} from "./utils";
+import {get_optional} from "../src/utils";
 // import exp from 'constants';
-// import {PowRadixOption} from './powRadix'
+// import {PowRadixOption} from '../src/powRadix'
 
 function measureTimeMillis(f: () => void): number {
   const start = Date.now();
