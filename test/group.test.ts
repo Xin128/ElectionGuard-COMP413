@@ -248,10 +248,10 @@ describe("TestOptionalFunctions", () => {
         const bad: number | null = null;
         expect(match_optional(good, () => 1, (x) => x + 2)).toEqual(5);
         expect(match_optional(bad, () => 1, (x) => {
-          if (x == null || x == undefined) {
+          if (x === null || x === undefined) {
             throw Error("match called on null or undefined.");
           }
-          return x + 2;
+          return (x as unknown as number) + 2;
         })).toEqual(1);
     });
 
@@ -267,10 +267,10 @@ describe("TestOptionalFunctions", () => {
         const bad: number | null = null;
         expect(get_optional(flatmap_optional(good, (x) => x + 2))).toEqual(5);
         expect(flatmap_optional(bad, (x) => {
-          if (x == null || x == undefined) {
+          if (x === null || x === undefined) {
             throw Error("flatmap called on null or undefined")
           }
-          return x + 2;
+          return (x as unknown as number) + 2;
         })).toBeUndefined();
     });
 });
