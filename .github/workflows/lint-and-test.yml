@@ -23,3 +23,18 @@ jobs:
     - run: yarn test
     - run: yarn lint
     - run: yarn build-all
+
+  test_vectors:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nodejs: [12, 14]
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: ${{ matrix.nodejs }}
+
+    - run: yarn test src/serialization.test.ts -t testTestVectors
