@@ -37,4 +37,5 @@ jobs:
       with:
         node-version: ${{ matrix.nodejs }}
 
+    - run: yarn install
     - run: yarn test serialization.test.ts -t testTestVectors
