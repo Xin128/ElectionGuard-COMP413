@@ -6,8 +6,6 @@
 .idea/*
 generated_data
 encrypted_data
-generated_test_inputs/
-generated_test_inputs_ts/
 
 .DS_Store
 coverage
