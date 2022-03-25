@@ -18,6 +18,7 @@ import { ElementModQ,ElementModP } from "../src/group";
 
 import {InternalManifest} from "../src/manifest";
 import * as fs from "fs";
+import path from "path";
 
 describe("TestDeserialization", () => {
 
@@ -60,8 +61,7 @@ describe("TestDeserialization", () => {
 
     fs.readdirSync(testFolder).forEach(file => {
       if (file !== testFolder) {
-        // const path2TestVector = testFolder + "\\" + file;
-        const path2TestVector = testFolder + "/" + file;
+        const path2TestVector = path.join(testFolder, file);
         const encryptInputs: EncryptInput[] = from_test_file_to_valid_inputs(path2TestVector);
         for (const input of encryptInputs) {
           const inputs = from_file_to_class();
