@@ -245,10 +245,20 @@ export function buildGeopoliticalUnit(manifest: any): GeopoliticalUnit[] {
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
 export function buildParty(manifest: any): Party[] {
-    const object_id = manifest.parties[0].object_id;
-    const languageName = new Language(manifest.parties[0].name.text[0].value, "en");
-    const name = new InternationalizedText([languageName]);
-    return [new Party(object_id, name)]
+    const [party] = manifest.parties;
+    const object_id = party.object_id;
+    const nameField = party.name.text;
+
+    let name = "";
+    if (nameField && nameField.length > 0 && nameField[0]) {
+        name = nameField[0].value;
+    }
+
+    const i18nName = new InternationalizedText([
+        new Language(name || "", "en"),
+    ]);
+
+    return [new Party(object_id, i18nName)];
 }
 
 /**
@@ -262,7 +272,10 @@ export function buildCandidate(manifest: any): Candidate[] {
     for (let i = 0; i < manifest.candidates.length; i++) {
         // we do not have candidate id, object_id same as candidate name
         const object_id = manifest.candidates[i].object_id;
-        const candidateName = new Language(manifest.candidates[i].name.text[0].value, "en");
+        const candidateName = new Language(
+            manifest.candidates[i].name.text[0]?.value || "",
+            "en",
+        );
         const name = new InternationalizedText([candidateName]);
         const candidate = new Candidate(object_id, name);
         candidates.push(candidate);
@@ -305,9 +318,19 @@ export function buildContest(manifest: any): ContestDescription[] {
  * @param ballot a ballot of JSON file, currently compatible with Aaron's example
  */
 export function buildBallotStyle(manifest: any): BallotStyle[] {
-    const object_id = manifest.ballot_styles[0].object_id;
-    const geopolitical_unit_ids = [manifest.ballot_styles[0].geopolitical_unit_ids[0]];
-    const party_ids = [manifest.ballot_styles[0].party_ids[0]];
+    const [ballot_style] = manifest.ballot_styles;
+    const object_id = ballot_style.object_id;
+    let geopolitical_unit_ids: any[] = [];
+    let party_ids: any[] = [];
+
+    if (ballot_style.geopolitical_unit_ids?.length > 0) {
+        geopolitical_unit_ids = [ballot_style.geopolitical_unit_ids[0]];
+    }
+
+    if (ballot_style.party_ids?.length > 0) {
+        party_ids = [ballot_style.party_ids[0]];
+    }
+
     return [new BallotStyle(object_id, geopolitical_unit_ids, party_ids)];
 }
 
