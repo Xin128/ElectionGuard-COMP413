@@ -1,14 +1,13 @@
 {
-  "name": "ElectionGuard-COMP413-clean",
-  "version": "0.4.2",
-  "description": "Boilerplate for TypeScript projects (Node.js and browser modules)",
-  "author": "Chris Hager <chris@linuxuser.at>",
-  "repository": "https://github.com/metachris/typescript-boilerplate",
+  "name": "ElectionGuard-Typescript",
+  "version": "0.95.1",
+  "description": "The Typescript implementation of ElectionGuard",
+  "author": "ElectionGuardTypeScriptTeam@Rice",
+  "repository": "https://github.com/DJunge-w/ElectionGuard-COMP413-clean",
   "license": "MIT",
   "keywords": [
     "typescript",
-    "boilerplate",
-    "esbuild"
+    "ElectionGuard"
   ],
   "main": "./dist/tsc/index.js",
   "types": "./dist/tsc/main.d.ts",
